@@ -3,50 +3,50 @@
 namespace Config;
 
 // Create a new instance of our RouteCollection class.
+use App\Controllers\Home;
+
 $routes = Services::routes();
 
-/*
- * --------------------------------------------------------------------
- * Router Setup
- * --------------------------------------------------------------------
- */
 $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-// The Auto Routing (Legacy) is very dangerous. It is easy to create vulnerable apps
-// where controller filters or CSRF protection are bypassed.
-// If you don't want to define all routes, please use the Auto Routing (Improved).
-// Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-// $routes->setAutoRoute(false);
 
-/*
- * --------------------------------------------------------------------
- * Route Definitions
- * --------------------------------------------------------------------
- */
+//all the client routes
+$routes->group('', function($routes){
+    $routes->match(['get', 'post'], 'login', 'Auth::login');
+    $routes->match(['get', 'post'], 'register', 'Auth::register');
+    $routes->match(['get', 'post'], 'activate/(:alphanum)', 'Auth::activate/$1');
+    $routes->match(['get', 'post'], 'logout', 'Auth::logout');
+});
 
-// We get a performance increase by specifying the default
-// route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
-$routes->match(['get', 'post'], 'login', 'Home::login');
-$routes->match(['get', 'post'], 'register', 'Home::register');
+//routes with login filter
+$routes->group('', ['filter'=>'isLoggedInFilter'], function($routes){
+    $routes->match(['get', 'post'], 'dashboard', 'Home::dashboard');
+    $routes->match(['get', 'post'], 'share/(:alphanum)', 'Home::share/$1');
+    $routes->match(['get', 'post'], 'update-profile', 'Profile::updateProfile');
+    $routes->match(['get', 'post'], 'payment', 'Home::payment');
+    $routes->match(['get', 'post'], 'share/(:alphanum/sacco-membership)', 'Home::saccoMembership/$1/sacco-membership');
+    $routes->match(['get', 'post'], 'messages', 'Home::messages');
+    $routes->match(['get', 'post'], 'message/(:num)', 'Home::message/1$');
 
+});
 
-/*
- * --------------------------------------------------------------------
- * Additional Routing
- * --------------------------------------------------------------------
- *
- * There will often be times that you need additional routing and you
- * need it to be able to override any defaults in this file. Environment
- * based routes is one such time. require() additional route files here
- * to make that happen.
- *
- * You will have access to the $routes object within that file without
- * needing to reload it.
- */
+//routes without login filter
+$routes->group('', function ($routes){
+    $routes->get('/', 'Home::index');
+    $routes->match(['get', 'post'], 'change-password', 'Auth::changePassword');
+    $routes->match(['get', 'post'], 'password-reset/(:alphanum)', 'Home::verifyEmail/$1');
+
+});
+
+//routes for server error
+
+$routes->group('', function ($routes){
+    $routes->get('/server-errors/many-requests', 'ServerError::manyRequests');
+});
+
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }

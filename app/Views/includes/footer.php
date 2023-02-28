@@ -1,6 +1,51 @@
-<footer class="footer">
-    <div class="container-fluid d-flex justify-content-between">
-        <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © Mzawadi 2023</span>
-        <span class="float-none float-sm-end mt-1 mt-sm-0 text-end">Developed by Mzawadi</span>
-    </div>
+<footer class="text-center text-white" style="background-color: #f1f1f1;">
+  <div class="container pt-4">
+    <section class="mb-4">
+      <a
+        class="btn btn-link btn-floating btn-lg text-dark m-1 footer-icon"
+        href="#!"
+        role="button"
+        data-mdb-ripple-color="dark"
+        ><i class="fab fa-facebook-f"></i
+      ></a>
+      <a
+        class="btn btn-link btn-floating btn-lg text-dark m-1 footer-icon"
+        href="#!"
+        role="button"
+        data-mdb-ripple-color="dark"
+        ><i class="fab fa-twitter"></i
+      ></a>
+      <a
+        class="btn btn-link btn-floating btn-lg text-dark m-1 footer-icon"
+        href="#!"
+        role="button"
+        data-mdb-ripple-color="dark"
+        ><i class="fab fa-google"></i
+      ></a>
+      <a
+        class="btn btn-link btn-floating btn-lg text-dark m-1 footer-icon"
+        href="#!"
+        role="button"
+        data-mdb-ripple-color="dark"
+        ><i class="fab fa-instagram"></i
+      ></a>
+      <a
+        class="btn btn-link btn-floating btn-lg text-dark m-1 footer-icon"
+        href="#!"
+        role="button"
+        data-mdb-ripple-color="dark"
+        ><i class="fab fa-linkedin"></i
+      ></a>
+      <a
+        class="btn btn-link btn-floating btn-lg text-dark m-1 footer-icon"
+        href="#!"
+        role="button"
+        data-mdb-ripple-color="dark"
+        ></a>
+    </section>
+  </div>
+  <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    © 2023 Copyright:
+    <a class="text-dark" href="#" style="text-decoration: none;">M-Zawadi.com</a>
+  </div>
 </footer>

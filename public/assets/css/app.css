@@ -1,9 +1,584 @@
-#card-id{
+
+/* css for the navbar */
+
+/* css for the footer */
+body{
+    background-color:rgb(249, 243, 249)
+}
+body::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+ }
+ 
+ body::-webkit-scrollbar-thumb {
+   border-radius: 8px;
+   background-color: rgb(234, 234, 234);
+ }
+ 
+.footer-link{
+    text-decoration: none;
+}
+/* css for the homepage */
+.btn-success{
+    background-color: rgb(214, 178, 214) !important;
+    border: none !important;
+}
+
+.clear-button{
+    border: none;
+    cursor: pointer;
+
+    cursor: pointer;
+    border-radius: 50%;
+
+
+}
+#clear-button-svg-icon{
+    fill:rgb(155, 4, 155);
+    display: grid;
+    place-items: center;
+    background-color: rgb(236, 233, 233);
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+}
+
+
+select {
+    width: 100px;
+    height: 30px;
+    padding: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    border: 1px solid rgb(87, 5, 87);
+    border-radius: 5px;
+  }
+  select:focus{
+    outline: none;
+  }
+  select:hover {
+    cursor: pointer;
+    border: 1px solid #999;
+  }
+  .shares-heading{
+    font-weight: 300;
+  }
+  .shares-heading-inner{
+    font-weight: 600;
+  }
+  .sacco{
+    display: flex;
+    justify-content: space-between;
+  }
+.list-shares{
+    box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    border-radius: 2px;
+    padding: 10px 15px;
+    cursor: pointer;
+    -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    transition: box-shadow 0.5s;
+}
+.list-shares:hover {
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+  }
+.shares-seller{
+    font-size: 15px;
+    font-weight: 600;
+    color: grey;
+}
+.list-shares-sub{
+    font-size: 12px;
+    font-weight: 300;
+    color: gray;
+}
+.list-shares-sub-title{
+    font-weight: 600;
+    color: black;
+}
+.location{
+    font-size: 8px;
+    font-weight: 600;
+}
+.user-info{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;   
+}
+.user-info span{
+    font-size: 12px;
+}
+.user-info-account{
+    font-size: 15px;
+    font-weight: 300;
+    color: green;
+}
+.fa-icon{
+    fill: green;
+}
+.user-info span{
+    font-size: 15px;
+    color: grey;
+}
+.user-info-account-not-very{
+    font-size: 15px;
+    font-weight: 300;
+    color: rgb(167, 17, 17);
+}
+.fa-icon-not-very{
+    color: rgb(166, 13, 13);
+}
+/* .shares-desc-div{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between; 
+} */
+.share-button{
+    cursor: pointer;
+    color:rgb(87, 5, 87);
+    background-color: rgb(207, 199, 199);
+    padding: 4px;
+    border-radius: 3px;
+    border: none;
+}
+.save-button>a{
+    color: rgb(87, 5, 87);
+    background-color: rgb(207, 199, 199);
+    padding: 4px;
+    border-radius: 3px;
+    border: none;
+}
+/* modal styles */
+.modal-bg-color{
+    background-color: rgb(241, 234, 241);
+}
+.modal-title{
+    font-size: 14px;
+    font-weight: 300;
+    color: grey;
+}
+.close-button{
+    border: none;
+    border-radius:3px;
+    color:rgb(87, 5, 87);
+    font-size: 14px;
+}
+.modal-body{
+    display: flex;
+    flex-direction: column;
+}
+span a{
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 300;
+    color: gray;
+}
+span i{
+    color: gray;
+    font-size: 12px;
+}
+/* end of the modal styles */
+.price-per-share{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+.border-col{
+    border-radius: 4px;
+    padding: 20px;
+    background-color: white;
+}
+.border-coll{
+    background-color: white;
+    border-radius: 4px;
+    padding: 20px;
+}
+.sacco-performance-title{
+    font-size: 15px;
+    font-weight: 600;
+    color: grey;
+}
+
+.percentage-increase{
+    font-size: 12px;
+    color: green;
+}
+.desc-location{
+    font-weight: 300;
+    font-size: 15px;
+}
+.total-amount-to-pay{
+    font-size: 15px;
+    font-weight: 300;
+    color: grey;
+}
+.shares-on-sale-label{
+    font-size: 15px;
+    font-weight: 600;
+    color: green;
+}
+.input-buy{
+    border: none;
+    color: green;
+    font-weight: 600;
+    padding: 10px 0;
+}
+.input-buy:focus{
+    outline: none;
+}
+.buy-button{
+
+    background-color: rgb(214, 178, 214);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 8px 30px;
+    text-decoration: none;
+}
+.accordion-button{
+    font-size: 14px;
+    height: 40px;
+}
+#accordionExample{
+    --bs-accordion-btn-focus-box-shadow: none;
+}
+.accordion-button::after{
+    width: 0;
+    height: 0;
+}
+.price-comparison-two{
+    padding: 0 0 0 10px;
+}
+.price-comparison>p{
+    font-size: 14px;
+    font-weight: 300;
+    color: grey;
+}
+.price-comparison-two>p{
+    font-size: 14px;
+    font-weight: 300;
+    color: grey;
+}
+.price-comparison>span{
+    font-weight: 300;
+    font-size: 14px;
+    color: green;
+}
+.price-comparison-two>span{
+    font-weight: 300;
+    font-size: 14px;
+    color: burlywood;
+}
+#safety-tips-para{
+    font-weight: 600;
+    color: grey;
+    font-size: 12px;
+}
+.tips>li{
+    font-weight: 300;
+    font-size: 12px;
+    color: grey;
+}
+/* start of payment css */
+.borders{
+    background-color: white;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 20px;
+}
+.payment-icon{
+    display: flex;
+    align-items: baseline;
+    height: 20px;
+}
+.payment-heading{
+    margin-left: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    color: grey;
+}
+.cad{
+    width: 100%;
+}
+.card-header{
+    padding: 8px 15px;
+    font-weight: 600;
+    color: grey;
+}
+#card-content{
+  display: flex; 
+  height: 40px; 
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 15px;
+  font-weight: 300;
+  color: gray;
+}
+.select-payment{
+    font-weight: 300;
+    color: gray; 
+    padding: 15px 0;
+}
+.payment-buttons{
+    border: 1px solid rgb(225, 225, 225);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+.payment-buttons:hover{
+    border: 1px solid rgb(156, 7, 156);
+    color:rgb(87, 5, 87)
+}
+.fa-mobile{
+    font-size: 30px;
+    margin: 8px 8px;
+}
+.payment-desc{
+    font-size: 12px;
+}
+.user-input-details{
+    border: 1px solid rgb(225, 225, 225);
+    border-radius: 4px;
+}
+select>option{
+    font-weight: 300;
+    color: grey;
+    font-size: 12px;
+}
+.user-select{
+    width: 100px;
+    height: 30px;
+    padding: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    border: 1px solid rgb(225, 225, 225);
+    border-radius: 5px;
+  }
+  .user-select:focus{
+    outline: none;
+  }
+  .phone-details{
+
+  }
+  #phone{
+    width: 80%;
+    height: 30px;
+    padding: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    border: 1px solid rgb(225, 225, 225);
+    border-radius: 5px;
+  }
+  #phone:focus{
+    outline: none;
+  }
+.user-input-details{
+    margin: 15px 0;
+}
+.phone-details{
+    padding: 8px 15px;
+}
+.select-service-provider{
+    font-weight: 300;
+    color: gray; 
+    padding: 5px;
+}
+.services{
+    font-weight: 300;
+    color: gray; 
+    padding: 10px 15px;
+}
+.checkbox-container{
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
     box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
     -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    transition: box-shadow 0.5s;
+    border-radius: 2px;
+    margin: 15px;
 }
-.c-title{
+.checkbox-container:hover {
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+  }
+
+.saf-img{
+    height: 50px;
+    border-radius: 4px;
+    margin-left: 10px; 
+}
+.footer-button{
+    display: flex;
+    justify-content: flex-end;
+}
+.footer-link{
+    text-decoration: none;
+    padding: 8px 40px;
+    border: 1px solid rgb(227, 225, 225);
+    border-radius: 4px;
+    cursor: pointer;
     color: grey;
-    font-weight: 600;
+    font-size: 13px;
+    margin-right: 8px;
 }
+.footer-pay-button{
+    border: none;
+    padding: 8px 50px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: grey;
+}
+.fa-lock{
+    padding-right: 5px;
+    font-size: 10px;
+}
+/* end of payment css */
+/* the start of the messages css */
+#messages-container{
+    width: 60rem; 
+    height: 28rem;
+    background-color: white;
+}
+#column-md-4{
+    height: 28rem;
+}
+#column-md-8{
+    background-color: rgb(235, 234, 234);
+    height: 28rem; 
+}
+#fa-messages-icon{
+    font-size: 40px;
+    color: rgb(205, 89, 205);
+}
+.fa-messages-bg{
+    width: 70px;
+    height: 70px;
+    background-color: rgb(153, 99, 153);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+.messages-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.messages-section>h6{
+    color: purple;
+    font-size: 14px;
+    font-weight: 300;
+    padding-top: 8px;
+}
+.messages-header{
+    padding-top: 6px;
+    background-color: white;
+}
+.messages-header>h6{
+    font-weight: 600;
+    font-size: 14px;
+    color: purple;
+}
+.message-info-link{
+    text-decoration: none;
+}
+hr{
+    color: rgb(225, 225, 225);
+}
+.message-user-info{
+    display: flex;
+    padding-top: 0;
+    cursor: pointer;
+}
+.avatar{
+    border-radius: 50%;
+    background-color: rgb(228, 228, 228);
+    height: 25px;
+    width: 25px;
+    display: grid;
+    place-items: center;
+}
+#avatar-icon{
+    font-size: 15px;
+}
+.user-avar-info{
+    display: flex;
+    justify-content: space-between;
+}
+.user-heading-container{
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+}
+.user-heading-container>h6{
+    font-weight: 600;
+    font-size: 14px;
+    color: grey;
+}
+.user-heading-container>p{
+    font-weight: 300;
+    font-size: 10px;
+    color: grey;
+}
+
+.btn-close-icon{
+    border-radius: 50%;
+    background-color: rgb(228, 228, 228);
+    height: 25px;
+    width: 25px;
+    border: none;
+    display: grid;
+    place-items: center;
+    margin-left: 30px;
+}
+.fa-x{
+    font-size: 10px;
+    color: grey;
+    text-align: center;
+}
+/* end of the messages css */
+/* start of the single messages */
+.messages-input-fields{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    height: 27rem;
+}
+.text-area-input{
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    border: none;
+    resize: none;
+    box-sizing: border-box;
+    overflow-y: hidden;
+}
+.text-area-input:focus{
+    outline: none;
+}
+.s{
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+.messages-input-field-icon{
+    transform: rotate(40deg);
+    margin-left: 2px;
+    color:rgb(87, 5, 87);
+}
+.single-message-submit-button{
+    border: none;
+    background-color: rgb(191, 188, 188);
+    padding: 8px;
+}
+/* end of single messages */

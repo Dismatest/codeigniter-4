@@ -1,0 +1,68 @@
+
+.profile-image-heading{
+    font-weight: 600;
+    color: grey;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+.profile-img-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    height: 100%;
+   border-right: 2px solid black;
+}
+.img-upload{
+    width: 100px;
+    height: 100px;
+    /*outline: 1px solid black;*/
+    box-shadow: 0px 0px 5px -1px rgba(0,0,0,1);
+    border-radius: 50%;
+
+}
+
+.personal-info-container{
+    background-color: white;
+
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    padding: 12px;
+    margin-top: 20px;
+    margin-bottom: 20px; 
+}
+
+.personal-info-names{
+    display: flex;
+}
+.update-personal-info{
+    display: flex;
+    justify-content: flex-end;
+}
+.update-personal-info-edit-button{
+    background-color: rgb(186, 26, 186);
+    border: none;
+    margin: 10px 0;
+    padding: 10px 20px;
+}
+.profile-image-upload{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.personal-information-edit {
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    width: 100%;
+  }
+.personal-information-edit:focus{
+    outline: none;
+}
+.update-personal-info{
+    padding: 10px;
+}

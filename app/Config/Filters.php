@@ -21,6 +21,8 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'isLoggedInFilter' => \App\Filters\LoginFilter::class,
+        'ipBlocker' => \App\Filters\IpBlocker::class,
     ];
 
     /**
@@ -29,6 +31,7 @@ class Filters extends BaseConfig
      */
     public array $globals = [
         'before' => [
+             //this is the filter that will be applied to all routes
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
@@ -51,7 +54,12 @@ class Filters extends BaseConfig
      * permits any HTTP method to access a controller. Accessing the controller
      * with a method you don’t expect could bypass the filter.
      */
-    public array $methods = [];
+    public array $methods = [
+
+        // applying this filter to all post routes
+        'post' => ['ipBlocker'],
+
+    ];
 
     /**
      * List of filter aliases that should run on any

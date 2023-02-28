@@ -1,0 +1,192 @@
+
+#col-content-section{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    padding: 12px;
+}
+#col-content-section-confirm-selling{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    padding: 12px;
+}
+.user-profile-info{
+    display: flex;
+    justify-content: space-between;
+}
+.user-profile-avatar{
+    font-size: 24px;
+    height: 30px;
+}
+.user-profile-name{
+    font-weight: 300;
+    color: grey;
+    font-size: 18px;
+}
+.user-profile-edit{
+    font-size: 16px;
+}
+.user-info-details{
+    padding-top: 12px;
+}
+.user-info-details>h6{
+    font-size: 12px;
+}
+#col-content-section-two{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    padding: 12px;
+}
+.profile-container-content{
+    padding: 10px 12px;
+}
+#selling-history-icon{
+    font-size: 18px;
+    color:rgb(155, 4, 155);
+
+}
+.selling-history{
+    font-size: 18px;
+    font-weight: 600;
+}
+.dashboardDataTable{
+    margin: 10px;
+}
+.dashboardDataTable .btn{
+    margin: 10px 3px 10px 0;
+    border-radius: 0;
+    background-color: rgb(155, 4, 155);
+    color: black;
+    font-size: 12px;
+}
+table>thead{
+    background-color: rgb(219, 218, 218);
+}
+thead>tr>th{
+    font-size: 12px;
+    color: grey;
+}
+tbody>tr>td{
+    font-size: 12px;
+    color: grey;
+}
+.dataTables_info{
+    font-size: 12px;
+}
+.td-button{
+    border: none;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    
+}
+#td-button-icon{
+    color:rgb(155, 4, 155);
+    font-size: 14px;
+    display: grid;
+    place-items: center;
+}
+.dashboard-heading{
+    font-size: 18px;
+    font-weight: 600;
+    color: grey;
+    padding: 12px;
+}
+.dashboard-shares-balance{
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(219, 218, 218);
+    margin: 0 12px;
+    padding: 8px;
+}
+.dashboard-shares-balance>h6{
+    font-size:12px;
+    color: black;
+    font-weight: 300;
+    padding: 0 8px;
+}
+.dashboard-sell{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.dashboard-sell-button{
+    margin: 10px 12px;
+    padding: 10px 40px;
+    cursor: pointer;
+    border: none;
+    font-size: 12px;
+    background-color: rgb(155, 4, 155);
+}
+.dashboard-sell>h6{
+    font-size:12px;
+    color: black;
+    font-weight: 300;
+    margin: 12px;
+}
+.confirm-shares-on-sale-heading{
+    font-size: 14px;
+    font-weight: 300;
+    color: grey;
+    padding: 12px;
+}
+.submit-shares-for-sale-form{
+    margin: 10px;
+}
+.shares-for-sale-input-label{
+    font-size: 14px;
+    color: grey;
+    font-weight: 300;
+}
+.shares-on-sales-input-field{
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid grey;
+    font-size: 14px;
+    font-weight: 300;
+    color: grey;
+    width: 100%;
+    box-sizing: border-box;
+}
+.shares-on-sales-input-field:focus{
+    outline: none;
+}
+.shares-for-sale-cost-per-share{
+    border: none;
+    font-size: 14px;
+    font-weight: 300;
+    color: grey;
+    width: 40px;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+.shares-for-sale-cost-per-share:focus{
+    outline: none;
+}
+.shares-on-sale-cost-price{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 0;
+}
+.shares-on-sale-cost-price>span{
+    font-size: 14px;
+    color: grey;
+    font-weight: 300;
+}
+.shares-on-sale-cost-price>p{
+    font-size: 14px;
+    color: grey;
+    font-weight: 300;
+}
+.submit-shares-on-sale{
+    padding: 10px 40px;
+    box-sizing: border-box;
+    cursor: pointer;
+    border: none;
+    font-size: 12px;
+    background-color: rgb(155, 4, 155);
+}
