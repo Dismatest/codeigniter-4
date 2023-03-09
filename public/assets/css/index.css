@@ -1,0 +1,212 @@
+html{
+    scroll-behavior: smooth;
+}
+.scroll-btn-main-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.welcome-scroll-btn{
+    color: white;
+    background: transparent;
+    border: 1px solid purple;
+    padding: 0.5rem 2rem;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+.arrow-icon-down{
+    font-size: 1rem;
+    padding-left: 5px;
+    animation: bounce 1s linear infinite;
+}
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+.main-container{
+    background: linear-gradient(rgb(0,0,0, 0.8), rgb(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1176&q=80') no-repeat top;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 70dvh;
+    display: flex;
+    flex-direction: column;
+}
+.description-section{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    height: 100%;
+
+}
+.content-section{
+    text-align: center;
+    animation-duration: 1s;
+    animation-name: example;
+    animation-timing-function: ease-out;
+}
+@keyframes example {
+    0% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.description-section h5{
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: white;
+    font-weight: 500;
+}
+.description-section p{
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: white;
+    font-weight: 300;
+    padding: 0.5rem 0;
+}
+.description-section a{
+    border: 1px solid purple;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0.7rem 4rem;
+    font-size: 1.4rem;
+}
+.arrow-icon{
+    padding-left: 4px;
+}
+.arrow-icon:hover{
+    padding-left: 0;
+    transition: 0.5s;
+}
+.description-section a:hover{
+    background: rgb(26, 25, 25);
+    color: white;
+    transition: 0.5s;
+    border: none;
+}
+
+.moving-text-container {
+    position: relative;
+    width: 100%;
+    height: 4em; /* adjust this as needed */
+    overflow: hidden;
+    background-color: grey;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.moving-text {
+    position: absolute;
+    white-space: nowrap;
+    animation: move-text 40s linear infinite;
+}
+.moving-text-container:hover .moving-text {
+    animation-play-state: paused;
+}
+@keyframes move-text {
+    from {
+        left: 100%;
+    }
+    to {
+        left: -100%;
+    }
+}
+.moving-text-name{
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: white;
+    font-weight: 500;
+}
+.moving-text-icon{
+    font-size: 0.8rem;
+    color: green;
+    font-weight: 600;
+}
+.moving-text-shares{
+    font-size: 0.8rem;
+    color: green;
+    font-weight: 600;
+    margin-right: 8em;
+}
+.onboarded-sacco-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0.6rem 0;
+}
+.onboarded-sacco-container h5{
+    font-size: 1.5em;
+    font-weight: 500;
+    color: grey;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.card-img-top{
+    width: 100%;
+    height: 8em;
+    object-fit: cover;
+}
+.card-body h5{
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: grey;
+}
+.card-body p{
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: gray;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+}
+.sacco-read-more{
+    border: 1px solid purple;
+    color: black;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0.5rem 3rem;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.sacco-read-more:hover{
+    background: rgb(26, 25, 25);
+    color: white;
+    transition: 0.5s;
+    border: none;
+}
+.arrow-icon2{
+    font-size: 0.8rem;
+    padding-left: 5px;
+}
+.arrow-icon::before{
+    font-weight: 300;
+}
+@media all and (max-width:620px){
+    .main-row-container{
+        row-gap: 1.5em;
+    }
+}
+

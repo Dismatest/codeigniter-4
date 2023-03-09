@@ -79,19 +79,26 @@ class Auth extends BaseController
                             if($login_activity_id){
                                 session()->set('logged_in_info', $login_activity_id);
                             }
-                            session()->set('currentLoggedInUser', $user['uniid']);
-                            return redirect()->to(base_url('/dashboard'));
+                            $sessionData = [
+                                'currentLoggedInUser' => $user['uniid'],
+                                'email' => $user['email'],
+                                'fname' => $user['fname'],
+                                'lname' => $user['lname'],
+                                'phone' => $user['phone'],
+                            ];
+                            session()->set($sessionData);
+                            return redirect()->to('/welcome_page');
                         }else{
                             session()->setTempdata('fail', 'Please activate your account or contact the admin');
-                            return redirect()->to(base_url('/login'));
+                            return redirect()->back();
                         }
                     }else{
                         session()->setTempdata('fail', 'Password is incorrect');
-                        return redirect()->to(base_url('/login'));
+                        return redirect()->back();
                     }
                 }else{
                     session()->setTempdata('fail', 'Can`t find the user with that email', 20);
-                    return redirect()->to(base_url('/login'));
+                    return redirect()->back();
                 }
             }
 

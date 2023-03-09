@@ -94,6 +94,26 @@ tbody>tr>td{
     font-weight: 600;
     color: grey;
     padding: 12px;
+    text-align: center;
+}
+.no-registration-info {
+    border: 1px dashed rgb(225, 225, 90);
+    border-radius: 4px;
+    padding: 5px 6px;
+    margin-bottom: 6px;
+}
+.no-membership-button a{
+    color: rgb(225, 225, 90);
+    font-size: 14px;
+}
+no-membership-button a:hover{
+    color: grey;
+}
+.no-registration-info>p{
+    font-size: 12px;
+    font-weight: 300;
+    color: grey;
+    letter-spacing: 1px;
 }
 .dashboard-shares-balance{
     display: flex;
@@ -189,4 +209,10 @@ tbody>tr>td{
     border: none;
     font-size: 12px;
     background-color: rgb(155, 4, 155);
+}
+/*responsive design for dashboard*/
+@media (max-width: 620px) {
+   .responsive-margin-container{
+       margin-top: 1.3em;
+   }
 }

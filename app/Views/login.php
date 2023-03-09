@@ -22,7 +22,10 @@
                     <?php
                 }
                 ?>
-                <h4>Hello! login to continue</h4>
+                  <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                      <img src="<?= base_url().'/assets/images/img.png'?>" alt="img" style="object-fit: cover; height: 9.5em;">
+                      <h4>Hello! login to continue</h4>
+                  </div>
                 <form class="pt-3" method="post" action="">
                   <?= csrf_field()?>
                   <div class="form-group">

@@ -3,37 +3,39 @@
 
 <?= $this->include('includes/navbar.php'); ?>
 
+    <div class="load"></div>
 <div class="container">
-    <div class="row mt-4 mb-5">
+    <div class="row" style="margin-bottom: 1.3em; margin-top: 2.0em;">
         <div class="col-md-7">
-            <div class="border-col">
+            <div class="border-col responsive-margin-top">
                 <div class="shares-desc-div">
+                    <div class="shares-description-sacco-title">
+                        <h4 class="sacco-performance-title"><?= $share['name'] ?> Sacco Limited.</h4>
+                    </div>
                 <div class="shares-user-info">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="shares-seller"><?= ucfirst($share['fname']) .' '. ucfirst($share['lname'])?></h5>
-                        <h4 class="list-shares-sub">Selling <span class="list-shares-sub-title"><?= $share['shares_amount'] ?></span> shares</h4>
+                    <div class="d-flex justify-content-between share-user-fname-description">
+                        <h5 class="shares-seller">Seller Name: <?= ucfirst($share['fname']) .' '. ucfirst($share['lname'])?></h5>
+                        <h4 class="shares-seller">Shares On Sale: <span class="list-shares-sub-title"><?= $share['shares_on_sale'] ?></span></h4>
                     </div>
-                    <div class="price-per-share">
-                        <h4 class="sacco-performance-title">Sacco: <?= $share['sacco'] ?></h4>
-                        <p class="percentage-increase">Sacco Price: ksh <?= $share['cost']?></p>
+                    <div class="price-per-share d-flex justify-content-between">
+                        <p class="percentage-increase">Price Per Share: ksh <?= $share['cost_per_share']?></p>
+                        <span class="total-amount-to-pay">Total Shares Value: ksh <?= $share['total']?></span>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <p class="desc-location">Head Office: Nairobi, Kenya</p>
-                        <span class="total-amount-to-pay">Total Amount: ksh <?= $share['total']?></span>
-                    </div>
-
                     <div class="">
+                            <div class="d-flex">
+                                <?php if($is_registered == true): ?>
+                                    <a href="<?= $payment_link ?>" class="buy-button">Buy Now</a>
+                                <?php elseif($is_registered == false) : ?>
+                                    <div class="membership-info">
+                                        <p>
+                                            Hello <?= ucfirst(session()->get('fname')) ?>, we have verified that you are not a member of <?= $share['name'] ?> sacco. Kindly
+                                            submit your registration details in the form bellow in order to become a member of the sacco, after then you should be able
+                                            to make your purchase. Thank you.
+                                        </p>
+                                    </div>
 
-                            <label class="shares-on-sale-label">Shares on Sale</label>
-                            <div class="d-flex justify-content-between">
-                                <span class="input-buy"><?= $share['shares_amount'] ?></span>
-                                <?php if(isset($is_registered)): ?>
-                                    <a href="<?= base_url().'/payment'?>" class="buy-button">Buy Now</a>
-                                <?php else: ?>
-                                    <a href="<?= base_url().'/share/'.$share['uuid'].'/sacco-membership'?>" class="buy-button"> Dont have account? Register to sacco <?= $share['sacco'] ?></a>
-                                 <?php endif; ?>
+                                <?php endif; ?>
                             </div>
-
                     </div>
                 </div>
                 </div>
@@ -42,53 +44,90 @@
         </div> 
 
        <div class="col-md-5">
-            <div class="border-coll d-flex justify-content-between">
+            <div class="border-coll d-flex justify-content-between responsive-margin">
                 
                 <div class="accordion" id="accordionExample">
                 <div class="accordion-item">
                     <h6 class="accordion-header" id="headingOne">
                     <button class="accordion-button" id="accordion-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Price Per Share
+                        Important Safety Tips
                     </button>
                     </h6>
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <div class="d-flex justify-content-between">
-                            <div class="price-comparison">
-                                <P>Sacco Price</P>
-                                <span>ksh: <?= $share['cost']?></span>
-                            </div>
-                            <div class="price-comparison-two">
-                                <P>Sellers Price</P>
-                                <span>ksh: 3.0</span>
-                            </div>
+
+                        <div class="safety-tips">
+                            <ul class="tips">
+                                <li>You can not negotiate the price per share</li>
+                                <li>You may receive the money within 24hr</li>
+                                <li>Make sure you register with the sacco to buy</li>
+                                <li>The sacco will register you and issue a personal number</li>
+                                <li>Only the M-pesa payment is available now</li>
+                            </ul>
                         </div>
+
                     </div>
                     </div>
                 </div>
                 </div>
                 
                 <div class="shares-save">
-                    <span class="share-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-regular fa-share-from-square"></i></span>
-                    <span class="save-button"><a href="#"><i class="fa-regular fa-bookmark"></i></span></a>
+                    <span class="share-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-regular fa-share-from-square" style="padding: 4px;"></i></span>
+                    <span class="save-button"><a href="#"><i class="fa-regular fa-bookmark" style="padding: 4px;"></i></span></a>
                 </div>
             </div>
+        </div>
 
-            <div class="border-coll mt-2">
-            <p class="text-center" id="safety-tips-para">Important safety tips</p>
-            <div class="safety-tips">
-                <ul class="tips">
-                    <li>You can not negotiate the price per share</li>
-                    <li>You may receive the money within 24hr</li>
-                    <li>Make sure you register with the sacco to buy</li>
-                    <li>The sacco will register you and issue a personal number</li>
-                    <li>Please take precautions while trading</li>
-                    <li>Only the M-pesa payment is available now</li>
-                </ul>
+        <?php if($is_registered == false): ?>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="membership-title">
+                        <h5>Membership Registration Form</h5>
+                    </div>
+                    <main>
+                        <div class="stepper">
+                            <div class="step--1 step-active">Step 1</div>
+                            <div class="step--2">Step 2</div>
+                            <div class="step--3">Step 3</div>
+                            <div class="step--4">Finish</div>
+                        </div>
+                        <form class="form form-active">
+                            <div class="form--header-container">
+                                <h1 class="form--header-title">
+                                    Personal Info
+                                </h1>
+                            </div>
+                            <input type="text" class="stepper-input-fields" placeholder="fname" >
+                            <input type="text" class="stepper-input-fields" placeholder="Lname" >
+                            <button class="form__btn" id="btn-1">Next</button>
+                        </form>
+                        <form class="form">
+                            <div class="form--header-container">
+                                <h1 class="form--header-title">
+                                    Personal Info
+                                </h1>
+                            </div>
+
+                            <input type="text"class="stepper-input-fields"  placeholder="Phone" >
+                            <input type="text" class="stepper-input-fields" placeholder="Email" >
+                            <button class="form__btn" id="btn-2-prev">Previous</button>
+                            <button class="form__btn" id="btn-2-next">Next</button>
+                        </form>
+                        <form class="form">
+                            <div class="form--header-container">
+                                <h1 class="form--header-title">
+                                    Personal Info
+                                </h1>
+                            </div>
+                            <input type="text" class="stepper-input-fields" placeholder="ID" >
+                            <input type="text" class="stepper-input-fields" placeholder="Sacco" >
+                            <button class="form__btn" id="btn-3">Submit</button>
+                        </form>
+                        <div class="form--message"></div>
+                    </main>
+                </div>
             </div>
-        </div>
-        </div>
-       
+        <?php endif; ?>
 
         <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

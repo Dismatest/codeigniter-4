@@ -8,7 +8,7 @@
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                    <span></span><a href="<?= 'create-new' ?>">Create New <i class="mdi mdi-plus-box icon-sm text-primary align-middle"></i></a>
                 </li>
             </ul>
         </nav>
@@ -43,20 +43,39 @@
                                     <td><?= $share['shares_amount'] ?></td>
                                     <td><?= $share['cost'] ?></td>
                                     <td><?= $share['total'] ?></td>
-                                    <td><?= $share['created_at'] ?></td>
-                                    <td><?= $share['is_verified'] ?></td>
+                                    <td><?= $time ?></td>
+                                    <?php if ($share['is_verified'] == 0): ?>
+                                        <td><a href="<?= 'verify-share/'.$share['uuid'] ?>" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><label class="badge badge-gradient-danger">Pending</label></a></td>
+                                    <?php else: ?>
+                                        <td><label class="badge badge-gradient-success">Verified</label></td>
+                                    <?php endif; ?>
                                     <td>
-                                        <a href="<?= 'edit-share/' . $share['uuid'] ?>" class="btn btn-gradient-primary btn-rounded btn-icon">
-                                            <i class="mdi mdi-tooltip-edit"></i>
-                                        </a>
-                                        <a href="<?= 'delete-share/' . $share['uuid'] ?>" class="btn btn-gradient-danger btn-rounded btn-icon">
-                                            <i class="mdi mdi-delete"></i>
+                                        <a href="<?= 'delete-share/' . $share['uuid'] ?>" >
+                                            <i class="mdi mdi-delete" style="font-size: 22px; color: grey;"></i>
                                         </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
                         </table>
+
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">Share verification</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to verify this share?</p>
+                                        <form method="post" action="<?= 'verify-share/'.$share['uuid'] ?>">
+                                            <?= csrf_field() ?>
+                                            <button type="submit" class="btn btn-primary">Verify</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

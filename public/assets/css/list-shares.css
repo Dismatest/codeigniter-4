@@ -1,0 +1,122 @@
+.sacco-image{
+    display: flex;
+    align-items: center;
+}
+.card-body a{
+    text-decoration: none;
+}
+.image-tag{
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    border: 1px dashed black;
+}
+.image-subtitle{
+    letter-spacing: 2px;
+    color: grey;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-left: 10px;
+}
+.sacco-full-name{
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: grey;
+    font-size: 15px;
+    padding: 4px 0;
+}
+h5::first-letter{
+    text-transform: uppercase;
+}
+.shares-value-price-title{
+    display: flex;
+    justify-content: space-between;
+}
+.shares-price-description{
+    letter-spacing: 2px;
+    color: grey;
+    font-size: 12px;
+}
+.shares-container-wrapper{
+    display: flex;
+    justify-content: space-around;
+}
+.shares-container-wrapper-content1{
+    width: 100%;
+    border-right:
+            1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 2em;
+}
+.shares-container-wrapper-content2{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.shares-price-value{
+    letter-spacing: 2px;
+    color: rgb(103, 180, 103);
+    font-size: 12px;
+}
+.customize-card{
+    position: relative;
+    border: none;
+    box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    cursor: pointer;
+    -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    transition: 0.5s;
+    border-radius: 3px;
+}
+.customize-card:hover{
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+    background: rgb(206, 201, 201);
+    transition: 0.5s;
+}
+.ribbon {
+    position: absolute;
+    right: -5px; top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 75px; height: 75px;
+    text-align: right;
+}
+.ribbon span {
+    font-size: 10px;
+    font-weight: bold;
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 20px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    width: 100px;
+    display: block;
+    background: #79A70A;
+    background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 19px; right: -21px;
+}
+.ribbon span::before {
+    content: "";
+    position: absolute; left: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid #79A70A;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #79A70A;
+}
+.ribbon span::after {
+    content: "";
+    position: absolute; right: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-right: 3px solid #79A70A;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #79A70A;
+}

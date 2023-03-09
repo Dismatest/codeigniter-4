@@ -1,0 +1,35 @@
+.load{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffff;
+    transition: opacity 0.7s, visibility 0.7s;
+    z-index: 99;
+}
+.load-hidden{
+    opacity: 0;
+    visibility: hidden;
+}
+.load::after{
+    content: "";
+    width: 50px;
+    height: 50px;
+    border: 4px solid black;
+    border-top-color: purple;
+    border-radius: 50%;
+    animation: loading 0.7s ease infinite;
+
+}
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

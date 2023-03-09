@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Controllers;
-use App\Libraries\Hash;
 use App\Models\DisplayDashboardModel;
 use App\Models\Users;
 use App\Models\Shares;
 use App\Models\Sacco;
 use App\Models\SaccoMembership;
 use App\Models\Notification;
+use App\Models\SharesOnSale;
+use App\Models\SaccoShares;
 use CodeIgniter\I18n\Time;
-
-
 class Home extends BaseController
 
 
@@ -18,8 +17,10 @@ class Home extends BaseController
     public $displayDashboard;
     public $email;
     public $shares;
+    public $sharesOnSale;
     public $users;
     public $sacco;
+    public $saccoShares;
     public $saccoMembershp;
     public $notification;
 
@@ -32,16 +33,23 @@ class Home extends BaseController
         $this->sacco = new Sacco();
         $this->saccoMembershp = new SaccoMembership();
         $this->notification = new Notification();
-
+        $this->sharesOnSale = new SharesOnSale();
+        $this->saccoShares = new SaccoShares();
     }
-
-    public function index() {
+    public function welcomePage() {
+        $data = [
+            'WelcomePageTitle' => 'Welcome',
+        ];
+        return view('welcome_page', $data);
+    }
+    public function indexPage() {
 
         $pager = \Config\Services::pager();
         $globalTime = [];
-        $shares = $this->shares->select('shares.*, users.fname, users.lname')
-            ->join('users', 'users.user_id = shares.user_id', 'left')
-            ->orderBy('shares.created_at', 'DESC')
+        $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name, sacco.sacco_id')
+            ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
+            ->orderBy('shares_on_sale.created_at', 'ASC')
             ->paginate(10);
 
 
@@ -55,17 +63,27 @@ class Home extends BaseController
             'indexTitle' => 'welcome to our platform',
             'shares' => $shares,
             'time' => $globalTime,
-            'pager' => $this->shares->pager,
+            'pager' => $this->sharesOnSale->pager,
         ];
 
         return view('index', $data);
     }
     public function dashboard() {
 
-        $data['dashboardTitle'] = 'Dashboard';
+        $data = [];
+        global $sacco_id;
+        global $membership_number;
         $uniid = session()->get('currentLoggedInUser');
-        $data['userData'] = $this->displayDashboard->getCurrentUserInformation($uniid);
+        $userData = $this->displayDashboard->getCurrentUserInformation($uniid);
+        $userShares = $this->displayDashboard->getUserShares();
+        if($userShares) {
 
+        foreach ($userShares as $share){
+            $sacco_id = $share['sacco_id'];
+            $membership_number = $share['membership_number'];
+        }
+
+        }
         if($this->request->getMethod() == 'post'){
             $shares = $this->request->getVar('shares', FILTER_SANITIZE_STRING);
             $price = $this->request->getVar('price', FILTER_SANITIZE_STRING);
@@ -73,12 +91,12 @@ class Home extends BaseController
 
             $shareData = [
 
-                'user_id'     => $data['userData']->user_id,
                 'uuid'   => md5(str_shuffle('abcdefghijklmnopqrstuvwxyz1234567890'.time())),
-                'sacco' => 'Hisa',
-                'membership_number' => '123456789',
-                'shares_amount' => $shares,
-                'cost'  => $price,
+                'user_id'     => $userData->user_id,
+                'sacco_id' => $sacco_id,
+                'membership_number' => $membership_number,
+                'cost_per_share'  => $price,
+                'shares_on_sale' => $shares,
                 'total'  => $total,
 
             ];
@@ -93,6 +111,12 @@ class Home extends BaseController
             }
 
         }
+
+        $data = [
+            'dashboardTitle' => 'Dashboard',
+            'userData' => $userData,
+            'userShares' => $userShares,
+        ];
 
         return view('dashboard', $data);
     }
@@ -216,29 +240,173 @@ public function expiryTime($date){
     public function share($id = null){
         $uuid = session()->get('currentLoggedInUser');
         $user = $this->users->where('uniid', $uuid)->first();
-        $shares = $this->shares->select('shares.*, users.fname, users.lname')
-            ->join('users', 'users.user_id = shares.user_id', 'left')
-            ->where('shares.uuid', $id)
+        $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name')
+            ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
+            ->where('shares_on_sale.uuid', $id)
+            ->where('shares_on_sale.is_verified', '0')
             ->first();
 
+        $payment_link = base_url('payment/initiate_payment/') .'?total='.urlencode($shares['total']);
+
         //retrieving the users who are already registered to the sacco they want to buy shares from
-        $registered = $this->shares->where('user_id', $user['user_id'])
-                ->where('sacco', $shares['sacco'])
+        //there is a need to restructure the saccoShares database table to only
+        $registered = $this->saccoShares->where('user_id', $user['user_id'])
+                ->where('sacco_id', $shares['sacco_id'])
                 ->countAllResults() > 0;
 
         $data = [
             'share' => $shares,
             'is_registered' => $registered,
+            'payment_link' => $payment_link,
         ];
 
         return view('share', $data);
     }
 
-    public function payment(){
-        return view('payment');
+    function lipaNaMpesaPassword()
+    {
+        //timestamp
+        $timestamp = date('YmdHms');
+        //passkey
+        $passKey ="bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
+
+        $businessShortCOde =174379;
+        //generate password
+        $mpesaPassword = base64_encode($businessShortCOde.$passKey.$timestamp);
+
+        return $mpesaPassword;
     }
 
-    public function saccoMembership($id = null){
+
+    function newAccessToken()
+    {
+        $consumer_key="c4KMRJZw99EOBa9a0QjdMa8GebbLI6OT";
+        $consumer_secret="FUmXydWV8gRbq2E8";
+        $credentials = base64_encode($consumer_key.":".$consumer_secret);
+        $url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
+
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Basic ".$credentials,"Content-Type:application/json"));
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $curl_response = curl_exec($curl);
+        $access_token=json_decode($curl_response);
+        curl_close($curl);
+
+        if($access_token){
+            return $access_token->access_token;
+        }else{
+            return false;
+        }
+    }
+
+
+    public function payment(){
+        global $errors;
+        global $trim_phone;
+        $price = $this->request->getGet('total');
+        $userId = session()->get('currentLoggedInUser');
+        $getUser = $this->users->where('uniid', $userId)->first();
+        $phone = $getUser['phone'];
+        $processedPhone = $this->processPhoneNumber($phone);
+
+        $phone_code = $this->request->getPost('phone-code');
+        $myphone = $this->request->getPost('phone');
+        $trim_phone = ltrim($phone_code, '+');
+
+        $phone_number = $trim_phone.$myphone;
+
+        $mpesa_check_box = $this->request->getPost('mpesa-check-box');
+
+        if($mpesa_check_box == 'on'){
+            $url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+            $curl_post_data = [
+                'BusinessShortCode' =>174379,
+                'Password' => 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMzAyMTMxOTA3',
+                'Timestamp' => "20230302131907",
+                'TransactionType' => 'CustomerPayBillOnline',
+                'Amount' => 1, // $price
+                'PartyA' => $phone_number,
+                'PartyB' => 174379,
+                'PhoneNumber' => $phone_number,
+                'CallBackURL' => 'https://0554-197-232-79-73.eu.ngrok.io/payment_callback',
+                'AccountReference' => "saccoPayment",
+                'TransactionDesc' => "buy shares"
+            ];
+
+
+            $data_string = json_encode($curl_post_data);
+
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization:Bearer '.$this->newAccessToken()));
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+            $curl_response = curl_exec($curl);
+            if($curl_response === false)
+            {
+                $info = curl_getinfo($curl);
+                curl_close($curl);
+                die('error occured during curl exec. Additioanl info: ' . var_export($info));
+            }else{
+//                return redirect()->to('dashboard');
+            }
+            curl_close($curl);
+        }else{
+            $errors = 'Please ensure you have checked the mpesa payment option here before you can continue continue';
+        }
+
+        $data = [
+            'total' => $price,
+            'phone' => $processedPhone,
+            'errors' => $errors,
+        ];
+        return view('payment', $data);
+    }
+
+
+
+    public function processPhoneNumber($phone){
+        return substr($phone, 1);
+
+    }
+
+    public function paymentConfirmationCallBack(){
+        $response = file_get_contents('php://input');
+        $path = WRITEPATH.'/payme.json';
+        file_put_contents($path, $response);
+
+
+    }
+
+    public function paymentCallback(){
+
+        $response = file_get_contents('php://input');
+        $json = json_dencode($response, true);
+
+        $data = [
+            'amount' => $json['Body']['stkCallback']['CallbackMetadata']['Item'][0]['Value'],
+            'mpesaReceiptNumber' => $json['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value'],
+            'transactionDate' => $json['Body']['stkCallback']['CallbackMetadata']['Item'][3]['Value'],
+            'phoneNumber' => $json['Body']['stkCallback']['CallbackMetadata']['Item'][4]['Value'],
+        ];
+
+        $savePayment = $this->displayDashboard->savePaymentsData($data);
+        if($savePayment) {
+            echo 'Payment was successful';
+        }else{
+            echo 'Payment was not successful';
+        }
+
+    }
+
+    public function saccoMembership(){
 
         $uuid = session()->get('currentLoggedInUser');
         $user = $this->users->where('uniid', $uuid)->first();

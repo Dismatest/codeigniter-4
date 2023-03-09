@@ -59,12 +59,15 @@ class LoginActivityModel extends Model{
         $query = $builder->get();
         return $query->getResultArray();
     }
+
     public function approveShare($uuid){
         $builder = $this->db->table('shares');
         $builder->where('uuid', $uuid);
-        $builder->update(['is_verified'=>1]);
-        if($this->db->affectedRows() > 0){
+        $builder->update(['is_verified' => 1]);
+        if ($this->db->affectedRows() === 1) {
             return true;
+        } else {
+            return false;
         }
     }
     public function findAllAllShares(){

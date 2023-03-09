@@ -1,0 +1,89 @@
+.footer{
+    background-color: rgb(110, 109, 109);
+    padding-top: 3.0em;
+}
+.footer-about{
+    margin-bottom: 30px;
+}
+a{
+    text-decoration: none;
+}
+ul{
+    padding-left: 0;
+}
+a:hover, input:focus{
+    text-decoration: none;
+    outline: none;
+    color: white;
+}
+.footer-about .footer-logo{
+    margin-bottom: 30px;
+}
+.footer-logo img{
+    height: 7em;
+    object-fit: cover;
+}
+.footer-about p{
+    color: white;
+    margin-bottom: 30px;
+}
+.footer-widget{
+    margin-bottom:30px;
+}
+.footer-widget h6{
+    color: black;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+.footer-widget ul li{
+    line-height: 36px;
+    list-style: none;
+}
+.footer-widget ul li a{
+    color: white;
+    font-size: 15px;
+}
+.footer-widget ul li a:hover{
+    color: rgb(252, 201, 210);
+}
+.footer-widget .footer-newslatter p{
+    color: white;
+}
+.footer-widget .footer-newslatter form{
+    position: relative;
+}
+.footer-widget .footer-newslatter input{
+    width: 100%;
+    font-size: 14px;
+    color: white;
+    background: transparent;
+    border: none;
+    padding: 15px 0;
+    border-bottom: 2px solid white;
+}
+
+.footer-widget .footer-newslatter input::placeholder{
+    color: white;
+}
+.footer-widget .footer-newslatter form button{
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    right: 5px;
+    top: 0;
+    height: 100%;
+    background: transparent;
+    border: none;
+}
+.footer-copyright-text{
+    border-top: 1px solid rgb(36, 34, 34);
+    padding: 20px 0;
+    margin-top: 40px;
+}
+.footer-copyright-tex p{
+    color: white;
+    margin-bottom: 0;
+}

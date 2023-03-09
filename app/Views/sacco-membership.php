@@ -1,8 +1,8 @@
 <?php $this->extend("login_base/base.php");?>
 <?php $this->section('login');?>
 
+    <div class="load"></div>
     <div class="container-scroller">
-
         <div class="container-fluid page-body-wrapper full-page-wrapper">
             <div class="content-wrapper d-flex align-items-center auth">
                 <div class="row flex-grow">
@@ -87,7 +87,7 @@
                                 <div class="mt-3">
                                     <button class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn" id="terms-of-use">SUBMIT</button>
                                 </div>
-                                <div class="text-center mt-4 font-weight-light"> Back to <a href="<?= base_url('') ?>" class="text-primary">Homepage</a>
+                                <div class="text-center mt-4 font-weight-light"> Back to <a href="<?= base_url('dashboard') ?>" class="text-primary">Dashboard</a>
                                 </div>
                             </form>
                         </div>

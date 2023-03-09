@@ -20,17 +20,23 @@
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
+            <a class="nav-link" href="">
                 <span class="menu-title">Reports</span>
+                <i class="mdi mdi-table-large menu-icon"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
+                <span class="menu-title">Users</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-medical-bag menu-icon"></i>
             </a>
             <div class="collapse" id="general-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href=""> Transactions </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= 'new-members' ?>"> New Members </a></li>
                 </ul>
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href=""> Notifications </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= 'manage-users' ?>""> Manage Users </a></li>
                 </ul>
             </div>
         </li>
