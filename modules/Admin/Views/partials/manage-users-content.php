@@ -3,12 +3,12 @@
         <h3 class="page-title">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
                   <i class="mdi mdi-home"></i>
-                </span> Manage Users
+                </span> Manage Members
         </h3>
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span><a href="<?= 'add-user-shares' ?>">Add shares <i class="mdi mdi-plus-box icon-sm text-primary align-middle"></i></a>
+                    <span></span><a href="<?= 'add-user-shares' ?>">Create Member Account <i class="mdi mdi-plus-box icon-sm text-primary align-middle"></i></a>
                 </li>
             </ul>
         </nav>

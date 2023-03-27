@@ -34,9 +34,26 @@ header .navbar2 a{
     color: white;
     padding: 1rem 1.5rem;
 }
-header .navbar2 a:hover, .active{
+a.active{
     transition: 0.6s;
-    border-bottom: 2px solid rgb(197, 227, 197);
+    border-bottom: 2px solid rgb(214, 178, 214);
+    animation: animateNavLinks 1s;
+}
+
+@keyframes animateNavLinks {
+    0% {
+        transform: translateX(-5rem) scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0rem) scale(1);
+        opacity: 1;
+    }
+}
+
+header .navbar2 a:hover{
+    transition: 0.6s;
+    border-bottom: 2px solid rgb(214, 178, 214);
 
 }
 header .btn{
@@ -94,3 +111,6 @@ header .btn{
     }
 
 }
+
+/* the first small navbar css*/
+

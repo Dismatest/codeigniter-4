@@ -6,10 +6,10 @@
             <div class="btn">
                 <i class="fa fa-times close-btn"></i>
             </div>
-            <a href="<?= base_url().'/welcome_page' ?>" class="active">Home</a>
-            <a href="">About Us</a>
-            <a href="<?= base_url().'/dashboard' ?>">Dashboard</a>
+            <a href="<?= base_url().'/welcome_page' ?>">Home</a>
             <?php if (session()->has('currentLoggedInUser')) : ?>
+                <a href="<?= base_url().'/my_bids' ?>">My Bids</a>
+                <a href="<?= base_url().'/dashboard' ?>">Dashboard</a>
                 <a href="<?= base_url('/') ?>">Logout</a>
             <?php else: ?>
                 <a href="<?= base_url().'/register' ?>">Register</a>

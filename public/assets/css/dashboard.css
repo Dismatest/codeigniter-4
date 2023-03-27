@@ -5,6 +5,14 @@
     box-shadow: 0 0 10px rgb(234, 234, 234);
     padding: 12px;
 }
+
+.col-content-section2{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    padding: 12px;
+}
+
 #col-content-section-confirm-selling{
     background-color: white;
     border-radius: 4px;
@@ -21,17 +29,26 @@
 }
 .user-profile-name{
     font-weight: 300;
-    color: grey;
-    font-size: 18px;
+    color: var(--text-color);
+    font-size: 14px;
 }
 .user-profile-edit{
     font-size: 16px;
 }
 .user-info-details{
     padding-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
 }
-.user-info-details>h6{
+
+.user-info-details .user-information1 h6{
     font-size: 12px;
+    color: grey;
+}
+.user-info-details .user-information2 h6{
+    font-size: 12px;
+    color: grey;
 }
 #col-content-section-two{
     background-color: white;
@@ -41,6 +58,8 @@
 }
 .profile-container-content{
     padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
 }
 #selling-history-icon{
     font-size: 18px;
@@ -48,18 +67,24 @@
 
 }
 .selling-history{
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-color);
 }
 .dashboardDataTable{
     margin: 10px;
 }
-.dashboardDataTable .btn{
+#example .btn{
     margin: 10px 3px 10px 0;
     border-radius: 0;
-    background-color: rgb(155, 4, 155);
+    background-color: rgb(214, 178, 214);
     color: black;
     font-size: 12px;
+    border: none;
+    color: white;
+}
+.dashboardDataTable .btn:hover{
+    color: grey;
 }
 table>thead{
     background-color: rgb(219, 218, 218);
@@ -89,12 +114,33 @@ tbody>tr>td{
     display: grid;
     place-items: center;
 }
+.view{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+}
+.view h6{
+    font-size: 12px;
+    color: grey;
+    font-weight: 300;
+}
+
+.view-icon{
+    font-size: 14px;
+    cursor: pointer;
+}
 .dashboard-heading{
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
     color: grey;
     padding: 12px;
     text-align: center;
+}
+.dashboard-heading h6{
+    font-size: 14px;
+    color: var(--text-color);
+    font-weight: 300;
 }
 .no-registration-info {
     border: 1px dashed rgb(225, 225, 90);
@@ -116,8 +162,12 @@ no-membership-button a:hover{
     letter-spacing: 1px;
 }
 .dashboard-shares-balance{
+    display: none;
+}
+.share-balance{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background-color: rgb(219, 218, 218);
     margin: 0 12px;
     padding: 8px;
@@ -138,8 +188,11 @@ no-membership-button a:hover{
     padding: 10px 40px;
     cursor: pointer;
     border: none;
-    font-size: 12px;
-    background-color: rgb(155, 4, 155);
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;
+    color: white;
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
 }
 .dashboard-sell>h6{
     font-size:12px;
@@ -210,9 +263,412 @@ no-membership-button a:hover{
     font-size: 12px;
     background-color: rgb(155, 4, 155);
 }
+
+/*selling shares modal css*/
+
+/* Full-width input fields */
+.customer-selling-button {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.customer-selling-button1 {
+    width: 20%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px dashed #ccc;
+    box-sizing: border-box;
+}
+.customer-selling-button1:focus{
+    outline: none;
+}
+/* Set a style for all buttons */
+.confirm-sell-shares-btn {
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;
+}
+
+.confirm-sell-shares-btn:hover {
+    opacity: 0.8;
+    color: black;
+}
+
+/* Extra styles for the cancel button */
+
+/* Center the image and position the close button */
+
+.container1 {
+    padding: 16px;
+}
+.divider{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+span.psw {
+    float: right;
+    padding-top: 16px;
+}
+
+/* The Modal (background) */
+.user-share-model {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content-user {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.imgcontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.x-close-button {
+    position: absolute;
+    right: 25px;
+    top: 5px;
+    color: #000;
+    font-weight: 300;
+    border: 1px solid rgb(143, 141, 141);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 300ms ease-in-out;
+
+}
+.close-font-icon{
+    font-size: 10px;
+    font-weight: 200;
+}
+.x-close-button:hover{
+    background-color:  rgb(214, 178, 214);
+    color: white !important;
+    border: none;
+}
+.shares-sell-heading{
+    font-weight: 500;
+    font-size: 14px;
+    color: grey;
+}
+.x-close-button:hover,
+.x-close-button:focus {
+    color: red;
+    cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)}
+    to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+    from {transform: scale(0)}
+    to {transform: scale(1)}
+}
+
+/* bid and share status */
+.reject-link{
+    padding: 10px 30px;
+    cursor: pointer;
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    color: white;
+    font-size: 14px;
+    border: none;
+    margin: 5px;
+    font-weight: 300;
+}
+.accept-link{
+    padding: 10px 30px;
+    cursor: pointer;
+    color: gray;
+    font-size: 14px;
+    border: 1px solid rgb(214, 178, 214);
+    margin: 5px;
+    font-weight: 300;
+}
+.bid-content{
+    margin-top: 20px;
+}
+.bid-content >p{
+    font-size: 12px;
+    color: grey;
+}
+.bid-badge {
+    color: rgb(234, 255, 0);
+    padding: 4px 8px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: 500;
+}
+.bid-badge-approved{
+    color: rgb(0, 255, 0);
+    padding: 4px 8px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: 500;
+}
+.toggle-bid{
+    margin: 5px;
+}
+.bid-content2{
+    display: none;
+    margin-top: 20px;
+    animation: display 1s;
+}
+.bid-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: ubuntu, sans-serif;
+}
+thead{
+    /*background: linear-gradient(to right, #da8cff, #9a55ff);*/
+    background: linear-gradient(to right, rgb(224, 224, 224, 0.2), rgb(224, 224, 224, 0.5));
+}
+.bid-table th,
+.bid-table td {
+    border: none;
+    padding: 12px;
+    text-align: center;
+}
+.bid-table th {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+tr:nth-child(even):hover {
+    background-color: rgb(224, 224, 224);
+}
+.fa-circle-info{
+    font-size: 18px;
+    cursor: pointer;
+    color: #d0cece;
+}
+#agreement-container{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    padding: 12px;
+}
+.agreement-title h3{
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-color);
+}
+.pdf-file{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.terms-of-use p{
+    font-size: 12px;
+    color: grey;
+    font-weight: 300;
+    pading: 10px 0;
+}
+.terms-of-use input[type="checkbox"]{
+    width: 13px;
+    height: 13px;
+    margin-left: 10px;
+}
+.terms-of-use{
+    display: flex;
+    align-items: center;
+}
+.sell-shares-terms-and-conditions{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+.container1 .sell-shares-terms-and-conditions span{
+    font-size: 12px;
+    color: grey;
+    font-weight: 300;
+}
+#error-message{
+    color: #c57878;
+    font-weight: 300;
+}
+.active>.page-link, .page-link.active{
+    background-color:  rgb(214, 178, 214);
+    color: white;
+    z-index: 1;
+    border-color: grey;
+}
+/*tooltip for the help button and other buttons*/
+[data-tooltip] {
+    position: relative;
+    cursor: pointer;
+}
+[data-tooltip]:before,
+[data-tooltip]:after {
+    line-height: 1;
+    font-size: .9em;
+    pointer-events: none;
+    position: absolute;
+    box-sizing: border-box;
+    display: none;
+    opacity: 0;
+}
+[data-tooltip]:before {
+    content: "";
+    border: 5px solid transparent;
+    z-index: 100;
+}
+[data-tooltip]:after {
+    content: attr(data-tooltip);
+    text-align: center;
+    min-width: 3em;
+    max-width: 21em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 6px 8px;
+    border-radius: 3px;
+    background: white;
+    color: black;
+    z-index: 99;
+}
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+    display: block;
+    opacity: 1;
+}
+[data-tooltip]:not([data-flow])::before,
+[data-tooltip][data-flow="top"]::before {
+    bottom: 100%;
+    border-bottom-width: 0;
+    border-top-color: white;
+}
+[data-tooltip]:not([data-flow])::after,
+[data-tooltip][data-flow="top"]::after {
+    bottom: calc(100% + 5px);
+}
+[data-tooltip]:not([data-flow])::before, [tooltip]:not([data-flow])::after,
+[data-tooltip][data-flow="top"]::before,
+[data-tooltip][data-flow="top"]::after {
+    left: 50%;
+    -webkit-transform: translate(-50%, -4px);
+    transform: translate(-50%, -4px);
+}
+[data-tooltip][data-flow="bottom"]::before {
+    top: 100%;
+    border-top-width: 0;
+    border-bottom-color: #4621FF;
+}
+[data-tooltip][data-flow="bottom"]::after {
+    top: calc(100% + 5px);
+}
+[data-tooltip][data-flow="bottom"]::before, [data-tooltip][data-flow="bottom"]::after {
+    left: 50%;
+    -webkit-transform: translate(-50%, 8px);
+    transform: translate(-50%, 8px);
+}
+[data-tooltip][data-flow="left"]::before {
+    top: 50%;
+    border-right-width: 0;
+    border-left-color: #4621FF;
+    left: calc(0em - 5px);
+    -webkit-transform: translate(-8px, -50%);
+    transform: translate(-8px, -50%);
+}
+[data-tooltip][data-flow="left"]::after {
+    top: 50%;
+    right: calc(100% + 5px);
+    -webkit-transform: translate(-8px, -50%);
+    transform: translate(-8px, -50%);
+}
+[data-tooltip][data-flow="right"]::before {
+    top: 50%;
+    border-left-width: 0;
+    border-right-color: #4621FF;
+    right: calc(0em - 5px);
+    -webkit-transform: translate(8px, -50%);
+    transform: translate(8px, -50%);
+}
+[data-tooltip][data-flow="right"]::after {
+    top: 50%;
+    left: calc(100% + 5px);
+    -webkit-transform: translate(8px, -50%);
+    transform: translate(8px, -50%);
+}
+[data-tooltip=""]::after, [data-tooltip=""]::before {
+    display: none !important;
+}
+
+/*end of the tooltip*/
+/*animating the flash messages*/
+.move-out-flash {
+    animation: moveLeftflash 0.5s ease-out;
+}
+
+@keyframes moveLeftflash {
+    0% {
+        transform: translateX(0rem) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-27rem) scale(0.9);
+        opacity: 0;
+    }
+}
+/*end of animating flash messages*/
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+    span.psw {
+        display: block;
+        float: none;
+    }
+}
+
 /*responsive design for dashboard*/
 @media (max-width: 620px) {
    .responsive-margin-container{
        margin-top: 1.3em;
    }
+
+    div.dataTables_wrapper div.dataTables_length select{
+        display: none;
+    }
 }

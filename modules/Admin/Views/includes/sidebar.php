@@ -27,39 +27,37 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
-                <span class="menu-title">Users</span>
+                <span class="menu-title">Members</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-medical-bag menu-icon"></i>
             </a>
             <div class="collapse" id="general-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="<?= 'new-members' ?>"> New Members </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= 'new-members' ?>">Approve New Members </a></li>
                 </ul>
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="<?= 'manage-users' ?>""> Manage Users </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= 'manage-users' ?>""> Manage Members </a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="">
                 <span class="menu-title">Transactions</span>
-                <i class="mdi mdi-table-large menu-icon"></i>
+                <i class="mdi mdi-cash-usd menu-icon"></i>
+            </a>
+        </li>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= 'upload_files'?>">
+                <span class="menu-title">Legal files</span>
+                <i class="mdi mdi-arrange-bring-forward menu-icon"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
+            <a class="nav-link" href="<?= 'notifications' ?>">
                 <span class="menu-title">Notifications</span>
-                <i class="menu-arrow"></i>
                 <i class="mdi mdi-medical-bag menu-icon"></i>
             </a>
-            <div class="collapse" id="general-pages">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href=""> Messages </a></li>
-                </ul>
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="<?= 'notifications' ?>"> Notifications </a></li>
-                </ul>
-            </div>
         </li>
 
     </ul>

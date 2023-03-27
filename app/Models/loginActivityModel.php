@@ -40,10 +40,23 @@ class LoginActivityModel extends Model{
             return true;
         }
     }
+
+    public function findAllUsers(){
+        $builder = $this->db->table('users');
+        return $builder->countAllResults();
+    }
+
+    public function findAllSaccoCount(){
+        $builder = $this->db->table('sacco');
+        return $builder->countAllResults();
+    }
+
+    //all the supperAdmin shares model methods
     public function findAllAprovedShares(){
-        $builder = $this->db->table('shares');
-        $builder->select('users.fname, users.lname, shares.uuid, shares.sacco, shares.membership_number, shares.shares_amount, shares.cost, shares.total, shares.is_verified, shares.created_at');
-        $builder->join('users', 'users.user_id = shares.user_id');
+        $builder = $this->db->table('shares_on_sale');
+        $builder->select('users.fname, users.lname, sacco.name, shares_on_sale.*');
+        $builder->join('users', 'users.user_id = shares_on_sale.user_id');
+        $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id');
         $builder->where('is_verified', '1');
         $builder->orderBy('created_at', 'ASC');
         $query = $builder->get();
@@ -51,9 +64,10 @@ class LoginActivityModel extends Model{
 
     }
     public function findAllNotAprovedShares(){
-        $builder = $this->db->table('shares');
-        $builder->select('users.fname, users.lname, shares.uuid, shares.sacco, shares.membership_number, shares.shares_amount, shares.cost, shares.total, shares.is_verified, shares.created_at');
-        $builder->join('users', 'users.user_id = shares.user_id');
+        $builder = $this->db->table('shares_on_sale');
+        $builder->select('users.fname, users.lname, shares_on_sale.*, sacco.name');
+        $builder->join('users', 'users.user_id = shares_on_sale.user_id');
+        $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id');
         $builder->where('is_verified', '0');
         $builder->orderBy('created_at', 'ASC');
         $query = $builder->get();
@@ -61,7 +75,7 @@ class LoginActivityModel extends Model{
     }
 
     public function approveShare($uuid){
-        $builder = $this->db->table('shares');
+        $builder = $this->db->table('shares_on_sale');
         $builder->where('uuid', $uuid);
         $builder->update(['is_verified' => 1]);
         if ($this->db->affectedRows() === 1) {
@@ -144,4 +158,31 @@ class LoginActivityModel extends Model{
             return false;
         }
     }
+    public function findAllRecords(){
+        $builder = $this->db->table('set_commission');
+        $builder->select('*');
+        $builder->orderBy('created_at', 'ASC');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+    public function insertCommission($data){
+        $builder = $this->db->table('set_commission');
+        $builder->insert($data);
+        if($this->db->affectedRows() == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public function updateCommission($id, $data){
+        $builder = $this->db->table('set_commission');
+        $builder->where('commission_id', $id);
+        $builder->update($data);
+        if($this->db->affectedRows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

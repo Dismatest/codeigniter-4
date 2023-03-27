@@ -11,8 +11,14 @@
             echo $indexTitle;
         }elseif(isset($dashboardTitle)){
             echo $dashboardTitle;
-        }else{
-            echo "Welcome to the Share Market";
+        }elseif(isset($loginTitle)){
+            echo $loginTitle;
+        }
+        elseif(isset($registerTitle)){
+            echo $registerTitle;
+        }
+        else{
+            echo "Share Market";
         }
         ?>
     </title>

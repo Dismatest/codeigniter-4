@@ -14,7 +14,7 @@ ul{
 a:hover, input:focus{
     text-decoration: none;
     outline: none;
-    color: white;
+    color: black;
 }
 .footer-about .footer-logo{
     margin-bottom: 30px;

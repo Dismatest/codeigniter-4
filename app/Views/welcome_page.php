@@ -10,7 +10,7 @@
             <h5>Welcome to the Sacco Hisa Shares Portal</h5>
             <p>The platform allow you sell and buy shares from different sacco within kenya.
             </p>
-            <a href="<?= 'index' ?>">Go To Shares <i class="fa-solid fa-arrow-right arrow-icon2"></i></a>
+            <a href="<?= 'index' ?>">Go to shares <i class="fa-solid fa-arrow-right arrow-icon2"></i></a>
         </div>
     </div>
     <div class="container scroll-btn-main-container">

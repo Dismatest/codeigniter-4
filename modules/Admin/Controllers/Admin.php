@@ -6,17 +6,23 @@ use App\Libraries\Hash;
 use Modules\Admin\Models\SaccoModels;
 use App\Models\Notification;
 use App\Models\Users;
-
+use App\Models\SaccoMembership;
+use App\Models\SaccoShares;
 class Admin extends BaseController
 {
     public $adminModel;
     public $notificationModel;
     public $userModel;
+    public $saccoMembershipModel;
+    public $saccoSharesModel;
+
     public function __construct()
     {
         $this->adminModel = new SaccoModels();
         $this->notificationModel = new Notification();
         $this->userModel = new Users();
+        $this->saccoMembershipModel = new SaccoMembership();
+        $this->saccoSharesModel = new SaccoShares();
     }
 
     public function dashboard()
@@ -24,6 +30,8 @@ class Admin extends BaseController
         $data['dashboardTitle'] = 'Admin Dashboard';
         $uuid = session()->get('currentLoggedInSacco');
         $data['saccoData'] = $this->adminModel->getCurrentSaccoInformation($uuid);
+        $data['totalMembers'] = $this->adminModel->getTotalUsers($data['saccoData']['sacco_id']);
+        $data['totalActiveShares'] = $this->adminModel->getTotalActiveShares($data['saccoData']['sacco_id']);
         return view('Modules\Admin\Views\dashboard', $data);
     }
 
@@ -58,8 +66,9 @@ class Admin extends BaseController
         $this->notificationModel->update($id, $data);
         return redirect()->to('admin/notifications');
     }
+
     // all the sacco admin shares methods
-   public function manageShares()
+    public function manageShares()
 
     {
         $data = [];
@@ -75,25 +84,29 @@ class Admin extends BaseController
         return view('Modules\Admin\Views\manage-shears', $data);
     }
 
-    public function verifyShares($id=null){
+    public function verifyShares($id = null)
+    {
         $shares = $this->adminModel->verifyShares($id);
-        if($shares){
+        if ($shares) {
             return redirect()->to('admin/manage-shares')->with('success', 'Shares verified successfully');
-        }else{
-           return redirect()->to('admin/manage-shares')->with('fail', 'Shares verification failed');
+        } else {
+            return redirect()->to('admin/manage-shares')->with('fail', 'Shares verification failed');
         }
     }
-    public function deleteShares($id=null){
+
+    public function deleteShares($id = null)
+    {
         $shares = $this->adminModel->deleteShares($id);
-        if($shares){
+        if ($shares) {
             return redirect()->to('admin/manage-shares')->with('success', 'Shares deleted successfully');
-        }else{
-           return redirect()->to('admin/manage-shares')->with('fail', 'Shares deletion failed');
+        } else {
+            return redirect()->to('admin/manage-shares')->with('fail', 'Shares deletion failed');
         }
     }
 
     // all the sacco admin users methods
-    public function manageUsers(){
+    public function manageUsers()
+    {
         $data = [];
         $users = $this->adminModel->manageUsers();
         foreach ($users as $key => $value) {
@@ -107,35 +120,117 @@ class Admin extends BaseController
         return view('Modules\Admin\Views\manage-users', $data);
     }
 
-    public function updateUserShares($id){
-        if($this->request->getMethod() == 'post'){
+    public function listMembers()
+    {
+        $allMembers = $this->adminModel->allMembers();
+        $data = [
+            'allMembers' => $allMembers,
+        ];
+        return view('Modules\Admin\Views\list_members', $data);
+    }
+
+    public function updateUserShares($id)
+    {
+        if ($this->request->getMethod() == 'post') {
             $data = [
                 'shares_amount' => $this->request->getPost('sharesAmount'),
             ];
             $save = $this->adminModel->updateUserShares($id, $data);
-            if($save){
+            if ($save) {
                 return redirect()->to('admin/manage-users')->with('success', 'Shares updated successfully');
-            }else{
+            } else {
                 return redirect()->to('admin/manage-users')->with('fail', 'Shares update failed');
             }
         }
         $this->adminModel->updateUserShares($id);
     }
-    public function deleteUserShares($id){
+
+    public function createShare()
+    {
+
+        $saccoID = session()->get('currentLoggedInSacco');
+        $sacco = $this->adminModel->getCurrentSaccoInformation($saccoID);
+        $users = $this->userModel->select('users.user_id, users.fname, users.lname, sacco_membership.is_approved, sacco_membership.has_shares')
+            ->join('sacco_membership', 'sacco_membership.user_id = users.user_id')
+            ->where('sacco_membership.is_approved', '1')
+            ->where('sacco_membership.has_shares', '0')
+            ->orderby('users.user_id', 'ASC')
+            ->findAll();
+
+        $data = [
+            'sacco' => $sacco,
+            'users' => $users,
+        ];
+
+        if ($this->request->getMethod() == 'post') {
+            $rules = [
+                'membershipNumber' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Membership number is required',
+                    ]
+                ],
+                'sharesAmount' => [
+                    'rules' => 'required|numeric',
+                    'errors' => [
+                        'required' => 'The amount of share is required',
+                        'numeric' => 'The amount of share must be a number',
+                    ]
+                ],
+                'cost' => [
+                    'rules' => 'required|numeric',
+                    'errors' => [
+                        'required' => 'The share cost is required',
+                        'numeric' => 'The cost per share must be a number',
+                    ]
+                ],
+            ];
+            if ($this->validate($rules)) {
+                $shareData = [
+
+                    'user_id' => $this->request->getPost('selectMemberName'),
+                    'sacco_id' => $this->request->getPost('selectSaccoName'),
+                    'membership_number' => $this->request->getPost('membershipNumber'),
+                    'cost_per_share' => $this->request->getPost('cost'),
+                    'shares_on_sale' => $this->request->getPost('sharesAmount'),
+                    'total' => $this->request->getPost('total'),
+                    'is_verified' => 1,
+
+                ];
+                dd($shareData);
+                $save = $this->adminModel->createShare($shareData);
+                if ($save) {
+                    return redirect()->to('admin/manage-shares')->with('success', 'Shares created successfully');
+                } else {
+                    return redirect()->to('admin/manage-shares')->with('fail', 'Shares creation failed');
+                }
+            } else {
+                $data['validation'] = $this->validator;
+            }
+        }
+        return view('Modules\Admin\Views\create-share', $data);
+    }
+
+    public function deleteUserShares($id)
+    {
         $shares = $this->adminModel->deleteUserShares($id);
-        if($shares){
+        if ($shares) {
             return redirect()->to('admin/manage-users')->with('success', 'Shares deleted successfully');
-        }else{
-           return redirect()->to('admin/manage-users')->with('fail', 'Shares deletion failed');
+        } else {
+            return redirect()->to('admin/manage-users')->with('fail', 'Shares deletion failed');
         }
     }
 
-    public function addUserShares(){
+    public function addUserShares()
+    {
         $data = [];
-        $users = $this->userModel->select('users.*, sacco_membership.is_approved')
+        $users = $this->userModel->select('users.user_id, users.fname, users.lname, sacco_membership.is_approved, sacco_membership.has_shares')
             ->join('sacco_membership', 'sacco_membership.user_id = users.user_id')
-            ->where('sacco_membership.is_approved', 1)
+            ->where('sacco_membership.is_approved', '1')
+            ->where('sacco_membership.has_shares', '0')
+            ->orderby('users.user_id', 'ASC')
             ->findAll();
+
         $sacco = $this->adminModel->getCurrentSaccoInformation(session()->get('currentLoggedInSacco'));
 
         $rules = [
@@ -166,9 +261,9 @@ class Admin extends BaseController
                 ]
             ],
         ];
-        if(!$this->validate($rules)) {
+        if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
-        }else{
+        } else {
             $data = [
                 'user_id' => $this->request->getPost('selectCustomerName'),
                 'sacco_id' => $sacco['sacco_id'],
@@ -179,9 +274,11 @@ class Admin extends BaseController
             ];
 
             $save = $this->adminModel->addUserShares($data);
-            if($save){
+            if ($save) {
+                //I want to update a column called has_shares in the sacco_membership table
+                $this->saccoMembershipModel->update($this->request->getPost('selectCustomerName'), ['has_shares' => 1]);
                 return redirect()->to('admin/add-user-shares')->with('success', 'Shares added successfully');
-            }else{
+            } else {
                 return redirect()->to('admin/add-user-shares')->with('fail', 'Shares addition failed');
             }
         }
@@ -189,9 +286,11 @@ class Admin extends BaseController
             'users' => $users,
             'sacco' => $sacco['name'],
         ];
-        return view('Modules\Admin\Views\add-user-shares', $data);
+        return view('Modules\Admin\Views\user_shares', $data);
     }
-    public function newMembers(){
+
+    public function newMembers()
+    {
         $newMembers = $this->adminModel->findAllNewMembers();
         $data = [
             'newMembers' => $newMembers,
@@ -199,23 +298,26 @@ class Admin extends BaseController
         return view('Modules\Admin\Views\new-members', $data);
     }
 
-    public function approveMemberRequest($id){
+    public function approveMemberRequest($id)
+    {
         $approve = $this->adminModel->approveMemberRequest($id);
-        if($approve){
+        if ($approve) {
             return redirect()->to('admin/new-members')->with('success', 'Member approved successfully');
-        }else{
+        } else {
             return redirect()->to('admin/new-members')->with('fail', 'Member approval failed');
         }
     }
 
-    public function deleteMemberRequest($id){
+    public function deleteMemberRequest($id)
+    {
         $delete = $this->adminModel->deleteMemberRequest($id);
-        if($delete){
+        if ($delete) {
             return redirect()->to('admin/new-members')->with('success', 'Request deleted successfully');
-        }else{
+        } else {
             return redirect()->to('admin/new-members')->with('fail', 'Member request deletion failed');
         }
     }
+
     public function login()
     {
         $data = [];
@@ -258,10 +360,12 @@ class Admin extends BaseController
                     session()->setFlashdata('fail', 'Password is incorrect');
                     return redirect()->to('admin/login');
                 } else {
-                    $saccoId = $sacco['uuid'];
+                    $sacco_id = $sacco['sacco_id'];
+                    $sacco_uuid = $sacco['uuid'];
                     $sessionData = array(
+                        'sacco_id' => $sacco_id,
+                        'currentLoggedInSacco' => $sacco_uuid,
                         'name' => $sacco['name'],
-                        'currentLoggedInSacco' => $saccoId,
                     );
 
                     session()->set($sessionData);
@@ -332,15 +436,53 @@ class Admin extends BaseController
                 }
             }
         }
-            return view('Modules\Admin\Views\change-password', $data);
+        return view('Modules\Admin\Views\change-password', $data);
 
     }
+
     public function logout()
     {
-        if(session()->has('currentLoggedInSacco')) {
+        if (session()->has('currentLoggedInSacco')) {
             session()->remove('currentLoggedInSacco');
             return redirect()->to('admin/login');
         }
 
+    }
+
+    public function uploadAgreementFile()
+    {
+        return view('Modules\Admin\Views\upload-agreement-file');
+    }
+
+    public function uploadAgreementFilesDocument()
+    {
+        if ($this->request->getMethod() == 'post') {
+            $rules = [
+                'agreementFile' => [
+                    'rules' => 'uploaded[agreementFile]|max_size[agreementFile,1024]|ext_in[agreementFile,pdf]',
+                    'errors' => [
+                        'uploaded' => 'Please select a file to upload',
+                        'max_size' => 'The file size must be less than 1MB',
+                        'ext_in' => 'The file must be a pdf file',
+                    ]
+                ],
+            ];
+            if (!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+            } else {
+                $file = $this->request->getFile('agreementFile');
+                $file->move('uploads/agreement-files');
+                $fileData = [
+                    'sacco_id' => session()->get('sacco_id'),
+                    'file' => $file->getName(),
+                ];
+                $save = $this->adminModel->saveAgreementFile($fileData);
+                if ($save) {
+                    return $this->response->setJSON(['success' => 'File uploaded successfully']);
+                } else {
+                    return $this->response->setJSON(['fail' => 'File upload failed']);
+                }
+            }
+        }
     }
 }

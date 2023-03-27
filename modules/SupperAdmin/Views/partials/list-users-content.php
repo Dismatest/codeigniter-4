@@ -6,11 +6,7 @@
                 </span> List Users
         </h3>
         <nav aria-label="breadcrumb">
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-                </li>
-            </ul>
+           <div id="DataTableListUsers"></div>
         </nav>
     </div>
 
@@ -20,7 +16,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table" id="supperAdminDataTable">
+                        <table class="table" id="dataTableListUsers">
                             <thead>
                             <tr>
                                 <th> Profile </th>

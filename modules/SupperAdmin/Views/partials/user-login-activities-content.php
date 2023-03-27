@@ -6,10 +6,7 @@
                 </span> User Login Activities
         </h3>
         <nav aria-label="breadcrumb">
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-                </li>
+            <div id="supperAdminExample"></div>
             </ul>
         </nav>
     </div>
@@ -23,6 +20,7 @@
                         <table class="table" id="supperAdminDataTable">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th> Fname </th>
                                 <th> Lname </th>
                                 <th> Agent </th>
@@ -36,6 +34,7 @@
                             <?php if(isset($users)) :?>
                             <?php foreach ($users as $user) :?>
                             <tr>
+                                <td class="test">1</td>
                                 <td> <?= ucfirst($user['fname']); ?> </td>
                                 <td> <?= ucfirst($user['lname']); ?> </td>
                                 <td> <?= ucfirst($user['agent']); ?> </td>

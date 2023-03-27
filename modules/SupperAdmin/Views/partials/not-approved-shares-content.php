@@ -26,9 +26,8 @@
                                 <th> Sacco </th>
                                 <th> Membership Number </th>
                                 <th> Shares </th>
-                                <th> Verification </th>
-                                <th> Creation Date </th>
-                                <th> Approve </th>
+                                <th> Date Created </th>
+                                <th> Approval </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -38,19 +37,14 @@
                                         <td>
                                             <?= ucfirst($user['fname'] ). ' ' . ucfirst($user['lname']) ?>
                                         </td>
-                                        <td> <?= ucfirst($user['sacco']) ?> </td>
+                                        <td> <?= ucfirst($user['name']) ?> </td>
                                         <td> <?= $user['membership_number'] ?> </td>
-                                        <td> <?= $user['shares_amount'] ?> </td>
+                                        <td> <?= $user['shares_on_sale'] ?> </td>
+                                        <td> <?= $time ?> </td>
                                         <td>
                                             <?php if($user['is_verified'] == 0): ?>
                                                 <label class="badge badge-gradient-danger">NO</label>
                                             <?php endif; ?>
-                                        </td>
-                                        <td> <?= $time ?> </td>
-                                        <td>
-                                            <a href="<?= base_url('supperAdmin/approve-share/' . $user['uuid']) ?>" class="btn btn-gradient-success btn-rounded btn-icon" style="display: grid; place-items: center; width: 24px; height: 24px;">
-                                                <i class="mdi mdi-check"></i>
-                                            </a>
                                         </td>
 
                                     </tr>

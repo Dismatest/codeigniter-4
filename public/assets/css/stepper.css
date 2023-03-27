@@ -1,13 +1,20 @@
-@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
 
 main {
-    height: 40vh;
+    height: 50vh;
     display: flex;
     justify-content: center;
     flex-direction: column;
     position: relative;
 }
-
+@media (max-width: 620px){
+    main{
+        height: 40vh;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+    }
+}
 .stepper {
     width: 20rem;
     display: flex;
@@ -61,12 +68,13 @@ main {
 
 .stepper-input-fields {
     padding: 0.4rem;
-    margin: auto;
     margin-top: 0.5rem;
-    width: 15rem;
+    margin-left: 15px;
+    width: 22rem;
     display: block;
     outline: none;
     border: 1px solid #bdbdbb;
+
 }
 
 .form__btn {

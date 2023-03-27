@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Libraries\Hash;
 use App\Models\DisplayDashboardModel;
 use App\Models\Users;
 use App\Models\Shares;
@@ -9,6 +10,7 @@ use App\Models\SaccoMembership;
 use App\Models\Notification;
 use App\Models\SharesOnSale;
 use App\Models\SaccoShares;
+use App\Models\BidShares;
 use CodeIgniter\I18n\Time;
 class Home extends BaseController
 
@@ -23,6 +25,7 @@ class Home extends BaseController
     public $saccoShares;
     public $saccoMembershp;
     public $notification;
+    public $bidShares;
 
     public function __construct(){
 
@@ -35,6 +38,7 @@ class Home extends BaseController
         $this->notification = new Notification();
         $this->sharesOnSale = new SharesOnSale();
         $this->saccoShares = new SaccoShares();
+        $this->bidShares = new BidShares();
     }
     public function welcomePage() {
         $data = [
@@ -49,6 +53,7 @@ class Home extends BaseController
         $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name, sacco.sacco_id')
             ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
             ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
+            ->where('shares_on_sale.is_verified', '1')
             ->orderBy('shares_on_sale.created_at', 'ASC')
             ->paginate(10);
 
@@ -73,9 +78,18 @@ class Home extends BaseController
         $data = [];
         global $sacco_id;
         global $membership_number;
+        global $is_approved;
         $uniid = session()->get('currentLoggedInUser');
         $userData = $this->displayDashboard->getCurrentUserInformation($uniid);
         $userShares = $this->displayDashboard->getUserShares();
+        $is_a_member = $this->displayDashboard->is_Member();
+        $is_approved = $this->displayDashboard->is_Verified();
+        $member_commission = $this->displayDashboard->findAllRecords();
+
+
+        foreach ($is_approved as $approved){
+            $is_approved = $approved['is_verified'];
+        }
         if($userShares) {
 
         foreach ($userShares as $share){
@@ -116,12 +130,15 @@ class Home extends BaseController
             'dashboardTitle' => 'Dashboard',
             'userData' => $userData,
             'userShares' => $userShares,
+            'is_approved' => $is_approved,
+            'is_a_member' => $is_a_member,
+            'member_commission' => $member_commission[0]['commission'],
         ];
 
         return view('dashboard', $data);
     }
 
-    public function changePassword(){
+    public function forgotPassword(){
         $data = [];
         if($this->request->getMethod() == 'post'){
             $rules = [
@@ -142,35 +159,55 @@ class Home extends BaseController
                 if(!empty($userData)){
 
                     if($this->displayDashboard->updateResetTime($userData['uniid'])){
-                        $message = "Hello ".$userData['lname']. "Your your password reset link has been sent successfully, click the link now to change your password".anchor(base_url('password-reset/'.$userData['uniid']),' reset password link','');
-                        $this->email->setFrom('billclintonogot88@.com', 'Saaco Product Application');
-                        $this->email->setTo("$email");
+                        $name = $userData['fname'];
+                        $emailSubject = "Password reset link";
+                        $setFrom = 'billclintonogot88@gmail.com';
+                        $messageTitle = "Sacco Product Application";
+                        $message = "Your your password reset link has been sent successfully, click the link now to change your password, the link expires within 39min".anchor(base_url('password-reset/'.$userData['uniid']),' reset password link','');
 
-                        $this->email->setSubject('Email Password Reset Link');
-                        $this->email->setMessage($message);
-
-                        if($this->email->send()){
+                        if($this->sendEmail($name, $email, $setFrom, $messageTitle, $emailSubject, $message)){
                             session()->setTempdata('success', 'An email with the password reset link has been sent to your email, change your password within 39 min', 3);
-                            return redirect()->to(base_url('reset-password'));
+                            return redirect()->to(base_url('forgot-password'));
                         }else{
-                            return redirect()->to(base_url('reset-password'))->with('fail', 'we can not send an activation email now');
+                            return redirect()->to(base_url('forgot-password'))->with('fail', 'we can not send an activation email now');
                         }
 
                     }else{
                         session()->setTempdata('fail', 'We can not update your password right now', 3);
-                        return redirect()->to(base_url('reset-password'));
+                        return redirect()->to(base_url('forgot-password'));
                     }
                 }else{
                     session()->setTempdata('fail', 'Your details were not found', 3);
-                    return redirect()->to(base_url('reset-password'));
+                    return redirect()->to(base_url('forgot-password'));
                 }
 
             }
         }
-        return view('reset-password', $data);
+        return view('forgot-password', $data);
 }
 
-public function verifyEmail($uniid=null){
+    public function sendEmail($fname, $email, $setFrom, $messageTitle, $emailSubject, $message)
+    {
+        $this->email->setFrom($setFrom, $messageTitle);
+        $this->email->setTo("$email");
+
+        $this->email->setSubject("$emailSubject");
+
+        $email_template = view('email_template_account_creation', [
+            'name' => $fname,
+            'message' => $message
+        ]);
+
+        // Set email message
+        $this->email->setMessage($email_template);
+        if($this->email->send()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+public function passwordReset($uniid=null){
         $data = [];
 
         if(!empty($uniid)){
@@ -182,7 +219,6 @@ public function verifyEmail($uniid=null){
 
                     if($this->request->getMethod() == 'post'){
                         $rules = [
-
                             'newPassword' => [
                                 'rules' => 'required|min_length[5]|max_length[20]',
                                 'errors' => [
@@ -201,11 +237,10 @@ public function verifyEmail($uniid=null){
                             ],
                         ];
                         if($this->validate($rules)){
-
                             $password = password_hash($this->request->getVar('newPassword'), PASSWORD_DEFAULT);
                             if($this->displayDashboard->passwordUpdate($uniid, $password)){
                                 session()->setTempdata('success', 'Your password was reset successfully, please login', 3);
-                                return redirect()->to(base_url('login'));
+                                return redirect()->to(base_url(''));
                             }else{
                                 session()->setTempdata('fail', 'Your are not able to reset your password', 3);
                                 return redirect()->to(base_url('reset-password'));
@@ -213,6 +248,7 @@ public function verifyEmail($uniid=null){
                         }else{
                             $data['validation'] = $this->validator;
                         }
+
                     }
                 }else{
                     $data['error'] = 'The password reset link has expired';
@@ -224,7 +260,7 @@ public function verifyEmail($uniid=null){
         }else{
             $data['error'] = 'Unauthorize access';
         }
-        return view('verify-email', $data);
+        return view('reset-password-form', $data);
 }
 
 public function expiryTime($date){
@@ -238,27 +274,80 @@ public function expiryTime($date){
         }
 }
     public function share($id = null){
+        $data = [];
         $uuid = session()->get('currentLoggedInUser');
         $user = $this->users->where('uniid', $uuid)->first();
         $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name')
             ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
             ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
             ->where('shares_on_sale.uuid', $id)
-            ->where('shares_on_sale.is_verified', '0')
+            ->where('shares_on_sale.is_verified', '1')
             ->first();
 
-        $payment_link = base_url('payment/initiate_payment/') .'?total='.urlencode($shares['total']);
 
         //retrieving the users who are already registered to the sacco they want to buy shares from
-        //there is a need to restructure the saccoShares database table to only
-        $registered = $this->saccoShares->where('user_id', $user['user_id'])
+        $is_approved = $this->saccoMembershp->where('user_id', $user['user_id'])
                 ->where('sacco_id', $shares['sacco_id'])
-                ->countAllResults() > 0;
+                ->where('is_approved', '1')
+                ->countAllResults() == 1;
 
+
+        if($this->request->getMethod() == 'post'){
+            $rules = [
+                'identification' => [
+                    'rules' => 'required|numeric|min_length[8]|max_length[8]',
+                    'errors' => [
+                        'required' => 'Your identification number is required',
+                        'numeric' => 'Your identification number must be numeric',
+                        'min_length' => 'Your identification number must be 8 digits',
+                        'max_length' => 'Your identification number must be 8 digits',
+                    ]
+                ]
+            ];
+            if(!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+            }else{
+                global $sacco_id, $user_id;
+                $user_id = $user['user_id'];
+                $sacco_id = $shares['sacco_id'];
+                $identification = $this->request->getVar('identification');
+                $membershipData = [
+                    'user_id' => $user_id,
+                    'sacco_id' => $sacco_id,
+                    'id_number' => $identification,
+                    'is_approved' => '0',
+                ];
+
+                $is_registered = $this->saccoMembershp->where('user_id', $user['user_id'])
+                        ->where('sacco_id', $shares['sacco_id'])
+                        ->countAllResults() == 1;
+                if($is_registered){
+                    session()->setTempdata('fail', 'You have already requested to join this sacco, please wait for admin approval.');
+                    return redirect()->back();
+                }else{
+                    if($this->saccoMembershp->save($membershipData)){
+                        $message = 'A new member has requested to join your sacco, please approve the request';
+                        $notifications = [
+                            'user_id' => $user['user_id'],
+                            'sacco_id' => $sacco_id,
+                            'message' => $message,
+                            'read_status' => '0',
+                        ];
+                        $this->notification->save($notifications);
+                        session()->setTempdata('success', 'Your request has been sent to the sacco admin, you will be notified once your request is approved', 3);
+                        return redirect()->back();
+                    }else{
+                        session()->setTempdata('fail', 'Your request was not sent, please try again', 3);
+                        return redirect()->back();
+                    }
+
+                }
+            }
+        }
         $data = [
+            'user' => $user,
             'share' => $shares,
-            'is_registered' => $registered,
-            'payment_link' => $payment_link,
+            'is_approved' => $is_approved,
         ];
 
         return view('share', $data);
@@ -353,7 +442,7 @@ public function expiryTime($date){
             {
                 $info = curl_getinfo($curl);
                 curl_close($curl);
-                die('error occured during curl exec. Additioanl info: ' . var_export($info));
+                die('error occurred during curl exec. Additional info: ' . var_export($info));
             }else{
 //                return redirect()->to('dashboard');
             }
@@ -370,8 +459,6 @@ public function expiryTime($date){
         return view('payment', $data);
     }
 
-
-
     public function processPhoneNumber($phone){
         return substr($phone, 1);
 
@@ -381,8 +468,6 @@ public function expiryTime($date){
         $response = file_get_contents('php://input');
         $path = WRITEPATH.'/payme.json';
         file_put_contents($path, $response);
-
-
     }
 
     public function paymentCallback(){
@@ -448,7 +533,7 @@ public function expiryTime($date){
                 //checking if the user has already requested to join the sacco
                 $is_requested = $this->saccoMembershp->where('user_id', $user['user_id'])
                     ->where('sacco_id', $sacco_id)
-                    ->countAllResults() > 1;
+                    ->countAllResults() == 1;
                 if($is_requested){
                     return redirect()->back()->with('fail', 'You have already requested to join this sacco, please wait for admin approval.');
                 }else{
@@ -475,6 +560,139 @@ public function expiryTime($date){
             'sacco' => $sacco,
         ];
         return view('sacco-membership', $data);
+    }
+
+    public function bid($id = null){
+        $uuid = session()->get('currentLoggedInUser');
+        $user = $this->users->where('uniid', $uuid)->first();
+        $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name')
+            ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
+            ->where('shares_on_sale.uuid', $id)
+            ->where('shares_on_sale.is_verified', '1')
+            ->first();
+
+        if($shares['user_id'] == $user['user_id']){
+            session()->setTempdata('fail', 'You are the owner of this share, you can`t place a bid.', 3);
+            return redirect()->back()->to(base_url().'/share/'.$id);
+        }
+
+        if($this->request->getMethod() == 'post'){
+             $bid =  $this->request->getVar('bid');
+
+                $bidData = [
+                    'user_id' => $user['user_id'],
+                    'share_on_sale_id' => $shares['share_on_sale_id'],
+                    'bid_amount' => $bid,
+                    'seller_id' => $shares['user_id'],
+                    'sacco_id' => $shares['sacco_id'],
+                    'action' => '0',
+                ];
+
+                $has_bid = $this->bidShares->where('user_id', $user['user_id'])
+                    ->where('share_on_sale_id', $shares['share_on_sale_id'])
+                    ->countAllResults() == 1;
+                if(!$has_bid){
+                    if($this->bidShares->save($bidData)) {
+                        $sessionData = [
+                            'user_bid_id' => $user['user_id'],
+                            'share_on_sale_bid_id' => $shares['share_on_sale_id'],
+                            'bid_amount' => $bid,
+                            'seller_bid_id' => $shares['user_id'],
+                        ];
+                        session()->set($sessionData);
+                        session()->setTempdata('success', 'Your bid has been placed', 3);
+                        return redirect()->back()->to(base_url().'/share/'.$id);
+                    }else{
+                        session()->setTempdata('fail', 'Your bid was not placed, please try again', 3);
+                        return redirect()->back()->to(base_url().'/share/'.$id);
+                    }
+                }else{
+                    session()->setTempdata('fail', 'Your already have an active bid, go to my_bids and purchase', 3);
+                    return redirect()->back()->to(base_url().'/share/'.$id);
+                }
+        }
+    }
+
+    public function bids(){
+        global $amount;
+        $uuid = session()->get('currentLoggedInUser');
+        $userData = $this->displayDashboard->getCurrentUserInformation($uuid);
+        $bid_share = $this->bidShares->select('bid_share.*, shares_on_sale.share_on_sale_id, shares_on_sale.total, users.fname, users.lname, sacco.name')
+            ->join('shares_on_sale', 'shares_on_sale.share_on_sale_id = bid_share.share_on_sale_id', 'left')
+            ->join('users', 'users.user_id = bid_share.user_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
+            ->where('bid_share.seller_id', $userData->user_id)
+            ->where('bid_share.action', '0')
+            ->findAll();
+
+        $accepted_bids = $this->bidShares->select('bid_share.*, shares_on_sale.share_on_sale_id, shares_on_sale.uuid, shares_on_sale.total, users.fname, users.lname, sacco.name')
+            ->join('shares_on_sale', 'shares_on_sale.share_on_sale_id = bid_share.share_on_sale_id', 'left')
+            ->join('users', 'users.user_id = bid_share.seller_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
+            ->where('bid_share.user_id', $userData->user_id)
+            ->where('bid_share.action', '1')
+            ->findAll();
+
+        $rejected_bids = $this->bidShares->select('bid_share.*, shares_on_sale.share_on_sale_id, shares_on_sale.uuid, shares_on_sale.total, users.fname, users.lname, sacco.name')
+            ->join('shares_on_sale', 'shares_on_sale.share_on_sale_id = bid_share.share_on_sale_id', 'left')
+            ->join('users', 'users.user_id = bid_share.seller_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
+            ->where('bid_share.user_id', $userData->user_id)
+            ->where('bid_share.action', '2')
+            ->findAll();
+
+        foreach ($accepted_bids as $accepted_bid){
+            $amount = $accepted_bid['bid_amount'];
+            $uuid = $accepted_bid['uuid'];
+        }
+
+        $payment_link = base_url('payment/initiate_payment/') . '?share_id=' . urlencode($uuid) . '&total=' . urlencode($amount);
+        global $id;
+        if(!empty($accepted_bid)){
+            $id = $accepted_bid['sacco_id'];
+        }else{
+            $id = '';
+        }
+        $pdf_view = $this->displayDashboard->getPdfView($id);
+
+        header('Content-type: application/pdf');
+        header('Content-Disposition: inline');
+        header('Content-Transfer-Encoding: binary');
+        header('Accept-Ranges: bytes');
+
+
+        $data = [
+            'bids' => $bid_share,
+            'accepted_bids' => $accepted_bids,
+            'rejected_bids' => $rejected_bids,
+            'payment_link' => $payment_link,
+            'pdf_view' => $pdf_view,
+        ];
+        return view('bids', $data);
+    }
+
+    public function acceptBid($id = null){
+        $bids = $this->bidShares->find($id);
+        $bidData = [
+            'action' => '1',
+        ];
+        if($this->bidShares->update($bids['bid_id'], $bidData)) {
+            session()->setTempdata('success', 'Bid approved', 3);
+            return redirect()->back()->to(base_url() . '/dashboard');
+        }
+    }
+
+    public function rejectBid($id = null){
+        $bids = $this->bidShares->find($id);
+        $bidData = [
+            'action' => '2',
+        ];
+        if($this->bidShares->update($bids['bid_id'], $bidData)) {
+            session()->setTempdata('success', 'Bid rejected', 3);
+            return redirect()->back()->to(base_url() . '/dashboard');
+        }
+
     }
     public function messages(){
         return view('messages');

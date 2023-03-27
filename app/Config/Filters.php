@@ -22,6 +22,7 @@ class Filters extends BaseConfig
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'isLoggedInFilter' => \App\Filters\LoginFilter::class,
+        'isAdminLoggedInFilter' => \App\Filters\AdminLoginFilter::class,
         'ipBlocker' => \App\Filters\IpBlocker::class,
     ];
 
@@ -35,6 +36,12 @@ class Filters extends BaseConfig
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
+            'isLoggedInFilter' => [
+                'except' => [
+                    '',
+                    '/*',
+            ],
+        ],
         ],
         'after' => [
             'toolbar',

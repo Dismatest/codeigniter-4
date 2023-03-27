@@ -13,8 +13,10 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers'], function (
     $routes->get('manage-shares', 'Admin::manageShares');
     $routes->post('verify-share/(:alphanum)', 'Admin::verifyShares/$1');
     $routes->get('delete-share/(:alphanum)', 'Admin::deleteShares/$1');
+    $routes->match(['post', 'get'],'create_share', 'Admin::createShare');
 
     //user management routes
+    $routes->get('list_members', 'Admin::listMembers');
     $routes->get('manage-users', 'Admin::manageUsers');
     $routes->match(['post','get'],'add-user-shares', 'Admin::addUserShares');
     $routes->post('update-user-shares/(:num)', 'Admin::updateUserShares/$1');
@@ -24,5 +26,8 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers'], function (
     $routes->get('approve-member-request/(:num)', 'Admin::approveMemberRequest/$1');
     $routes->get('delete-member-request/(:num)', 'Admin::deleteMemberRequest/$1');
     $routes->get('dashboard', 'Admin::dashboard');
+
+    $routes->get('upload_files', 'Admin::uploadAgreementFile');
+    $routes->post('upload_agreement_files', 'Admin::uploadAgreementFilesDocument');
 
 });

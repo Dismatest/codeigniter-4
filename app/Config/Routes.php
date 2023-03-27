@@ -27,6 +27,10 @@ $routes->group('', ['filter'=>'isLoggedInFilter'], function($routes){
     $routes->match(['get', 'post'], 'dashboard', 'Home::dashboard');
     $routes->match(['get', 'post'], 'share/(:alphanum)', 'Home::share/$1');
     $routes->match(['get', 'post'], 'update-profile', 'Profile::updateProfile');
+    $routes->match(['get', 'post'], 'share/(:alphanum)/bid', 'Home::bid/$1/bid');
+    $routes->match(['get', 'post'], 'my_bids', 'Home::bids');
+    $routes->match(['get', 'post'], 'my_bids/accept/(:num)', 'Home::acceptBid/$1');
+    $routes->match(['get', 'post'], 'my_bids/reject/(:num)', 'Home::rejectBid/$1');
     $routes->match(['get', 'post'], 'payment/initiate_payment', 'Home::payment');
     $routes->match(['get', 'post'], 'sacco_membership', 'Home::saccoMembership');
     $routes->match(['get', 'post'], 'messages', 'Home::messages');
@@ -41,8 +45,8 @@ $routes->group('', ['filter'=>'isLoggedInFilter'], function($routes){
 //routes without login filter
 $routes->group('', function ($routes){
     $routes->match(['post', 'get'], '/', 'Auth::login');
-    $routes->match(['get', 'post'], 'change-password', 'Auth::changePassword');
-    $routes->match(['get', 'post'], 'password-reset/(:alphanum)', 'Home::verifyEmail/$1');
+    $routes->match(['get', 'post'], 'forgot-password', 'Home::forgotPassword');
+    $routes->match(['get', 'post'], 'password-reset/(:alphanum)', 'Home::passwordReset/$1');
 
 });
 

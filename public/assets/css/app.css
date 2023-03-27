@@ -1,48 +1,268 @@
+/*login css*/
 
-/* css for the navbar */
-
-/* css for the footer */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+:root{
+    --primary-color: rgb(214, 178, 214);
+    --text-color: #607d8b;
+    --background-color: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    --background-hoover: linear-gradient(to right, rgb(214, 178, 214), rgb(114, 90, 114));
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Ubuntu', sans-serif;
+}
 body{
     background-color:rgb(249, 243, 249)
 }
 body::-webkit-scrollbar {
     width: 6px;
     background-color: #F5F5F5;
- }
- 
- body::-webkit-scrollbar-thumb {
-   border-radius: 8px;
-   background-color: rgb(234, 234, 234);
- }
+}
+
+body::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: rgb(234, 234, 234);
+}
+section{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+}
+section .imgBx:before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(225deg, rgb(216, 215, 215), rgb(206, 188, 188));
+    z-index: 1;
+    mix-blend-mode: screen;
+}
+section .imgBx{
+    width: 50%;
+    height: 100%;
+    position: relative;
+}
+section .imgBx img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+section .contentBx{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+}
+section .contentBx .formBx{
+    width: 50%;
+}
+section .contentBx .formBx h2{
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border-bottom: 4px solid var( --primary-color);
+    display: inline-block;
+    letter-spacing: 1px;
+}
+section .contentBx .formBx .inputBx{
+    margin-bottom: 20px;
+}
+section .contentBx .formBx .inputBx span{
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: inline-block;
+    color: var(--text-color);
+    font-weight: 300;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+section .contentBx .formBx .inputBx input{
+    width: 100%;
+    padding: 10px 20px;
+    outline: none;
+    font-weight: 400;
+    border: 1px solid var(--text-color);
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: var(--text-color);
+    background: transparent;
+    border-radius: 30px;
+}
+section .contentBx .formBx .inputBx input[type="submit"]{
+    background: var(--background-color);
+    color: white;
+    outline: none;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+section .contentBx .formBx .inputBx input[type="submit"]:hover{
+    background: var(--background-hoover);
+}
+section .contentBx .formBx .remember-me{
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-weight: 400;
+    font-size: 14px;
+}
+section .contentBx .formBx .inputBx p{
+    color: var(--text-color);
+}
+section .contentBx .formBx .inputBx p a{
+    color: var(--primary-color);
+}
+@media (max-width: 768px) {
+    section .imgBx{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    section .contentBx{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+    section .contentBx .formBx{
+        width: 100%;
+        padding: 40px;
+        background: rgb(249, 244, 244, 0.7);
+        margin: 50px;
+    }
+    section .contentBx .formBx h3{
+        color: var(--text-color);
+        text-align: center;
+        margin: 30px 0 10px;
+    }
+}
+/*end of the login css*/
+/*start of the register css*/
+.registration-container{
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: var(--background-color);
+}
+.registration-container-2{
+    max-width: 700px;
+    width: 100%;
+    background: white;
+    padding:25px 30px;
+    border-radius: 5px;
+}
+.registration-container-2 .registration-title{
+    font-size: 25px;
+    font-weight: 500;
+    color: var(--text-color);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+.registration-container-2 .registration-title span a{
+    text-decoration: none;
+    font-size: 14px;
+    color: var(--primary-color);
+}
+.registration-container-2 .registration-title::before{
+    content: " ";
+    position: absolute;
+    height: 3px;
+    width: 120px;
+    left: 0;
+    bottom: 0;
+    background: var(--background-color);
+}
+.registration-container-2 form .user-details{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 20px 0 12px 0;
+}
+form .user-details .registration-input{
+    margin-bottom: 5px;
+    width: calc(100% /2 - 20px);
+}
+.user-details .registration-input input{
+    height: 40px;
+    width: 100%;
+    border-radius: 40px;
+    border: 1px solid #ccc;
+    padding-left: 15px;
+    font-size: 15px;
+}
+.user-details .registration-input .registration-details{
+    color: var(--text-color);
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+form .register-button{
+    height: 45px;
+    margin: 10px 0;
+}
+form .register-button input{
+    height: 100%;
+    padding: 0 40px;
+    border-radius: 40px;
+    outline: none;
+    color: #fff;
+    border: none;
+    letter-spacing: 1px;
+    font-weight: 500;
+    font-size: 18px;
+    background: var(--background-color);
+}
+.terms-and-conditions{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.terms-and-conditions span{
+    padding: 0 0 0 5px;
+}
+@media (max-width: 584px) {
+    .registration-container-2{
+        max-width: 100%;
+    }
+    form .user-details .registration-input{
+        margin-bottom: 5px;
+        width: 100%;
+    }
+    .registration-container-2 form .user-details{
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+    .user-details::-webkit-scrollbar{
+        width: 0;
+    }
+}
+/*end of the register css*/
  
 .footer-link{
     text-decoration: none;
 }
 /* css for the homepage */
 .btn-success{
-    background-color: rgb(214, 178, 214) !important;
+    background-color: var(--primary-color) !important;
     border: none !important;
 }
-
-.clear-button{
-    border: none;
-    cursor: pointer;
-
-    cursor: pointer;
-    border-radius: 50%;
-
-
-}
-#clear-button-svg-icon{
-    fill:rgb(155, 4, 155);
-    display: grid;
-    place-items: center;
-    background-color: rgb(236, 233, 233);
-    border-radius: 50%;
-    height: 30px;
-    width: 30px;
-}
-
 
 select {
     width: 100px;
@@ -214,7 +434,7 @@ span i{
 
 @keyframes spin-bottom-left {
     0% {
-        width: 0px; height: 0px;
+        width: 0; height: 0;
     }
     50% {
         width: 0; height: 0;
@@ -264,13 +484,16 @@ span i{
 }
 .buy-button{
 
-    background-color: rgb(214, 178, 214);
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    padding: 8px 30px;
+    padding: 10px 30px;
     text-decoration: none;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
 }
 .accordion-button{
     font-size: 14px;
@@ -278,6 +501,10 @@ span i{
 }
 #accordionExample{
     --bs-accordion-btn-focus-box-shadow: none;
+}
+.accordion-button:not(.collapsed){
+    color: grey;
+    background-color: rgb(207, 199, 199);
 }
 .accordion-button::after{
     width: 0;
@@ -458,7 +685,7 @@ select>option{
 .footer-link{
     text-decoration: none;
     padding: 8px 40px;
-    border: 1px solid rgb(227, 225, 225);
+    border: 1px solid rgb(214, 178, 214);
     border-radius: 4px;
     cursor: pointer;
     color: grey;
@@ -469,13 +696,15 @@ select>option{
     border: none;
     padding: 8px 50px;
     border-radius: 4px;
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
     cursor: pointer;
     font-size: 13px;
-    color: grey;
+    color: white;
 }
 .fa-lock{
     padding-right: 5px;
     font-size: 10px;
+    color: white;
 }
 /* end of payment css */
 /* the start of the messages css */

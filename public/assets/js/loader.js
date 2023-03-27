@@ -3,6 +3,6 @@ window.addEventListener('load', function(){
     loader.classList.add('load-hidden');
 
     loader.addEventListener('transitionend', function(){
-        document.body.removeChild("load");
+        loader.classList.remove("load");
     })
 })

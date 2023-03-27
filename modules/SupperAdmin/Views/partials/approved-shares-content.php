@@ -26,8 +26,8 @@
                                 <th> Sacco </th>
                                 <th> Member Number </th>
                                 <th> Shares </th>
-                                <th> Verification </th>
-                                <th> Creation Date </th>
+                                <th> Approval </th>
+                                <th> Date Created </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -37,9 +37,9 @@
                                         <td>
                                             <?= ucfirst($user['fname'] ). ' ' . ucfirst($user['lname']) ?>
                                         </td>
-                                        <td> <?= ucfirst($user['sacco']) ?> </td>
+                                        <td> <?= ucfirst($user['name']) ?> </td>
                                         <td> <?= $user['membership_number'] ?> </td>
-                                        <td> <?= $user['shares_amount'] ?> </td>
+                                        <td> <?= $user['shares_on_sale'] ?> </td>
                                         <td>
                                             <?php if($user['is_verified'] == 1): ?>
                                                 <label class="badge badge-gradient-success">YES</label>

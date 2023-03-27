@@ -65,7 +65,7 @@
             </div>
         </div>
         <div class="footer-button">
-            <a href="<?= base_url().'/'?>" class="footer-link">Cancel</a>
+            <a href="<?= base_url().'/my_bids'?>" class="footer-link">Cancel</a>
             <button type="submit" class="footer-pay-button"><span><i class="fa-solid fa-lock"></i></span> Pay Now</button>
         </div>
         </form>

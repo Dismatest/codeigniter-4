@@ -11,4 +11,14 @@ window.onload = function() {
     close_btn.addEventListener('click', function () {
         navigation_bar.classList.remove('active2');
     });
+
+    const navLink = window.location.pathname;
+    const allNavLink = document.querySelectorAll('.navbar2 a');
+    allNavLink.forEach(link =>{
+        if(link.href.includes(`${navLink}`)){
+            link.classList.add('active')
+            console.log(`${navLink}`)
+        }
+    }
+    )
 }

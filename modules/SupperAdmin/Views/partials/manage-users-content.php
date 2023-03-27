@@ -6,11 +6,7 @@
                 </span> Manage Users
         </h3>
         <nav aria-label="breadcrumb">
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
-                </li>
-            </ul>
+            <div id="ManageUsers"></div>
         </nav>
     </div>
 
@@ -20,7 +16,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
 
-                        <table id="example" class="table table-striped" style="width:100%">
+                        <table id="manageUsers" class="table table-striped" style="width:100%">
                             <thead>
                             <tr>
                                 <th> Name </th>
@@ -55,7 +51,7 @@
                                                 <i class="mdi mdi-border-color"></i>
                                             </a>
 
-                                            <a href="<?= base_url().'/supperAdmin/manage-users/delete/'.$user['uniid']; ?>" class="btn btn-gradient-danger btn-rounded btn-icon" style="display: grid; place-items: center; width: 20px; height: 20px; margin: 0 3px;">
+                                            <a href="<?= base_url().'/supperAdmin/manage-users/delete/'.$user['uniid']; ?>" class="btn btn-gradient-danger btn-rounded btn-icon" style="height: 24px; width: 24px; display: grid; place-items: center;">
                                                 <i class="mdi mdi-delete"></i>
                                             </a>
 

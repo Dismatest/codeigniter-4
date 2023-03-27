@@ -8,7 +8,7 @@
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span><a href="<?= 'create-new' ?>">Create New <i class="mdi mdi-plus-box icon-sm text-primary align-middle"></i></a>
+                    <span></span><a href="<?= 'create_share' ?>">Create New <i class="mdi mdi-plus-box icon-sm text-primary align-middle"></i></a>
                 </li>
             </ul>
         </nav>
@@ -35,15 +35,18 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <?php if(isset($shares) && !empty($shares)): ?>
                             <?php foreach ($shares as $share): ?>
                                 <tr>
                                     <td><?= $share['fname'] .' '. $share['lname'] ?></td>
                                     <td><?= $share['phone'] ?></td>
                                     <td><?= $share['membership_number'] ?></td>
-                                    <td><?= $share['shares_amount'] ?></td>
-                                    <td><?= $share['cost'] ?></td>
+                                    <td><?= $share['shares_on_sale'] ?></td>
+                                    <td><?= $share['cost_per_share'] ?></td>
                                     <td><?= $share['total'] ?></td>
+                                    <?php if(isset($time) && !empty($time)): ?>
                                     <td><?= $time ?></td>
+                                    <?php endif; ?>
                                     <?php if ($share['is_verified'] == 0): ?>
                                         <td><a href="<?= 'verify-share/'.$share['uuid'] ?>" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><label class="badge badge-gradient-danger">Pending</label></a></td>
                                     <?php else: ?>
@@ -56,6 +59,11 @@
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="9" class="text-center">No shares found</td>
+                                </tr>
+                            <?php endif; ?>
                             </tbody>
                         </table>
 
@@ -68,10 +76,12 @@
                                     </div>
                                     <div class="modal-body">
                                         <p>Are you sure you want to verify this share?</p>
+
                                         <form method="post" action="<?= 'verify-share/'.$share['uuid'] ?>">
                                             <?= csrf_field() ?>
                                             <button type="submit" class="btn btn-primary">Verify</button>
                                         </form>
+
                                     </div>
                                 </div>
                             </div>

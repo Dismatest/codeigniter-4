@@ -80,6 +80,7 @@ class Auth extends BaseController
                                 session()->set('logged_in_info', $login_activity_id);
                             }
                             $sessionData = [
+                                'user_id' => $user['user_id'],
                                 'currentLoggedInUser' => $user['uniid'],
                                 'email' => $user['email'],
                                 'fname' => $user['fname'],
@@ -182,17 +183,13 @@ class Auth extends BaseController
                     'uniid' => $uniid,
                     'activation_date' => date('Y-m-d h:i:s') //update the activation_date each time the page is requested
                 ];
-                $message = "Hello".$sanitizeFname."\n Your account was created successfully, please activate your account using the following link \n".anchor(base_url('activate/'.$usersData['uniid']),' Activate now','');
                 $query = $this->userModel->insert($usersData);
                 if($query){
-
-                    $this->email->setFrom('billclintonogot88@gmail.com', 'Sacco Product Application');
-                    $this->email->setTo("$sanitizeEmail");
-
-                    $this->email->setSubject('Email Activation Link');
-                    $this->email->setMessage($message);
-
-                    if($this->email->send()){
+                    $message = "Hello".$sanitizeFname."\n Your account was created successfully, please activate your account using the following link \n".anchor(base_url('activate/'.$usersData['uniid']),' Activate now','');
+                    $emailSubject = "Password reset link";
+                    $setFrom = 'billclintonogot88@gmail.com';
+                    $messageTitle = "Sacco Product Application";
+                    if($this->sendEmail($fname, $email, $setFrom, $messageTitle, $emailSubject, $message)){
                         return redirect()->to(base_url('/login'))->with('success', 'An activation email has been sent to your email, please activate your account');
                     }else{
                         return redirect()->to(base_url('/login'))->with('fail', 'we can not send an activation email now');
@@ -204,6 +201,27 @@ class Auth extends BaseController
             }
         }
         return view('register', $data);
+    }
+
+    public function sendEmail($name, $email, $setFrom, $messageTitle, $emailSubject, $message)
+    {
+        $this->email->setFrom($setFrom, $messageTitle);
+        $this->email->setTo("$email");
+
+        $this->email->setSubject("$emailSubject");
+
+        $email_template = view('email_template', [
+            'name' => $name,
+            'message' => $message
+        ]);
+
+        // Set email message
+        $this->email->setMessage($email_template);
+        if($this->email->send()){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
@@ -244,15 +262,29 @@ public function activate($uuid = null){
 
 public function expiry_date($expiry_date){
 
+    $updated_time = strtotime($expiry_date);
+    $currentTime = time();
+    $difference_time = ($currentTime - $updated_time)/60;
+    if($difference_time < 3600){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+//the second function for expiry date
+
+public function checkExpiry($date){
         $current_time = now();
         $reg_time = strtotime($current_time);
-        $difference_in_time = (int)$expiry_date - (int)$reg_time;
+        $difference_in_time = (int)$date - (int)$reg_time;
         if(3600 < $difference_in_time){
             return true;
         }else{
             return false;
         }
-}
+    }
+
 //the function that is user to get user agent detail
 public function getUserAgentInfo(){
         $agent = $this->request->getUserAgent();

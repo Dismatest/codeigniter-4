@@ -1,12 +1,29 @@
 <?= $this->extend("client_base/base.php");?>
 <?= $this->section('content');?>
-
 <?= $this->include('includes/navbar.php'); ?>
-
+    <script>
+        setTimeout(function (){
+            $('#hideTempMessage').addClass('move-out-flash');
+            setTimeout(function (){
+                $('#hideTempMessage').remove();
+            }, 500);
+        }, 5000);
+    </script>
     <div class="load"></div>
 <div class="container">
     <div class="row" style="margin-bottom: 1.3em; margin-top: 2.0em;">
         <div class="col-md-7">
+            <?php if(session()->getTempdata('success')): ?>
+                <div class="alert alert-success" id="hideTempMessage">
+                    <?= session()->getTempdata('success') ?>
+                </div>
+            <?php else: ?>
+                <?php if(session()->getTempdata('fail')): ?>
+                    <div class="alert alert-danger" id="hideTempMessage">
+                        <?= session()->getTempdata('fail') ?>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
             <div class="border-col responsive-margin-top">
                 <div class="shares-desc-div">
                     <div class="shares-description-sacco-title">
@@ -23,9 +40,9 @@
                     </div>
                     <div class="">
                             <div class="d-flex">
-                                <?php if($is_registered == true): ?>
-                                    <a href="<?= $payment_link ?>" class="buy-button">Buy Now</a>
-                                <?php elseif($is_registered == false) : ?>
+                                <?php if($is_approved == true): ?>
+                                    <a href="#" class="buy-button" id="display-sell-now-btn" onclick="document.getElementById('id01').style.display='block'">Place a bid</a>
+                                <?php elseif($is_approved == false) : ?>
                                     <div class="membership-info">
                                         <p>
                                             Hello <?= ucfirst(session()->get('fname')) ?>, we have verified that you are not a member of <?= $share['name'] ?> sacco. Kindly
@@ -41,7 +58,23 @@
                 </div>
 
             </div>
-        </div> 
+        </div>
+
+<!--start of the bid model-->
+        <div id="id01" class="user-share-model">
+            <form class="modal-content-user animate" action="<?= $share['uuid'].'/bid' ?>" method="post" id="form">
+                <div class="imgcontainer">
+                    <span onclick="document.getElementById('id01').style.display='none'" class="x-close-button" title="Close Modal"><i class="fa-solid fa-x close-font-icon"></i></span>
+                </div>
+
+                <div class="container1">
+                    <label for="shares"><b class="shares-sell-heading">Your Bid Amount (ksh)</b></label>
+                    <input type="text" class="customer-selling-button" name="bid" id="shares-for-sale-input-1" value="<?= $share['total']?>">
+                    <button type="submit" class="confirm-sell-shares-btn" id="sell-now-btn">Place a bid</button>
+                </div>
+            </form>
+        </div>
+<!-- end of the modal-->
 
        <div class="col-md-5">
             <div class="border-coll d-flex justify-content-between responsive-margin">
@@ -78,11 +111,22 @@
             </div>
         </div>
 
-        <?php if($is_registered == false): ?>
+        <?php if($is_approved == false): ?>
             <div class="row">
                 <div class="col-md-7">
                     <div class="membership-title">
                         <h5>Membership Registration Form</h5>
+                        <?php if(session()->getTempdata('success')): ?>
+                            <div class="alert alert-success" id="hideTempMessage">
+                                <?= session()->getTempdata('success') ?>
+                            </div>
+                        <?php else: ?>
+                            <?php if(session()->getTempdata('fail')): ?>
+                                    <div class="alert alert-danger" id="hideTempMessage">
+                                    <?= session()->getTempdata('fail') ?>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                     <main>
                         <div class="stepper">
@@ -91,36 +135,41 @@
                             <div class="step--3">Step 3</div>
                             <div class="step--4">Finish</div>
                         </div>
-                        <form class="form form-active">
+                        <form class="form form-active" method="post" action="">
                             <div class="form--header-container">
                                 <h1 class="form--header-title">
-                                    Personal Info
+                                    Personal Information
                                 </h1>
                             </div>
-                            <input type="text" class="stepper-input-fields" placeholder="fname" >
-                            <input type="text" class="stepper-input-fields" placeholder="Lname" >
+                            <labe for="fname" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500;">First Name</labe>
+                            <input type="text" class="stepper-input-fields" value="<?= $user['fname'] ?>" name="fname">
+                            <labe for="lname" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500; padding-top: 5px;">Last Name</labe>
+                            <input type="text" class="stepper-input-fields" value="<?= $user['lname'] ?>" name="lname">
                             <button class="form__btn" id="btn-1">Next</button>
                         </form>
-                        <form class="form">
+                        <form class="form" method="post" action="">
                             <div class="form--header-container">
                                 <h1 class="form--header-title">
-                                    Personal Info
+                                    Personal Information
                                 </h1>
                             </div>
-
-                            <input type="text"class="stepper-input-fields"  placeholder="Phone" >
-                            <input type="text" class="stepper-input-fields" placeholder="Email" >
+                            <labe for="phone" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500;">Phone Number</labe>
+                            <input type="text"class="stepper-input-fields" value="<?= $user['phone'] ?>" name="phone">
+                            <labe for="email" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500; padding-top: 5px;">Email Address</labe>
+                            <input type="text" class="stepper-input-fields" value="<?= $user['email'] ?>" name="email">
                             <button class="form__btn" id="btn-2-prev">Previous</button>
                             <button class="form__btn" id="btn-2-next">Next</button>
                         </form>
-                        <form class="form">
+                        <form class="form" method="post" action="">
                             <div class="form--header-container">
                                 <h1 class="form--header-title">
-                                    Personal Info
+                                    Personal Information
                                 </h1>
                             </div>
-                            <input type="text" class="stepper-input-fields" placeholder="ID" >
-                            <input type="text" class="stepper-input-fields" placeholder="Sacco" >
+                            <labe for="sacco-name" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500;">Sacco Name</labe>
+                            <input type="text" class="stepper-input-fields" value="<?= $share['name'] ?>" name="sacco-name">
+                            <labe for="identification" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500; padding-top: 5px;">ID Number</labe>
+                            <input type="text" class="stepper-input-fields" placeholder="ID" name="identification">
                             <button class="form__btn" id="btn-3">Submit</button>
                         </form>
                         <div class="form--message"></div>
@@ -129,7 +178,7 @@
             </div>
         <?php endif; ?>
 
-        <!-- Modal -->
+        <!-- share posted share modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content modal-bg-color">

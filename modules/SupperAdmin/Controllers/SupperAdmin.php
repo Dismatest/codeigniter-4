@@ -20,11 +20,13 @@ class SupperAdmin extends BaseController
     }
     public function dashboard()
     {
-
-
+        $allUsers = $this->loginActivityModel->findAllUsers();
+        $allSacco = $this->loginActivityModel->findAllSaccoCount();
 
         $data = [
             'dashboardTitle' => 'Dashboard',
+            'allUsers' => $allUsers,
+            'allSacco' => $allSacco,
 
         ];
         return view('Modules\SupperAdmin\Views\dashboard', $data);
@@ -55,21 +57,12 @@ class SupperAdmin extends BaseController
                         'is_unique' => 'Email already exists',
                     ]
                 ],
-                'location' => [
-                    'rules' => 'required|max_length[50]',
-                    'errors' => [
-                        'required' => 'Location is required',
-                        'min_length' => 'The maximum length should be 50',
-                    ]
-                ],
             ];
             if (!$this->validate($rules)) {
                 $data['validation'] = $this->validator;
             } else {
                 $name = $this->request->getVar('name');
                 $email = $this->request->getVar('email');
-                $location = $this->request->getVar('location');
-                $website = $this->request->getVar('website');
                 $uuid = md5(str_shuffle('abcdefghijklmnopqrstuvwxyz1234567890' . time()));
                 $password = random_string('alnum', 8);
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
@@ -78,8 +71,6 @@ class SupperAdmin extends BaseController
                     'uuid' => $uuid,
                     'name' => $name,
                     'email' => $email,
-                    'location' => $location,
-                    'website' => $website,
                     'password' => $hashedPassword,
                 ];
                 $message = "<br/> The sacco account was created successfully, please find your default password bellow, and please ensure you updated the password through the sacco admin dashboard.<br/><br/>" . $password;
@@ -97,7 +88,7 @@ class SupperAdmin extends BaseController
             }
 
         }
-        return view('Modules\SupperAdmin\Views\sacco\register-sacco', $data);
+        return view('Modules\SupperAdmin\Views\register-sacco', $data);
     }
 
     public function sendEmail($name, $email, $message)
@@ -146,29 +137,84 @@ class SupperAdmin extends BaseController
             'sacco' => $this->loginActivityModel->findSacco($uuid),
         ];
 
-        if($this->request->getMethod() == 'post'){
-            $name = $this->request->getVar('name');
-            $email = $this->request->getVar('email');
-            $location = $this->request->getVar('location');
-            $website = $this->request->getVar('website');
-
-            $updateSacco = [
-                'name' => $name,
-                'email' => $email,
-                'location' => $location,
-                'website' => $website,
+        if($this->request->getMethod() == 'post') {
+            $rules = [
+                'phone' => [
+                    'rules' => 'required|numeric',
+                    'errors' => [
+                        'required' => 'Phone number is required',
+                        'numeric' => 'Phone number should be numeric',
+                    ]
+                ],
+                'email' => [
+                    'rules' => 'required|valid_email',
+                    'errors' => [
+                        'required' => 'Email field is required',
+                        'valid_email' => 'A valid email address is required',
+                    ]
+                ],
+                'office' => [
+                    'rules' => 'required|max_length[50]',
+                    'errors' => [
+                        'required' => 'Office is required',
+                        'min_length' => 'The maximum length should be 50',
+                    ]
+                ],
+                'website' => [
+                    'rules' => 'required|max_length[50]',
+                    'errors' => [
+                        'required' => 'Website is required',
+                        'min_length' => 'The maximum length should be 50',
+                    ]
+                ],
+                'till' => [
+                    'rules' => 'required|max_length[10]|numeric',
+                    'errors' => [
+                        'required' => 'Till number is required',
+                        'min_length' => 'The maximum length should be 10',
+                        'numeric' => 'Till number should be numeric',
+                    ]
+                ],
+                'commission' => [
+                    'rules' => 'required|max_length[2]|numeric',
+                    'errors' => [
+                        'required' => 'Commission is required',
+                        'min_length' => 'The maximum length should be 2',
+                        'numeric' => 'Commission should be numeric',
+                    ]
+                ],
             ];
-            $sacco = $this->loginActivityModel->updateSacco($uuid, $updateSacco);
-            if($sacco){
-                return redirect()->to('supperAdmin/manage-sacco')->with('success', 'Sacco updated successfully');
-            }else{
-                return redirect()->to('supperAdmin/manage-sacco')->with('error', 'There was an error in updating sacco');
+            if(!$this->validate($rules)){
+                $data['validation'] = $this->validator;
+            }else {
+
+                $phone = $this->request->getVar('phone');
+                $email = $this->request->getVar('email');
+                $location = $this->request->getVar('office');
+                $website = $this->request->getVar('website');
+                $till = $this->request->getVar('till');
+                $commission = $this->request->getVar('commission');
+
+                $updateSacco = [
+                    'contact_phone' => $phone,
+                    'contact_email' => $email,
+                    'location' => $location,
+                    'website' => $website,
+                    'till' => $till,
+                    'commission' => $commission,
+                ];
+
+                $sacco = $this->loginActivityModel->updateSacco($uuid, $updateSacco);
+                if($sacco){
+                    return redirect()->to('supperAdmin/manage-sacco')->with('success', 'Sacco updated successfully');
+                }else{
+                    return redirect()->to('supperAdmin/manage-sacco')->with('error', 'There was an error in updating sacco');
+                }
+
             }
 
-
-
         }
-        return view('Modules\SupperAdmin\Views\edit-sacco', $data);
+        return view('Modules\SupperAdmin\Views\edit_sacco', $data);
     }
     //user methods
 
@@ -369,6 +415,54 @@ class SupperAdmin extends BaseController
             'share' => $this->loginActivityModel->getShare($uuid),
         ];
         return view('Modules\SupperAdmin\Views\edit-share', $data);
+    }
+
+    public function setCommission(){
+        $data = [
+            'setCommissionTitle' => 'Set Commission',
+            'commissions' => $this->loginActivityModel->findAllRecords(),
+        ];
+        if ($this->request->getMethod() == 'post') {
+            $rules = [
+                'commission' => [
+                    'rules' => 'required|max_length[2]|numeric',
+                    'errors' => [
+                        'required' => 'Commission is required',
+                        'min_length' => 'Commission must be more than 2',
+                        'numeric' => 'Commission must be a number',
+                    ]
+                ],
+            ];
+            if(!$this->validate($rules)){
+                $data['validation'] = $this->validator;
+            }else{
+
+                $commissionData = [
+                    'commission' => $this->request->getVar('commission'),
+                ];
+                $getAllRecords = $this->loginActivityModel->findAllRecords();
+                $countRecords = count($getAllRecords);
+
+                if($countRecords == 1){
+                    $updateCommission = $this->loginActivityModel->updateCommission($getAllRecords[0]['commission_id'],$commissionData);
+                    if($updateCommission) {
+                        return redirect()->to('supperAdmin/set_commission')->with('success', 'Commission updated successfully');
+                    }else{
+                        return redirect()->to('supperAdmin/set_commission')->with('error', 'Commission not updated');
+                    }
+
+                }else{
+                    $insertCommission = $this->loginActivityModel->insertCommission($commissionData);
+                    if($insertCommission) {
+                        return redirect()->to('supperAdmin/set_commission')->with('success', 'Commission is set successfully');
+                    }else{
+                        return redirect()->to('supperAdmin/set_commission')->with('error', 'Commission not set');
+                    }
+                }
+            }
+            return redirect()->to('supperAdmin/set_commission')->with('success', 'Commission updated successfully');
+        }
+        return view('Modules\SupperAdmin\Views\set-commission', $data);
     }
 
 }

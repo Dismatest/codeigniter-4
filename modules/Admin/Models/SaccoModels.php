@@ -24,6 +24,21 @@ class SaccoModels extends Model
         return $query->getRowArray();
     }
 
+    public function getTotalUsers($sacco_id)
+    {
+        $builder = $this->db->table('sacco_membership');
+        $builder->where('sacco_id', $sacco_id);
+        return $builder->countAllResults();
+    }
+
+    public function getTotalActiveShares($sacco_id)
+    {
+        $builder = $this->db->table('shares_on_sale');
+        $builder->where('sacco_id', $sacco_id);
+        $builder->where('is_verified', '1');
+        return $builder->countAllResults();
+    }
+
     public function updatePassword($uuid,$password)
     {
         $builder = $this->db->table('sacco');
@@ -36,18 +51,28 @@ class SaccoModels extends Model
         }
     }
     //all the sacco shares admin methods
+    public function allMembers(){
+        $builder = $this->db->table('sacco_membership');
+        $builder->select('users.uniid, users.fname,users.lname,users.email,users.phone, sacco.name, sacco_membership.id_number');
+        $builder->join('users', 'users.user_id = sacco_membership.user_id');
+        $builder->join('sacco', 'sacco.sacco_id = sacco_membership.sacco_id');
+        $builder->orderBy('sacco_membership.created_at', 'ASC');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
     public function manageShares(){
-        $saccoName = session()->get('name');
-        $builder = $this->db->table('shares');
-        $builder->select('users.uniid, users.fname,users.lname,users.email,users.phone,shares.*');
-        $builder->join('users', 'users.user_id = shares.user_id');
-        $builder->where('shares.sacco', $saccoName);
-        $builder->orderBy('shares.created_at', 'ASC');
+        $sacco_id = session()->get('sacco_id');
+        $builder = $this->db->table('shares_on_sale');
+        $builder->select('users.uniid, users.fname,users.lname,users.email,users.phone, sacco.name, shares_on_sale.*');
+        $builder->join('users', 'users.user_id = shares_on_sale.user_id');
+        $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id');
+        $builder->where('shares_on_sale.sacco_id', $sacco_id);
+        $builder->orderBy('shares_on_sale.created_at', 'ASC');
         $query = $builder->get();
         return $query->getResultArray();
     }
     public function verifyShares($uuid){
-        $builder = $this->db->table('shares');
+        $builder = $this->db->table('shares_on_sale');
         $builder->where('uuid', $uuid);
         $builder->update(['is_verified' => 1]);
         if ($this->db->affectedRows() === 1) {
@@ -72,6 +97,16 @@ class SaccoModels extends Model
         $builder = $this->db->table('sacco_shares');
         $builder->insert($data);
         if($this->db->affectedRows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function createShare($data){
+        $builder = $this->db->table('shares_on_sale');
+        $builder->insert($data);
+        if($this->db->affectedRows() > 0) {
             return true;
         }else{
             return false;
@@ -137,5 +172,16 @@ class SaccoModels extends Model
         }else{
             return false;
         }
+    }
+
+    public function saveAgreementFile($fileData){
+        $builder = $this->db->table('agreement');
+        $builder->insert($fileData);
+        if($this->db->affectedRows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+
     }
 }

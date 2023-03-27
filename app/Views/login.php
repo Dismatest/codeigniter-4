@@ -1,20 +1,20 @@
-<?php $this->extend("login_base/base.php");?>
-<?php $this->section('login');?>
-<script>
-    setTimeout(function (){
-        $('#hideTempMessage').hide();
-    }, 3000)
-</script>
-<div class="container-scroller">
-      <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div class="content-wrapper d-flex align-items-center auth">
-          <div class="row flex-grow">
-            <div class="col-lg-4 mx-auto">
-              <div class="auth-form-light text-left p-5">
-              <?php 
-                if(!empty(session()->getFlashData('success'))){
+<?php $this->extend("client_base/base.php");?>
+<?php $this->section('content');?>
+    <script>
+        setTimeout(function (){
+            $('#hideTempMessage').hide();
+        }, 3000)
+    </script>
+    <section>
+        <div class="imgBx">
+            <img src="https://images.unsplash.com/photo-1524508762098-fd966ffb6ef9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="">
+        </div>
+        <div class="contentBx">
+            <div class="formBx">
+                <?php
+                if(!empty(session()->getTempdata('success'))){
                     ?>
-                    <div class="alert alert-success" id="hideTempMessage"><?= session()->getFlashData('success') ?></div>
+                    <div class="alert alert-success" id="hideTempMessage"><?= session()->getTempData('success') ?></div>
                     <?php
                 }else if(!empty(session()->getTempdata('fail'))){
                     ?>
@@ -22,48 +22,42 @@
                     <?php
                 }
                 ?>
-                  <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                      <img src="<?= base_url().'/assets/images/img.png'?>" alt="img" style="object-fit: cover; height: 9.5em;">
-                      <h4>Hello! login to continue</h4>
-                  </div>
-                <form class="pt-3" method="post" action="">
-                  <?= csrf_field()?>
-                  <div class="form-group">
-                    <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email" name="email">
-                    <?php if(isset($validation)) : ?>
-                    <?php if($validation->hasError('email')) : ?>
-                    <span class="text-danger text-sm"><?= $validation->getError('email') ?></span>
-                    <?php endif; ?>
-                    <?php endif; ?>
-                  </div>
-                  <div class="form-group">
-                    <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" name="password">
-                    <?php if(isset($validation)) : ?>
-                    <?php if($validation->hasError('password')) : ?>
-                    <span class="text-danger text-sm"><?= $validation->getError('password') ?></span>
-                    <?php endif; ?>
-                    <?php endif; ?>
-                  </div>
-                  <div class="mt-3">
-                    <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SIGN IN</button>
-                  </div>
-                  <div class="my-2 d-flex justify-content-between align-items-center">
-                    <div class="form-check">
-                      <label class="form-check-label text-muted">
-                        <input type="checkbox" class="form-check-input" name="remember"> Keep me signed in </label>
+                <h2>Login</h2>
+                <form method="post" action="">
+                    <?= csrf_field()?>
+                    <div class="inputBx">
+                        <span>Email</span>
+                        <input type="email" placeholder="enter your email" name="email">
+                        <?php if(isset($validation)) : ?>
+                            <?php if($validation->hasError('email')) : ?>
+                                <span class="text-danger text-sm"><?= $validation->getError('email') ?></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
-                    <a href="<?= base_url('change-password')?>" class="auth-link text-black">Forgot password?</a>
-                  </div>
-                  <div class="text-center mt-4 font-weight-light"> Don't have an account? <a href="<?= base_url('register') ?>" class="text-primary">Create</a>
-                  </div>
+                    <div class="inputBx">
+                        <span>Password</span>
+                        <input type="password" placeholder="enter your password" name="password">
+                        <?php if(isset($validation)) : ?>
+                            <?php if($validation->hasError('password')) : ?>
+                                <span class="text-danger text-sm"><?= $validation->getError('password') ?></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="remember-me">
+                        <label><input type="checkbox" name="remember"> Remember me</label>
+                    </div>
+                    <div class="inputBx">
+                        <input type="submit" value="Sign In">
+                    </div>
+                    <div class="inputBx">
+                        <p>Don`t have an account? <a href="<?= base_url('register') ?>">Sign Up</a></p>
+                    </div>
+                    <div class="inputBx">
+                        <p>Forgot password? <a href="<?= base_url('forgot-password')?>">Reset Password</a></p>
+                    </div>
                 </form>
-              </div>
             </div>
-          </div>
         </div>
-        <!-- content-wrapper ends -->
-      </div>
-      <!-- page-body-wrapper ends -->
-    </div>
+    </section>
 
 <?php $this->endSection();?>

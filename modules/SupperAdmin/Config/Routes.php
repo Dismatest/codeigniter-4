@@ -29,6 +29,7 @@ $routes->group('supperAdmin', ['namespace' => 'Modules\SupperAdmin\Controllers']
     //shares routes
 
     $routes->get('approved-shares', 'SupperAdmin::approvedShares');
+    $routes->match(['post', 'get'], 'set_commission', 'SupperAdmin::setCommission');
     $routes->get('not-approved-shares', 'SupperAdmin::notApprovedShares');
     $routes->match(['post', 'get'], 'approve-share/(:alphanum)', 'SupperAdmin::approveShare/$1');
     $routes->get('manage-shares', 'SupperAdmin::manageShares');
