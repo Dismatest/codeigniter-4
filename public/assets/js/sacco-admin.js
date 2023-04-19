@@ -1,13 +1,13 @@
-$(document).ready(function() {
-    $('#upload-form').on('submit', function(event) {
+$(document).ready(function () {
+    $('#upload-form').on('submit', function (event) {
         event.preventDefault();
         let myFile = $('#agreementInputField');
         let inputValue = myFile.val();
-        if(!inputValue) {
+        if (!inputValue) {
             var errors = 'Please select file to upload';
             $('#file-error-upload').text(errors);
             return;
-        }else{
+        } else {
             errors = '';
             $('#file-error-upload').text(errors);
         }
@@ -19,28 +19,358 @@ $(document).ready(function() {
             contentType: false,
             cache: false,
             processData: false,
-            success: function(data) {
+            success: function (data) {
                 $('#upload-form')[0].reset();
                 let success = 'The file has been saved successfully';
                 $("#form-success").text(success);
             },
-                error: function(error) {
-                    let fail = 'An error has occurred, refresh the page then upload new file';
-                    $("#fail").text(fail);
-                }
-         })
+            error: function (error) {
+                let fail = 'An error has occurred, refresh the page then upload new file';
+                $("#fail").text(fail);
+            }
+        })
     });
 });
 
+// ajax request for viewing the data
+
+$(document).ready(function () {
+    $(document).on('click', '.mark-as-read', function () {
+
+        let data_id = $(this).data('id');
+
+        $.ajax({
+            method: 'POST',
+            url: '/admin/get_each_share_notification',
+            data: {
+                share_id: data_id,
+            },
+
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    const date = new Date(value.created_at);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const formattedDate = `${month}/${day}/${year}`;
+
+                    $('#notification-seller-name').text(value.fname + ' ' + value.lname);
+                    $('#buyer-member-number').text(value.membership_number);
+                    $('#notification-shares').text(value.shares_on_sale);
+                    $('#notification-sacco').text(value.name);
+                    $('#notification-share-value').text(value.total);
+                    $('#notification-date').text(formattedDate);
+                    $('#notification-reject').attr({'data-id': value.uuid, 'data-name': value.user_id});
+                    $('#notification-approve').attr({'data-id': value.uuid, 'data-name': value.user_id});
+
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+
+        });
+    });
+});
+// ajax view shares in notification
+
+// reject and approve shares ajax request
+$(document).ready(function () {
+    $('#notification-reject').on('click', function () {
+        let share_id = $(this).data('id');
+        let user_id = $(this).data('name');
+        let reason = $('#reason').val();
+
+        if (reason === '') {
+            $('.reject-share-errors').css('display', 'block');
+            $('#reason').css('border', '1px solid red');
+            return false;
+        } else {
+
+            $('.reject-share-errors').css('display', 'none');
+            $('#reason').css('border', '1px solid #ced4da');
+        }
+
+        $.ajax({
+            method: 'POST',
+            url: '/admin/reject_share',
+            data: {
+                share_id: share_id,
+                user_id: user_id,
+                reason: reason,
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    $('#notificationsModalReport').modal('hide');
+                    updateRejectShares(share_id, user_id);
+                    $('#reason').val('');
+                    $('#displayShareNotifications').empty();
+                    displaySingleShare();
+                    alertify.set('notifier', 'position', 'bottom-right');
+                    alertify.success(response.message);
+
+                }
+            },
+
+            error: function (error) {
+                console.log(error);
+            }
+
+        });
+    });
+});
+
+function updateRejectShares(share_id, user_id) {
+    $.ajax({
+        url: '/admin/update_reject_shares',
+        method: 'POST',
+        data: {
+            share_id: share_id,
+            user_id: user_id,
+        },
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+
+    });
+}
+
+$(document).ready(function () {
+    $('#notification-approve').on('click', function () {
+        let share_id = $(this).data('id');
+        let user_id = $(this).data('name');
+        $.ajax({
+            url: '/admin/approve_share',
+            method: 'POST',
+            data: {
+                share_id: share_id,
+                user_id: user_id,
+            },
+            success: function (response) {
+                $('#notificationsModalReport').modal('hide');
+                $('#displayShareNotifications').empty();
+                displaySingleShare();
+                alertify.set('notifier', 'position', 'bottom-right');
+                alertify.success(response.message);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+
+        });
+    });
+});
+
+// end of reject and approve shares ajax request
+
+$(document).ready(function () {
+    displaySingleShare();
+});
+
+function displaySingleShare() {
+    $.ajax({
+        url: '/admin/view_share_notification',
+        method: 'GET',
+        success: function (response) {
+            let countAllResult = Object.keys(response).length;
+            $('#notification-count').text(countAllResult);
+            $.each(response, function (key, value) {
+                let row = '<tr>' +
+
+                    '<td>' + value.fname + ' ' + value.lname + '</td>' +
+                    '<td>' + value.membership_number + '</td>' +
+                    '<td>' + value.shares_on_sale + '</td>' +
+                    '<td>' + 'Ksh: ' + value.total + '</td>' +
+                    '<td>' +
+                    '<button class="btn btn-sm btn-primary mark-as-read" data-bs-toggle="modal" data-bs-target="#notificationsModalReport" data-id="' + value.uuid + '">View</button>' +
+                    '</td>' +
+                    '</tr>'
+
+                $('#notificationTable tbody').append(row);
+            });
+
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+
+// end
+
+$(document).ready(function () {
+
+    $(document).on('click', '.view-btn', function () {
+        var data_id = $(this).data('id');
+        $.ajax({
+            method: 'POST',
+            url: 'reports/view',
+            data: {
+                report_id: data_id,
+            },
+            success: function (response) {
+                $.each(response, function (key, value) {
+                    $('#seller-name').text(value[0].seller_fname + ' ' + value[0].seller_lname);
+                    $('#buyer-name').text(value[0].buyer_fname + ' ' + value[0].buyer_lname);
+                    $('#shares-sold').text(value[0].shares_on_sale);
+                    $('#share-value').text(value[0].total);
+                    $('#amount').text(value[0].amount);
+                    $('#mpesaReceiptNumber').text(value[0].mpesaReceiptNumber);
+                    $('#date').text(value[0].transactionDate);
+                });
+            }
+        });
+    });
+
+});
+
+// approve shares ajax request
+$(document).ready(function () {
+    $(document).on('click', '.approve-share', function () {
+        var share_id = $(this).data('id');
+        $.ajax({
+            method: 'POST',
+            url: 'manage_shares/approve',
+            data: {
+                share_id: share_id,
+            },
+            success: function (response) {
+                alertify.set('notifier', 'position', 'bottom-right');
+                alertify.success(response.status);
+            }
+        });
+    });
+});
 
 // js for the admin file upload
+// registering new user
+$(document).ready(function () {
+
+    $('#register').on('click', function () {
+
+            let fname = $('#fname');
+            let lname = $('#lname');
+            let email = $('#email');
+            let phone = $('#phone');
+
+            $('#create-new-users').validate({
+                rules: {
+                    errorClass: 'error',
+                    validClass: 'valid',
+                    fname: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20,
+                    },
+                    lname: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20,
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    phone: {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 12,
+                    }
+                },
+                messages: {
+                    fname: {
+                        required: 'Please enter first name',
+                        minlength: 'First name must be at least 3 characters',
+                        maxlength: 'First name must not exceed 20 characters',
+                    },
+                    lname: {
+                        required: 'Please enter last name',
+                        minlength: 'Last name must be at least 3 characters',
+                        maxlength: 'Last name must not exceed 20 characters',
+                    },
+                    email: {
+                        required: 'Please enter last name',
+                        email: 'Please enter a valid email address',
+                    },
+                    phone: {
+                        required: 'Please enter last name',
+                        minlength: 'Phone number must be at least 10 characters',
+                        maxlength: 'Phone number must not exceed 12 characters',
+                    }
+
+
+                },
+                highlight: function (element) {
+                    $(element).addClass('error');
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass('error');
+                },
+                errorPlacement: function (error, element) {
+                    error.addClass('help-block');
+                    element.parents('.form-group').addClass('has-error');
+                    error.appendTo(element.parent());
+                },
+                success: function (label) {
+                    label.parents('.form-group').removeClass('has-error');
+                },
+                onkeyup: function (element) {
+                    $(element).valid();
+                },
+                submitHandler: function (form) {
+
+                    $.ajax({
+                        method: 'POST',
+                        url: '/admin/new_user_post',
+                        data: {
+                            fname: fname.val(),
+                            lname: lname.val(),
+                            email: email.val(),
+                            phone: phone.val(),
+                        },
+                        success: function (response) {
+                            if(response.error === true){
+                                alertify.set('notifier', 'position', 'bottom-right');
+                                alertify.error(response.messages.phone + " " + response.messages.email);
+                            }
+                            if (response.status === 200) {
+                                $('#registerModal').modal('hide');
+                                alertify.set('notifier', 'position', 'bottom-right');
+                                alertify.success(response.messages);
+                            }
+                            if(response.status === 201){
+                                alertify.set('notifier', 'position', 'bottom-right');
+                                alertify.error(response.messages);
+                            }
+                            if(response.status === 500){
+                                alertify.set('notifier', 'position', 'bottom-right');
+                                alertify.error(response.messages);
+                            }
+                        },
+
+                        error: function (error) {
+                            console.log(error);
+                        }
+
+                    });
+
+                }
+
+            });
+        }
+    );
+});
 document.querySelectorAll(".drop-zone--input").forEach(element => {
     const dropZoneElement = element.closest(".drop-zone");
     dropZoneElement.addEventListener("click", e => {
         element.click();
     });
     element.addEventListener("change", e => {
-        if(element.files.length){
+        if (element.files.length) {
             updateThumbnail(dropZoneElement, element.files[0])
         }
     })
@@ -48,16 +378,16 @@ document.querySelectorAll(".drop-zone--input").forEach(element => {
         e.preventDefault();
         dropZoneElement.classList.add("drop-zone--over");
     });
-    ["dragleave", "dragend"].forEach(type =>{
-        dropZoneElement.addEventListener(type, e =>{
+    ["dragleave", "dragend"].forEach(type => {
+        dropZoneElement.addEventListener(type, e => {
             dropZoneElement.classList.remove("drop-zone--over")
         });
     });
-    dropZoneElement.addEventListener("drop", e =>{
+    dropZoneElement.addEventListener("drop", e => {
         e.preventDefault();
-        if(e.dataTransfer.files.length > 1){
+        if (e.dataTransfer.files.length > 1) {
             return false;
-        }else{
+        } else {
             element.files = e.dataTransfer.files;
             updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
         }
@@ -65,35 +395,35 @@ document.querySelectorAll(".drop-zone--input").forEach(element => {
     })
 });
 
-function updateThumbnail(dropZoneElement, file){
+function updateThumbnail(dropZoneElement, file) {
     let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumbnail");
-    if(dropZoneElement.querySelector(".drop-zone__prompt")){
+    if (dropZoneElement.querySelector(".drop-zone__prompt")) {
         dropZoneElement.querySelector(".drop-zone__prompt").remove();
     }
-    if(!thumbnailElement){
+    if (!thumbnailElement) {
         thumbnailElement = document.createElement("div");
         thumbnailElement.classList.add("drop-zone__thumb");
         dropZoneElement.appendChild(thumbnailElement);
 
     }
     thumbnailElement.dataset.label = file.name;
-    if(file.type.startsWith("image")){
+    if (file.type.startsWith("image")) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
             thumbnailElement.style.backgroundImage = `url('${reader.result}')`
         }
 
-    }else{
+    } else {
         thumbnailElement.style.backgroundImage = null;
     }
 }
 
 
 // chart js for the admin page
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const adminCtx = document.getElementById('adminChart').getContext('2d');
-    if(adminCtx){
+    if (adminCtx) {
         const adminChart = new Chart(adminCtx, {
             type: 'bar',
             data: {
@@ -137,10 +467,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // displaying create shares more details form
 const displayCreateSharesForm = document.getElementById('selectMemberName');
-displayCreateSharesForm.addEventListener('change', function() {
-    const display = document.getElementById('display-share-form');
-    display.style.display = 'block';
-}
+displayCreateSharesForm.addEventListener('change', function () {
+        const display = document.getElementById('display-share-form');
+        display.style.display = 'block';
+    }
 );
 
 const sharesAmountInput = document.querySelector('input[name="sharesAmount"]');
@@ -155,7 +485,7 @@ function calculateTotalCost() {
     const sharesAmount = Number(sharesAmountInput.value);
     const costPerShare = Number(costPerShareInput.value);
 
-    totalCostInput.value= sharesAmount * costPerShare;
+    totalCostInput.value = sharesAmount * costPerShare;
 }
 
 

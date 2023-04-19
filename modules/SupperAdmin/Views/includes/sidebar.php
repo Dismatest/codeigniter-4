@@ -35,15 +35,8 @@
                 </ul>
             </div>
         </li>
-
         <li class="nav-item">
-            <a class="nav-link" href="">
-                <span class="menu-title">Notifications</span>
-                <i class="mdi mdi-chart-bar menu-icon"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="">
+            <a class="nav-link" href="<?= base_url().'/supperAdmin/view-transactions' ?>">
                 <span class="menu-title">Transactions</span>
                 <i class="mdi mdi-table-large menu-icon"></i>
             </a>
@@ -64,7 +57,13 @@
         <li class="nav-item">
             <a class="nav-link" href="<?= base_url()."/supperAdmin/set_commission"?>">
                 <span class="menu-title">Set Commission</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                <i class="mdi mdi mdi-cash-multiple menu-icon"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= base_url()."/supperAdmin/audit_trail"?>">
+                <span class="menu-title">Audit Trail</span>
+                <i class="mdi mdi mdi-alert-outline menu-icon"></i>
             </a>
         </li>
         <li class="nav-item">
@@ -73,7 +72,12 @@
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
             </a>
         </li>
-
+        <li class="nav-item">
+            <a class="nav-link" href="">
+                <span class="menu-title">Notifications</span>
+                <i class="mdi mdi-chart-bar menu-icon"></i>
+            </a>
+        </li>
     </ul>
 </nav>
 <!-- partial -->

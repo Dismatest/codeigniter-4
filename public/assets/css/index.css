@@ -9,10 +9,13 @@ html{
 .welcome-scroll-btn{
     color: white;
     background: transparent;
-    border: 1px solid purple;
+    border: 1px solid rgb(214, 178, 214);
     padding: 0.5rem 2rem;
     font-size: 1.4rem;
     letter-spacing: 1px;
+    border-radius: 0.3rem;
+    border-bottom: none;
+
 }
 .arrow-icon-down{
     font-size: 1rem;
@@ -38,6 +41,7 @@ html{
     display: flex;
     flex-direction: column;
 }
+
 .description-section{
     display: flex;
     justify-content: center;
@@ -63,26 +67,29 @@ html{
     }
 }
 .description-section h5{
-    font-size: 2rem;
+    font-size: 20px;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: white;
     font-weight: 500;
 }
 .description-section p{
-    font-size: 1rem;
-    letter-spacing: 2px;
-    color: white;
+    font-size: 1.2rem;
     font-weight: 300;
-    padding: 0.5rem 0;
+    padding: 1rem 0;
+    color: rgb(214, 178, 214);
+}
+.top-button{
+    margin-top: 10rem;
 }
 .description-section a{
-    border: 1px solid purple;
+    border: 1px solid rgb(214, 178, 214);
     color: white;
     cursor: pointer;
     text-decoration: none;
-    padding: 0.7rem 4rem;
+    padding: 1.2rem 6rem;
     font-size: 1.4rem;
+    border-radius: 0.5rem;
 }
 .arrow-icon{
     padding-left: 4px;
@@ -92,7 +99,7 @@ html{
     transition: 0.5s;
 }
 .description-section a:hover{
-    background: rgb(26, 25, 25);
+    background: rgb(214, 178, 214);
     color: white;
     transition: 0.5s;
     border: none;
@@ -103,7 +110,7 @@ html{
     width: 100%;
     height: 4em; /* adjust this as needed */
     overflow: hidden;
-    background-color: grey;
+    background-color: rgb(94, 92, 92);
     display: flex;
     align-items: center;
     text-align: center;
@@ -148,19 +155,22 @@ html{
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0.6rem 0;
+    padding: 1.5rem 0;
 }
 .onboarded-sacco-container h5{
     font-size: 1.5em;
     font-weight: 500;
-    color: grey;
     letter-spacing: 2px;
-    text-transform: uppercase;
 }
 .card-img-top{
     width: 100%;
-    height: 8em;
+    height: 5em;
     object-fit: cover;
+}
+@media screen and (max-width: 768px){
+    .card-img-top{
+        height: 8em;
+    }
 }
 .card-body h5{
     text-align: center;
@@ -179,20 +189,27 @@ html{
     overflow: hidden;
 
 }
+.shares-heading{
+    font-size: 14px;
+    font-weight: 500;
+    padding-right: 20px;
+}
 .sacco-read-more{
-    border: 1px solid purple;
+    border: 1px solid rgb(214, 178, 214);
     color: black;
     cursor: pointer;
     text-decoration: none;
-    padding: 0.5rem 3rem;
-    font-size: 0.8rem;
+    padding: 1rem 4rem;
+    font-size: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 0.3rem;
 
 }
+
 .sacco-read-more:hover{
-    background: rgb(26, 25, 25);
+    background: rgb(214, 178, 214);
     color: white;
     transition: 0.5s;
     border: none;
@@ -204,9 +221,65 @@ html{
 .arrow-icon::before{
     font-weight: 300;
 }
+
+/*footer css */
+
+/*end of the footer css*/
+
 @media all and (max-width:620px){
     .main-row-container{
         row-gap: 1.5em;
     }
+    .header-two-content{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .list-shares-main-container{
+        box-sizing: border-box;
+    }
+    .header-content-3 h6{
+        color: grey;
+        font-size: 13px;
+        font-weight: 300;
+    }
+    .header-content-3-select span{
+        color: grey;
+        font-size: 13px;
+        font-weight: 300;
+    }
+    #shares-heading1{
+        display: none;
+    }
+    .main-container{
+        height: 50dvh;
+        background-size: cover;
+    }
+    .description-section h5{
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+        text-transform: lowercase;
+        color: white;
+        font-weight: 300;
+    }
+    .description-section p{
+        font-size: 1.5rem;
+        font-weight: 300;
+        padding: 2rem 1rem;
+        color: rgb(214, 178, 214);
+    }
+    .description-section a{
+        padding: 1.2rem 4.5rem;
+        font-size: 1.2rem;
+    }
+    .top-button{
+        margin-top: 5.5rem;
+    }
+    .welcome-scroll-btn{
+        display: none;
+    }
+    .sacco-read-more{
+        padding: 0.8rem 1.5rem;
+        font-size: 0.8rem;
+    }
 }
-

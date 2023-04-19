@@ -14,16 +14,21 @@
                         <?php
                     }
                     ?>
-                    <h4>Set members commission</h4>
+                    <h4>Set members commission
+                    </h4>
                     <form class="pt-3" method="post" action="">
                         <?= csrf_field()?>
                         <div class="form-group">
-                            <label for="selectInput" class="form-label">Set commission (%)</Your></label>
-                            <?php if(!empty($commissions)): ?>
-                                <?php foreach($commissions as $commission): ?>
-                                    <input type="text" class="form-control form-control-lg" name="commission" value="<?= $commission['commission'] ?>">
-                                <?php endforeach; ?>
-                               <?php endif; ?>
+                            <label for="selectInput" class="form-label">Set commission
+
+                                <?php if(!empty($commissions)): ?>
+                                    <?php foreach($commissions as $commission): ?>
+                                        <span class="text-warning"> (<?= $commission['commission'] ?> %)</span>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+
+                                </Your></label>
+                            <input type="text" class="form-control form-control-lg" name="commission" value="">
                             <?php if(isset($validation)) : ?>
                                 <?php if($validation->hasError('commission')) :?>
                                     <span class="text-danger text-sm"><?= $validation->getError('commission') ?></span>

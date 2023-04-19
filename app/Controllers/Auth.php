@@ -88,18 +88,18 @@ class Auth extends BaseController
                                 'phone' => $user['phone'],
                             ];
                             session()->set($sessionData);
-                            return redirect()->to('/welcome_page');
+                            return redirect()->to('/index');
                         }else{
-                            session()->setTempdata('fail', 'Please activate your account or contact the admin');
-                            return redirect()->back();
+                            session()->setFlashdata('fail', 'Please activate your account or contact the admin');
+                            return redirect()->to(base_url('login'));
                         }
                     }else{
-                        session()->setTempdata('fail', 'Password is incorrect');
-                        return redirect()->back();
+                        session()->setFlashdata('fail', 'Password is incorrect');
+                        return redirect()->to(base_url('login'));
                     }
                 }else{
-                    session()->setTempdata('fail', 'Can`t find the user with that email', 20);
-                    return redirect()->back();
+                    session()->setFlashdata('fail', 'Can`t find the user with that email');
+                    return redirect()->to(base_url('login'));
                 }
             }
 
@@ -186,16 +186,19 @@ class Auth extends BaseController
                 $query = $this->userModel->insert($usersData);
                 if($query){
                     $message = "Hello".$sanitizeFname."\n Your account was created successfully, please activate your account using the following link \n".anchor(base_url('activate/'.$usersData['uniid']),' Activate now','');
-                    $emailSubject = "Password reset link";
+                    $emailSubject = "Account Activation Link";
                     $setFrom = 'billclintonogot88@gmail.com';
                     $messageTitle = "Sacco Product Application";
                     if($this->sendEmail($fname, $email, $setFrom, $messageTitle, $emailSubject, $message)){
-                        return redirect()->to(base_url('/login'))->with('success', 'An activation email has been sent to your email, please activate your account');
+                        session()->setFlashdata('success', 'An activation email has been sent to your email, please activate your account');
+                        return redirect()->to(base_url('login'));
                     }else{
-                        return redirect()->to(base_url('/login'))->with('fail', 'we can not send an activation email now');
+                        session()->setFlashdata('fail', 'There was an error sending activation email');
+                        return redirect()->to(base_url('register'));
                     }
                 }else{
-                    return redirect()->to(base_url('/login'))->with('fail', 'registration failed');
+                    session()->setFlashdata('fail', 'Registration has failed, please try again latter');
+                    return redirect()->back(base_url('register'));
                 }
 
             }
@@ -210,7 +213,7 @@ class Auth extends BaseController
 
         $this->email->setSubject("$emailSubject");
 
-        $email_template = view('email_template', [
+        $email_template = view('email_template_account_creation', [
             'name' => $name,
             'message' => $message
         ]);
@@ -334,15 +337,15 @@ public function changePassword(){
                 if(Hash::decrypt($old_password, $data['user']->password)){
                    if($this->getCurrntLoggedInUser->updatePassword($new_password, session()->get('currentLoggedInUser')))
                     {
-                        session()->setTempdata('success', 'You have changed your password');
+                        session()->setFlashdata('success', 'You have changed your password');
                         return redirect()->to(base_url('/change-password'));
                     }
                     else{
-                        session()->setTempdata('fail', 'We can not update your password now', 3);
+                        session()->setFlashdata('fail', 'We can not update your password now');
                         return redirect()->to(base_url('/change-password'));
                     }
                 }else {
-                    session()->setTempdata('fail', 'Your old password is incorrect, try again', 3);
+                    session()->setFlashdata('fail', 'Your old password is incorrect, try again');
                     return redirect()->to(base_url('/change-password'));
                 }
             }
@@ -356,7 +359,11 @@ public function changePassword(){
         }
         if(session()->has('currentLoggedInUser')){
             session()->remove('currentLoggedInUser');
-            return redirect()->to(base_url(' /login'))->with('success', 'You have logged out');
+//            return redirect()->to(base_url(' /login'))->with('success', 'You have logged out');
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'You have logged out'
+            ]);
         }
     }
 }

@@ -1,10 +1,10 @@
 <?php $this->extend("client_base/base.php");?>
 <?php $this->section('content');?>
-    <script>
-        setTimeout(function (){
-            $('#hideTempMessage').hide();
-        }, 3000)
-    </script>
+<!--    <script>-->
+<!--        setTimeout(function (){-->
+<!--            $('#hideTempMessage').hide();-->
+<!--        }, 3000)-->
+<!--    </script>-->
     <section>
         <div class="imgBx">
             <img src="https://images.unsplash.com/photo-1524508762098-fd966ffb6ef9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="">
@@ -12,13 +12,13 @@
         <div class="contentBx">
             <div class="formBx">
                 <?php
-                if(!empty(session()->getTempdata('success'))){
+                if(!empty(session()->getFlashdata('success'))){
                     ?>
-                    <div class="alert alert-success" id="hideTempMessage"><?= session()->getTempData('success') ?></div>
+                    <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
                     <?php
-                }else if(!empty(session()->getTempdata('fail'))){
+                }elseif(!empty(session()->getFlashdata('fail'))){
                     ?>
-                    <div class="alert alert-danger" id="hideTempMessage"><?= session()->getTempdata('fail') ?></div>
+                    <div class="alert alert-danger"><?= session()->getFlashdata('fail') ?></div>
                     <?php
                 }
                 ?>

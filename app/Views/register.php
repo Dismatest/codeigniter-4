@@ -4,7 +4,7 @@
         <div class="registration-container-2">
             <div class="registration-title">
                 <?php
-                if(!empty(session()->getFlashData('success'))){
+                if(!empty(session()->getFlashdata('success'))){
                     ?>
                     <div class="alert alert-success"><?= session()->getFlashData('success') ?></div>
                     <?php
@@ -15,7 +15,7 @@
                 }
                 ?>
                 <span>Registration</span>
-                <span><a href="<?= base_url('') ?>">login</a></span>
+                <span><a href="<?= base_url('login') ?>">login</a></span>
             </div>
             <form action="" method="post">
                 <div class="user-details">
@@ -57,7 +57,7 @@
                     </div>
                     <div class="registration-input">
                         <span class="registration-details">Password</span>
-                        <input type="text" placeholder="enter your password" name="password">
+                        <input type="password" placeholder="enter your password" name="password">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('password')) :?>
                                 <span class="text-danger text-sm"><?= $validation->getError('password') ?></span>
@@ -66,7 +66,7 @@
                     </div>
                     <div class="registration-input">
                         <span class="registration-details">Confirm Password</span>
-                        <input type="text" placeholder="confirm password" name="confirm-password">
+                        <input type="password" placeholder="confirm password" name="confirm-password">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('confirm-password')) :?>
                                 <span class="text-danger text-sm"><?= $validation->getError('confirm-password') ?></span>

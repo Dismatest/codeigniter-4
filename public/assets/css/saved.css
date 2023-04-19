@@ -1,0 +1,703 @@
+:root{
+    --primary-color: rgb(214, 178, 214);
+    --text-color: #607d8b;
+    --background-color: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    --background-hoover: linear-gradient(to right, rgb(214, 178, 214), rgb(114, 90, 114));
+}
+.main-saved-container{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+}
+.margin-content-section{
+    padding: 12px;
+}
+.settings-section{
+    display: flex;
+    justify-content: space-between;
+}
+.setting-link{
+    display: flex;
+    align-items: center;
+    justify-content:  flex-end;
+}
+.setting-link h5{
+    color: var(--primary-color);
+    font-size: 14px;
+}
+.setting-link span{
+    font-size: 14px;
+    padding: 0 5px;
+}
+.profile-main-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.profile-main-section img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+.display-user-name-phone{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+}
+.display-user-name-phone h5{
+    font-size: 13px;
+    color: grey;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+.display-user-name-phone span{
+    font-size: 12px;
+    color: grey;
+    font-weight: 300;
+}
+.need-help{
+    background-color: grey;
+}
+.need-help{
+    height: 40px;
+}
+.need-help a{
+    border: 1px solid grey;
+}
+.help-related-sections a{
+    display: flex;
+    align-items: baseline;
+    box-sizing: border-box;
+    padding: 12px;
+}
+.help-related-sections h5{
+    font-weight: 500;
+    font-size: 12px;
+    color: grey;
+    padding: 0 15px;
+    flex-grow: 1;
+}
+.help-related-sections span{
+    font-size: 14px;
+    font-weight: 500;
+}
+.main-saved-container hr{
+    border: 1px solid #dedede;
+}
+.save-title{
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+.save-title h5{
+    font-size: 14px;
+    font-weight: 500;
+}
+.save-title button{
+    padding: 5px 10px;
+    color: white;
+    background: var(--background-color);
+    border: none;
+    border-radius: 20px;
+}
+.saved-shares-content{
+    position: relative;
+}
+.saved-shares-content .margin-content-section{
+    display: flex;
+}
+.close-saved-share{
+    position: absolute;
+    top: 2px;
+    right: 20px;
+    background: rgb(0 0 0 / 0.2);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+.shares-value{
+    font-size: 13px;
+    font-weight: 400;
+ }
+.saved-shares-content .saved-shares-details img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    border: 1px dashed grey;
+}
+.saved-shares-more-details{
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.connect-social-media{
+    text-align: center;
+    padding: 12px;
+}
+.social-media-icons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.social-media-icons a{
+    text-decoration: none;
+    font-size: 10px;
+    color: #484545;
+    text-transform: lowercase;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 10px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 10px;
+    width: 10px;
+    left: 10px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--primary-color);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+}
+
+/* Style the "ON" and "OFF" text */
+.on, .off {
+    position: absolute;
+    display: block;
+    width: 20px;
+    height: 10px;
+    top: 6px;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 10px;
+    color: white;
+    font-size: 8px;
+}
+
+.on {
+    left: 2px;
+    background-color: var(--primary-color);
+}
+
+.off {
+    right: 2px;
+    background-color: #ccc;
+}
+
+.on2, .off2 {
+    position: absolute;
+    display: block;
+    width: 20px;
+    height: 10px;
+    top: 6px;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 10px;
+    color: white;
+    font-size: 8px;
+}
+
+.on2 {
+    left: 2px;
+    background-color: var(--primary-color);
+}
+
+.off2 {
+    right: 2px;
+    background-color: #ccc;
+}
+.contact-us-form{
+    padding: 12px;
+}
+.contact-section-box{
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0;
+}
+.contact-section-box span{
+    font-size: 12px;
+    color: grey;
+    font-weight: 300;
+    padding: 4px 0;
+}
+.contact-section-box input{
+    padding: 10px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    outline: none;
+}
+.contact-section-box textarea{
+    padding: 10px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    outline: none;
+    resize: none;
+}
+.contact-section-box input[type='submit']{
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background: var(--background-color);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.number-active-shares{
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+.share-status{
+    background: green;
+    color: white;
+    border-radius: 10px;
+    padding: 4px 20px;
+}
+.share-status-pending{
+    background: #d7d415;
+    color: black;
+    border-radius: 10px;
+    padding: 4px 20px;
+}
+.shares-rejected-reason{
+    color: #ab6b6b;
+}
+
+.share-status-rejected{
+    background: #a64b4b;
+    color: white;
+    border-radius: 10px;
+    padding: 4px 20px;
+}
+
+.share-view-status{
+    padding: 12px;
+}
+.share-view-status h5{
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px 0;
+}
+.share-view-status .share-status-heading:after{
+    content: ' ';
+    display: block;
+    width: 80px;
+    height: 2px;
+    background: var(--background-color);
+}
+.viewers-status{
+    display: flex;
+    justify-content: space-between;
+}
+.no-active-shares{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #e1d941;
+    border-radius: 5px;
+}
+
+/*accordion for share status*/
+
+.my-accordion {
+    border-radius: 4px;
+}
+.my-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.my-accordion-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.my-accordion-content {
+    padding: 0 12px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+}
+
+.my-accordion-content1 {
+    padding: 0 12px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+}
+
+.my-accordion-item.active .my-accordion-content {
+    max-height: 1000px; /* adjust to your needs */
+    transition: max-height 0.3s ease-in;
+}
+
+.my-accordion-item.active .my-accordion-content1 {
+    max-height: 1000px; /* adjust to your needs */
+    transition: max-height 0.3s ease-in;
+}
+
+.my-accordion-toggle {
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: transform 0.3s ease-out;
+}
+
+.my-accordion-toggle:before {
+    content: '+';
+    font-size: 20px;
+    color: #999;
+}
+
+.my-accordion-item.active .my-accordion-toggle:before {
+    content: '-';
+    color: #000;
+    transform: rotate(180deg);
+}
+.my-accordion-content-section img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.my-accordion-content-section h5{
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 0;
+}
+.shares-on-share-active{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px;
+    border: 1px dashed #e1d941;
+    border-radius: 5px;
+}
+.shares-on-share-active img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.my-accordion-sacco-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+.my-accordion-sacco-share-value{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+/*end of the accordion*/
+/*start of the sell shares section*/
+.sell-main-section{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.sell-main-section1{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+}
+.sell-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+.sell-heading h5{
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px 0;
+}
+
+.sell-heading h5:after{
+    content: ' ';
+    display: block;
+    width: 80px;
+    height: 2px;
+    background: var(--background-color);
+}
+.sell-heading span{
+    font-size: 12px;
+    color: grey;
+    font-weight: 300;
+    padding: 4px 0;
+    cursor: pointer;
+}
+
+.verify-account{
+    color: black;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 0;
+    background: var(--background-color);
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+.verify-form{
+    margin-top: 30px;
+}
+.verify-form-2{
+    margin-top: 30px;
+}
+.verify-input{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.verify-input label{
+    font-size: 12px;
+    font-weight: 500;
+    color: grey;
+}
+.verify-input input{
+    width: 100%;
+    border: 1px solid grey;
+    border-radius: 5px;
+    outline: none;
+}
+.verify-input input
+{
+    padding: 10px;
+}
+
+.verify-input input:focus{
+    border: 1px solid rgb(214, 187, 212);
+}
+
+.verify-input-button{
+
+    margin-top: 20px;
+    background: var(--background-color);
+    border: none;
+    padding: 10px 80px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+    .sell-main-section {
+        margin-top: 20px;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .sell-heading h5:after {
+        content: ' ';
+        display: block;
+        width: 40px;
+        height: 2px;
+        background: var(--background-color);
+    }
+}
+@media screen and (max-width: 768px) {
+    .sell-main-section1 {
+        margin-top: 20px;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .sell-heading h5:after {
+        content: ' ';
+        display: block;
+        width: 40px;
+        height: 2px;
+        background: var(--background-color);
+    }
+
+}
+/*end of sell shares section*/
+
+/*start of the sell now */
+
+.custom-select {
+    position: relative;
+    width: 70%; /* set the width of the select field */
+}
+
+.custom-select-search {
+    position: relative;
+    width: 100%; /* set the width of the select field */
+}
+
+
+.verify-input-2 input{
+    width: 100%;
+    border: 1px solid grey;
+    border-radius: 5px;
+    outline: none;
+    padding: 10px;
+}
+
+
+.verify-input-2{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+
+@media screen and (max-width: 768px) {
+    .custom-select {
+        width: 60%;
+    }
+}
+
+.select-input {
+    width: 100%;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.select-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+    max-height: 200px; /* set the maximum height of the dropdown */
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.select-options li {
+    list-style-type: none;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(233, 233, 233);
+}
+
+.select-options li:hover {
+    background-color: #f0f0f0;
+}
+.verify-input-1{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+.verify-input-1 label{
+    font-size: 12px;
+    font-weight: 500;
+    color: grey;
+}
+
+.verify-input-1 input{
+    width: 70%;
+    border: 1px solid grey;
+    border-radius: 5px;
+    outline: none;
+    padding: 10px;
+}
+
+.verify-input-1 input:focus{
+    border: 1px solid rgb(214, 187, 212);
+}
+
+.settings-top{
+    padding-top: 2.0rem;
+    padding-bottom: 2.0rem;
+}
+
+@media screen and (max-width: 768px) {
+    .verify-input-1 input {
+        width: 60%;
+    }
+    .settings-top{
+        padding-top: 0.8rem;
+        padding-bottom: 0.8rem;
+    }
+    .settings-top-social-media{
+        padding-top: 0.8rem;
+    }
+}
+.verify-terms{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+.verify-terms label{
+    font-size: 12px;
+    font-weight: 300;
+    color: grey;
+}
+/*end of the sell now*/

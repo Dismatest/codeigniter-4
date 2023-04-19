@@ -3,17 +3,6 @@
 
     <div class="registration-container">
         <div class="registration-container-2">
-            <?php
-            if(!empty(session()->getFlashData('success'))){
-                ?>
-                <div class="alert alert-success"><?= session()->getFlashData('success') ?></div>
-                <?php
-            }else if(!empty(session()->getFlashData('fail'))){
-                ?>
-                <div class="alert alert-danger"><?= session()->getFlashData('fail') ?></div>
-                <?php
-            }
-            ?>
             <div class="registration-title">
                 <span>Admin Login</span>
             </div>

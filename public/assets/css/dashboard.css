@@ -145,8 +145,35 @@ tbody>tr>td{
 .no-registration-info {
     border: 1px dashed rgb(225, 225, 90);
     border-radius: 4px;
-    padding: 5px 6px;
+    padding: 20px 6px;
     margin-bottom: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.no-registration-info img{
+    height: 120px;
+}
+.clip-the-path{
+    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+    background-color: var(--text-color);
+    height: 40px;
+    width: 20em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 6px;
+    text-align: center;
+}
+.clip-the-path1{
+    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+    background-color: var(--primary-color);
+    height: 60px;
+    width: 21em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 6px;
 }
 .no-membership-button a{
     color: rgb(225, 225, 90);
@@ -158,7 +185,6 @@ no-membership-button a:hover{
 .no-registration-info>p{
     font-size: 12px;
     font-weight: 300;
-    color: grey;
     letter-spacing: 1px;
 }
 .dashboard-shares-balance{
@@ -274,7 +300,14 @@ no-membership-button a:hover{
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
+    border-radius: 0.3rem;
 }
+
+.customer-selling-button:focus{
+    outline: none;
+    border: 1px solid rgb(214, 187, 212);
+}
+
 
 .customer-selling-button1 {
     width: 20%;
@@ -286,23 +319,75 @@ no-membership-button a:hover{
 }
 .customer-selling-button1:focus{
     outline: none;
+    border: 1px solid rgb(214, 187, 212);
 }
 /* Set a style for all buttons */
 .confirm-sell-shares-btn {
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    color: white;
+    padding: 10px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    width: 49%;
+    border-radius: 0.3em;
+}
+
+.confirm-sell-shares-btn3 {
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    color: white;
+    padding: 10px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    width: 100%;
+    border-radius: 0.3em;
+}
+
+.confirm-sell-shares-btn2 {
+    background: linear-gradient(to right, rgb(100, 72, 100), rgb(214, 178, 214));
+    color: white;
+    padding: 10px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    width: 49%;
+    border-radius: 0.3em;
+}
+
+.first-modal-buttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 10px;
+}
+
+.confirm-sell-shares-btn2:hover {
+    opacity: 0.8;
+    color: white !important;
+}
+
+.non-members-form{
     background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
-    width: 100%;
+    width: 49%;
 }
 
 .confirm-sell-shares-btn:hover {
     opacity: 0.8;
-    color: black;
+    color: white !important;
 }
 
 /* Extra styles for the cancel button */
@@ -310,7 +395,7 @@ no-membership-button a:hover{
 /* Center the image and position the close button */
 
 .container1 {
-    padding: 16px;
+   padding-top: 10px;
 }
 .divider{
     display: flex;
@@ -321,6 +406,9 @@ no-membership-button a:hover{
 span.psw {
     float: right;
     padding-top: 16px;
+}
+.request-registration-link{
+    padding: 12px;
 }
 
 /* The Modal (background) */
@@ -342,21 +430,24 @@ span.psw {
 .modal-content-user {
     background-color: #fefefe;
     margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-    border: 1px solid #888;
+    border: none;
+    border-radius: 4px;
+    padding: 16px;
     width: 50%; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button (x) */
-.imgcontainer{
+.imgContainer{
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    padding-bottom: 20px;
 }
 .x-close-button {
     position: absolute;
-    right: 25px;
-    top: 5px;
+    right: 0;
+    top: 2px;
     color: #000;
     font-weight: 300;
     border: 1px solid rgb(143, 141, 141);
@@ -380,15 +471,25 @@ span.psw {
 }
 .shares-sell-heading{
     font-weight: 500;
-    font-size: 14px;
-    color: grey;
+    font-size: 13px;
+}
+.icon-exclamation{
+    color: var(--primary-color);
+    font-size: 15px;
+    padding-right: 5px;
 }
 .x-close-button:hover,
 .x-close-button:focus {
     color: red;
     cursor: pointer;
 }
-
+.offer-buttons span{
+    padding: 8px 20px;
+    border: 1px solid rgb(214, 178, 214);
+    border-radius: 4rem;
+    cursor: pointer;
+    margin: 10px 0;
+}
 /* Add Zoom Animation */
 .animate {
     -webkit-animation: animatezoom 0.6s;
@@ -415,6 +516,7 @@ span.psw {
     border: none;
     margin: 5px;
     font-weight: 300;
+    border-radius: 0.3rem;
 }
 .accept-link{
     padding: 10px 30px;
@@ -424,7 +526,9 @@ span.psw {
     border: 1px solid rgb(214, 178, 214);
     margin: 5px;
     font-weight: 300;
+    border-radius: 0.3rem;
 }
+
 .bid-content{
     margin-top: 20px;
 }
@@ -467,7 +571,6 @@ thead{
 .bid-table td {
     border: none;
     padding: 12px;
-    text-align: center;
 }
 .bid-table th {
     color: white;
@@ -492,6 +595,14 @@ tr:nth-child(even):hover {
     font-size: 14px;
     font-weight: 400;
     color: var(--text-color);
+}
+
+@media (max-width: 620px) {
+    .agreement-title h3{
+        font-size: 10px;
+        font-weight: 300;
+        padding-bottom: 10px;
+    }
 }
 .pdf-file{
     display: flex;
@@ -535,108 +646,28 @@ tr:nth-child(even):hover {
     z-index: 1;
     border-color: grey;
 }
-/*tooltip for the help button and other buttons*/
-[data-tooltip] {
-    position: relative;
-    cursor: pointer;
-}
-[data-tooltip]:before,
-[data-tooltip]:after {
-    line-height: 1;
-    font-size: .9em;
-    pointer-events: none;
-    position: absolute;
-    box-sizing: border-box;
-    display: none;
-    opacity: 0;
-}
-[data-tooltip]:before {
-    content: "";
-    border: 5px solid transparent;
-    z-index: 100;
-}
-[data-tooltip]:after {
-    content: attr(data-tooltip);
-    text-align: center;
-    min-width: 3em;
-    max-width: 21em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 6px 8px;
-    border-radius: 3px;
-    background: white;
-    color: black;
-    z-index: 99;
-}
-[data-tooltip]:hover:before,
-[data-tooltip]:hover:after {
-    display: block;
-    opacity: 1;
-}
-[data-tooltip]:not([data-flow])::before,
-[data-tooltip][data-flow="top"]::before {
-    bottom: 100%;
-    border-bottom-width: 0;
-    border-top-color: white;
-}
-[data-tooltip]:not([data-flow])::after,
-[data-tooltip][data-flow="top"]::after {
-    bottom: calc(100% + 5px);
-}
-[data-tooltip]:not([data-flow])::before, [tooltip]:not([data-flow])::after,
-[data-tooltip][data-flow="top"]::before,
-[data-tooltip][data-flow="top"]::after {
-    left: 50%;
-    -webkit-transform: translate(-50%, -4px);
-    transform: translate(-50%, -4px);
-}
-[data-tooltip][data-flow="bottom"]::before {
-    top: 100%;
-    border-top-width: 0;
-    border-bottom-color: #4621FF;
-}
-[data-tooltip][data-flow="bottom"]::after {
-    top: calc(100% + 5px);
-}
-[data-tooltip][data-flow="bottom"]::before, [data-tooltip][data-flow="bottom"]::after {
-    left: 50%;
-    -webkit-transform: translate(-50%, 8px);
-    transform: translate(-50%, 8px);
-}
-[data-tooltip][data-flow="left"]::before {
-    top: 50%;
-    border-right-width: 0;
-    border-left-color: #4621FF;
-    left: calc(0em - 5px);
-    -webkit-transform: translate(-8px, -50%);
-    transform: translate(-8px, -50%);
-}
-[data-tooltip][data-flow="left"]::after {
-    top: 50%;
-    right: calc(100% + 5px);
-    -webkit-transform: translate(-8px, -50%);
-    transform: translate(-8px, -50%);
-}
-[data-tooltip][data-flow="right"]::before {
-    top: 50%;
-    border-left-width: 0;
-    border-right-color: #4621FF;
-    right: calc(0em - 5px);
-    -webkit-transform: translate(8px, -50%);
-    transform: translate(8px, -50%);
-}
-[data-tooltip][data-flow="right"]::after {
-    top: 50%;
-    left: calc(100% + 5px);
-    -webkit-transform: translate(8px, -50%);
-    transform: translate(8px, -50%);
-}
-[data-tooltip=""]::after, [data-tooltip=""]::before {
-    display: none !important;
-}
 
-/*end of the tooltip*/
+.reject-accept-delete{
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    background: rgb(214, 178, 214);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 10px;
+    color: grey;
+}
+.download-agreement-form{
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    background: rgb(214, 178, 214);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-right: 10px;
+}
 /*animating the flash messages*/
 .move-out-flash {
     animation: moveLeftflash 0.5s ease-out;
@@ -654,6 +685,18 @@ tr:nth-child(even):hover {
 }
 /*end of animating flash messages*/
 
+/*start of the related shares css */
+.related-shares-title{
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+/*end of the related shares csaa*/
+
+/*start of the search shares section*/
+
+/*end of the search shares section*/
+
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
     span.psw {
@@ -663,12 +706,90 @@ tr:nth-child(even):hover {
 }
 
 /*responsive design for dashboard*/
-@media (max-width: 620px) {
-   .responsive-margin-container{
-       margin-top: 1.3em;
-   }
+@media screen and (max-width: 768px) {
+    .responsive-margin-container{
+        margin-top: 1.3em;
+    }
 
     div.dataTables_wrapper div.dataTables_length select{
-        display: none;
+        display: flex;
+        flex-flow: row;
+    }
+    .clip-the-path{
+        height: 100px;
+        width: 20em;
+        overflow: hidden;
+    }
+    .user-share-model {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        padding-top: 50px;
+    }
+    .modal-content-user {
+        background-color: #fefefe;
+        margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+        border: none;
+        border-radius: 4px;
+        padding: 16px;
+        width: 100%; /* Could be more or less, depending on screen size */
+        height: 80dvh;
+    }
+    .confirm-sell-shares-btn {
+        padding: 8px 10px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        width: 49%;
+        border-radius: 0.3em;
+    }
+
+    .confirm-sell-shares-btn2 {
+        padding: 8px 10px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        width: 49%;
+        border-radius: 0.3em;
+    }
+    .container1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .offer-buttons span{
+        margin-left: 10px;
+    }
+
+    .shares-sell-heading{
+        font-size: 12px;
+    }
+    .action-links{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .reject-link {
+        padding: 8px 20px;
+        font-size: 12px;
+    }
+    .accept-link {
+        padding: 8px 20px;
+        font-size: 12px;
     }
 }

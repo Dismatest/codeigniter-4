@@ -35,36 +35,11 @@
                     <h6 class="p-3 mb-0 text-center">2 new messages</h6>
                 </div>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
+            <li class="nav-item">
+                <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="<?= 'notifications' ?>">
                     <i class="mdi mdi-bell-outline" style="position: relative;"></i>
-                    <?php if(session()->has('notifications')) : ?>
-                    <span class="bg-danger" style="font-size: 12px; height: 20px; width: 20px; display: grid; place-items: center; border-radius: 50%; position: absolute; top: 10px; left: 10px;"><?= count(session()->get('notifications'))?></span>
-                    <?php endif ?>
+                    <span class="bg-danger" id="notification-count" style="font-size: 12px; height: 20px; width: 20px; display: grid; place-items: center; border-radius: 50%; position: absolute; top: 10px; left: 10px;"></span>
                 </a>
-
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                    <h6 class="p-3 mb-0">Notifications</h6>
-                    <div class="dropdown-divider"></div>
-                    <?php $notifications = session()->get('notifications'); ?>
-                    <?php if(isset($notifications)) : ?>
-                    <?php foreach ($notifications as $notification): ?>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                                <p class="text-gray ellipsis mb-0"><?= $notification['message'] ?></p>
-                            </div>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                    <?php endforeach; ?>
-                    <?php else: ?>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                                <p class="text-gray ellipsis mb-0">You don`t have notifications now</p>
-                            </div>
-                        </a>
-                    <?php endif; ?>
-                    <span><a href="<?= 'notifications' ?>" class="p-3 mb-0 text-center text-decoration-none">See More</a></span>
-                </div>
             </li>
             <?php if (session()->has('currentLoggedInSacco')): ?>
 

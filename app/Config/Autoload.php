@@ -44,6 +44,7 @@ class Autoload extends AutoloadConfig
         'Config'      => APPPATH . 'Config',
         'Modules\SupperAdmin' => ROOTPATH . 'modules/SupperAdmin', //All the modules
         'Modules\Admin' => ROOTPATH . 'modules/Admin', //All the modules
+        'Dompdf' => ROOTPATH . 'vendor/dompdf/dompdf/src',
     ];
 
     /**

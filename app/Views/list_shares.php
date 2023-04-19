@@ -1,43 +1,168 @@
-<div class="container">
+<div class="container" id="shares-container">
 
-    <div class="row pt-5 pb-5">
-        <?php if(!empty($shares)): ?>
-        <?php foreach ($shares as $share) :?>
-        <div class="col-md-3">
+    <div class="row pt-5 pb-4 list-shares-main-container">
+        <!-- Remove the PHP loop -->
+
+        <div class="col-md-3 col-6 list-shares-shares">
             <div class="card customize-card">
-                <div class="ribbon"><span>NEW</span></div>
                 <div class="card-body">
-                    <a href="<?= base_url().'/share/'.$share['uuid'] ?>">
-                        <div class="sacco-image">
-                            <img src="<?= 'assets/images/image.png'?>" alt="" class="image-tag" style="object-fit: cover;">
-                            <span class="image-subtitle">HS</span>
-                        </div>
-                        <div class="sacco-full-name">
-                            <h5><?= $share['name'] ?> sacco ltd.</h5>
-                        </div>
-                        <div class="shares-container-wrapper">
-                            <div class="shares-container-wrapper-content1">
-                                <span class="shares-price-description">Shares</span>
-                                <span class="shares-price-value"><?= $share['shares_on_sale'] ?></span>
-                            </div>
-
-                            <div class="shares-container-wrapper-content2">
-                                <span class="shares-price-description">Value</span>
-                                <span class="shares-price-value">ksh <?= $share['total'] ?></span>
+                    <div class="placeholder-glow placeholder-main-container">
+                        <span class="placeholder placeholder-sacco-image"></span>
+                        <div class="placeholder-glow placeholder-sacco-name-container">
+                            <span class="placeholder w-100 placeholder-sacco-name"></span>
+                            <span class="placeholder w-100 placeholder-xs placeholder-price"></span>
+                            <div class="placeholder-button-div">
+                                <span class="placeholder w-75 placeholder-sm placeholder-button"></span>
+                                <div>
+                                </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
-            <?php endforeach;?>
-        <?php else:?>
-            <h6 class="text-center">No shares found</h6>
-        <?php endif;?>
+
+
+        <div class="col-md-3 col-6 list-shares-shares">
+            <div class="card customize-card">
+                <div class="card-body">
+                    <div class="placeholder-glow placeholder-main-container">
+                        <span class="placeholder placeholder-sacco-image"></span>
+                        <div class="placeholder-glow placeholder-sacco-name-container">
+                            <span class="placeholder w-100 placeholder-sacco-name"></span>
+                            <span class="placeholder w-100 placeholder-xs placeholder-price"></span>
+                            <div class="placeholder-button-div" >
+                                <span class="placeholder w-75 placeholder-sm placeholder-button"></span>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3 col-6 list-shares-shares">
+            <div class="card customize-card">
+                <div class="card-body">
+                    <div class="placeholder-glow placeholder-main-container">
+                        <span class="placeholder placeholder-sacco-image"></span>
+                        <div class="placeholder-glow placeholder-sacco-name-container">
+                            <span class="placeholder w-100 placeholder-sacco-name"></span>
+                            <span class="placeholder w-100 placeholder-xs placeholder-price"></span>
+                            <div class="placeholder-button-div">
+                                <span class="placeholder w-75 placeholder-sm placeholder-button"></span>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3 col-6 list-shares-shares">
+            <div class="card customize-card">
+                <div class="card-body">
+                    <div class="placeholder-glow placeholder-main-container">
+                        <span class="placeholder placeholder-sacco-image"></span>
+                        <div class="placeholder-glow placeholder-sacco-name-container">
+                            <span class="placeholder w-100 placeholder-sacco-name"></span>
+                            <span class="placeholder w-100 placeholder-xs placeholder-price"></span>
+                            <div class="placeholder-button-div">
+                                <span class="placeholder w-75 placeholder-sm placeholder-button"></span>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 list-shares-shares">
+            <div class="card customize-card">
+                <div class="card-body">
+                    <div class="placeholder-glow placeholder-main-container">
+                        <span class="placeholder placeholder-sacco-image"></span>
+                        <div class="placeholder-glow placeholder-sacco-name-container">
+                            <span class="placeholder w-100 placeholder-sacco-name"></span>
+                            <span class="placeholder w-100 placeholder-xs placeholder-price"></span>
+                            <div class="placeholder-button-div">
+                                <span class="placeholder w-75 placeholder-sm placeholder-button"></span>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 list-shares-shares">
+            <div class="card customize-card">
+                <div class="card-body">
+                    <div class="placeholder-glow placeholder-main-container">
+                        <span class="placeholder placeholder-sacco-image"></span>
+                        <div class="placeholder-glow placeholder-sacco-name-container">
+                            <span class="placeholder w-100 placeholder-sacco-name"></span>
+                            <span class="placeholder w-100 placeholder-xs placeholder-price"></span>
+                            <div class="placeholder-button-div">
+                                <span class="placeholder w-75 placeholder-sm placeholder-button"></span>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 list-shares-shares">
+            <div class="card customize-card">
+                <div class="card-body">
+                    <div class="placeholder-glow placeholder-main-container">
+                        <span class="placeholder placeholder-sacco-image"></span>
+                        <div class="placeholder-glow placeholder-sacco-name-container">
+                            <span class="placeholder w-100 placeholder-sacco-name"></span>
+                            <span class="placeholder w-100 placeholder-xs placeholder-price"></span>
+                            <div class="placeholder-button-div">
+                                <span class="placeholder w-75 placeholder-sm placeholder-button"></span>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 list-shares-shares">
+            <div class="card customize-card">
+                <div class="card-body">
+                    <div class="placeholder-glow placeholder-main-container">
+                        <span class="placeholder placeholder-sacco-image"></span>
+                        <div class="placeholder-glow placeholder-sacco-name-container">
+                            <span class="placeholder w-100 placeholder-sacco-name"></span>
+                            <span class="placeholder w-100 placeholder-xs placeholder-price"></span>
+                            <div class="placeholder-button-div">
+                                <span class="placeholder w-75 placeholder-sm placeholder-button"></span>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
     <div class="pt-3 pagination">
-        <h6><?= $pager->links('default', 'full-pagination') ?></h6>
+        <h6 id="pagination-links"></h6>
     </div>
 
 </div>

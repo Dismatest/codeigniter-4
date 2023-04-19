@@ -21,8 +21,8 @@
                         <img src="<?=base_url('assets/images/dashboard/circle.svg')?>" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">Total Users <i class="mdi mdi-chart-line mdi-24px float-right"></i>
                         </h4>
-                        <?php if($allUsers > 0): ?>
-                            <h2 class="mb-5"><?= $allUsers ?></h2>
+                        <?php if(isset($allUsers) && $allUsers > 0): ?>
+                            <h2 class="mb-5">Users: <?= $allUsers ?></h2>
                         <?php else: ?>
                             <h2 class="mb-5">0</h2>
                         <?php endif; ?>
@@ -38,8 +38,8 @@
                         <img src="<?=base_url('assets/images/dashboard/circle.svg')?>" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">Total Sacco <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
                         </h4>
-                        <?php if($allSacco > 0): ?>
-                            <h2 class="mb-5"><?= $allSacco ?></h2>
+                        <?php if(isset($allSacco) && $allSacco > 0): ?>
+                            <h2 class="mb-5">Sacco: <?= $allSacco ?></h2>
                         <?php else: ?>
                             <h2 class="mb-5">0</h2>
                         <?php endif; ?>
@@ -54,7 +54,11 @@
                     <img src="<?= base_url('assets/images/dashboard/circle.svg')?>" class="card-img-absolute" alt="circle-image" />
                     <h4 class="font-weight-normal mb-3">Total Transactions <i class="mdi mdi-diamond mdi-24px float-right"></i>
                     </h4>
-                    <h2 class="mb-5">ksh 955,741</h2>
+                    <?php if(isset($allTransactions) && $allTransactions > 0): ?>
+                        <h2 class="mb-5">Ksh: <?= $allTransactions ?></h2>
+                    <?php else: ?>
+                        <h2 class="mb-5">Ksh: 0</h2>
+                    <?php endif; ?>
                     <h6 class="card-text">Increased by 5%</h6>
                 </div>
             </div>

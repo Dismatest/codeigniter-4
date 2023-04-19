@@ -1,20 +1,35 @@
 /*login css*/
 
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"');
 :root{
     --primary-color: rgb(214, 178, 214);
-    --text-color: #607d8b;
+    --text-color: #7597ad;
     --background-color: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
     --background-hoover: linear-gradient(to right, rgb(214, 178, 214), rgb(114, 90, 114));
+    --main-background-color: rgb(249, 243, 249);
 }
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Nunito', sans-serif;
+}
+.slider-main-container{
+    position: relative;
+    height: 100%;
+}
+
+.swiper {
+    width: 50%;
+    height: 100%;
+}
+@media screen and (max-width: 768px){
+    .swiper{
+        width: 100%;
+    }
 }
 body{
-    background-color:rgb(249, 243, 249)
+    background-color: var(--main-background-color);
 }
 body::-webkit-scrollbar {
     width: 6px;
@@ -84,7 +99,6 @@ section .contentBx .formBx .inputBx span{
     display: inline-block;
     color: var(--text-color);
     font-weight: 300;
-    font-size: 16px;
     letter-spacing: 1px;
 }
 section .contentBx .formBx .inputBx input{
@@ -122,6 +136,19 @@ section .contentBx .formBx .inputBx p{
 section .contentBx .formBx .inputBx p a{
     color: var(--primary-color);
 }
+
+.select-registration{
+    width: 100%;
+    padding: 10px 20px;
+    outline: none;
+    font-weight: 400;
+    border: 1px solid var(--text-color);
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: var(--text-color);
+    background: transparent;
+    border-radius: 30px;
+}
 @media (max-width: 768px) {
     section .imgBx{
         position: absolute;
@@ -152,13 +179,22 @@ section .contentBx .formBx .inputBx p a{
 }
 /*end of the login css*/
 /*start of the register css*/
+.registration-container1{
+    display: flex;
+    height: 70vh;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
 .registration-container{
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background: var(--background-color);
+}
+select #select-registration{
+    width: 100%;
 }
 .registration-container-2{
     max-width: 700px;
@@ -175,6 +211,16 @@ section .contentBx .formBx .inputBx p a{
     display: flex;
     justify-content: space-between;
 }
+
+.registration-container-2 .registration-title1{
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-color);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
 .registration-container-2 .registration-title span a{
     text-decoration: none;
     font-size: 14px;
@@ -189,6 +235,16 @@ section .contentBx .formBx .inputBx p a{
     bottom: 0;
     background: var(--background-color);
 }
+
+.registration-container-2 .registration-title1::before{
+    content: " ";
+    position: absolute;
+    height: 3px;
+    width: 10rem;
+    left: 0;
+    bottom: 0;
+    background: var(--background-color);
+}
 .registration-container-2 form .user-details{
     display: flex;
     flex-wrap: wrap;
@@ -198,14 +254,19 @@ section .contentBx .formBx .inputBx p a{
 form .user-details .registration-input{
     margin-bottom: 5px;
     width: calc(100% /2 - 20px);
+
 }
 .user-details .registration-input input{
     height: 40px;
     width: 100%;
     border-radius: 40px;
     border: 1px solid #ccc;
+    color: var(--text-color);
     padding-left: 15px;
     font-size: 15px;
+}
+.user-details .registration-input input::placeholder{
+    color: var(--text-color);
 }
 .user-details .registration-input .registration-details{
     color: var(--text-color);
@@ -264,7 +325,7 @@ form .register-button input{
     border: none !important;
 }
 
-select {
+.home-select {
     width: 100px;
     height: 30px;
     padding: 5px;
@@ -273,10 +334,10 @@ select {
     border: 1px solid rgb(87, 5, 87);
     border-radius: 5px;
   }
-  select:focus{
+  .home-select :focus{
     outline: none;
   }
-  select:hover {
+  .home-select :hover {
     cursor: pointer;
     border: 1px solid #999;
   }
@@ -363,24 +424,14 @@ span i{
     padding: 20px;
     background-color: white;
 }
-.membership-title h5{
-    font-size: 15px;
-    font-weight: 600;
-    color: grey;
-    padding: 5px 0;
-}
+
 .border-coll{
     background-color: white;
     border-radius: 4px;
     padding: 20px;
 }
-.sacco-performance-title{
-    font-size: 15px;
-    font-weight: 600;
-    color: grey;
-}
-.share-user-fname-description{
-    padding: 5px 0;
+.share-user-fname-description h5{
+
 }
 .membership-info{
     position: relative;
@@ -453,21 +504,6 @@ span i{
     color: grey;
     letter-spacing: 1px;
 }
-.shares-seller{
-    font-size: 15px;
-    font-weight: 600;
-    color: grey;
-}
-.percentage-increase{
-    font-size: 12px;
-    color: green;
-    font-weight: 300;
-}
-.total-amount-to-pay{
-    font-size: 12px;
-    font-weight: 300;
-    color: green;
-}
 .shares-on-sale-label{
     font-size: 15px;
     font-weight: 600;
@@ -483,18 +519,61 @@ span i{
     outline: none;
 }
 .buy-button{
-
     background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
-    color: white;
+    color: black;
     border: none;
     cursor: pointer;
     padding: 10px 30px;
     text-decoration: none;
     width: 100%;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
+    margin-top: 20px;
+    border-radius: .3em;
 }
+
+.share-description-container{
+    display: flex;
+    justify-content: space-between;
+}
+.share-description-container-img img{
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    padding: 5px;
+    object-fit: cover;
+    transition: 300ms ease-out;
+}
+.share-description-share-details .sacco-name{
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.3em;
+    font-weight: 500;
+    border-bottom: 2px solid rgb(214, 178, 214);
+    padding-bottom: 10px;
+}
+
+.share-description-priceValue{
+    display: flex;
+
+    align-items: center;
+}
+.share-description-share-details p{
+    font-size: 1.2em;
+    padding-top: 10px;
+}
+.share-description-priceValue p{
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.share-description-container:hover img{
+    transform: scale(1.1);
+    box-shadow: 0 0 2px 1px var(--primary-color) !important;
+}
+
 .accordion-button{
     font-size: 14px;
     height: 40px;
@@ -850,9 +929,111 @@ hr{
     padding: 8px;
 }
 /* end of single messages */
+.share-description-container-heading{
+    display: flex;
+    justify-content: space-between;
+}
+.share-description-container-new{
+    display: flex;
+    justify-content: space-between;
+}
+.share-description-container-new-info{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+.share-description-container-new-date{
+    width: 20%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-bottom: 10px;
+}
+.new-budge{
+    background-color: rgb(124, 148, 104);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 10px;
+    margin-right: 20px;
+}
+.verified-budge{
+    color: rgb(106, 196, 34);
+    font-size: 14px;
+    margin-right: 20px;
+}
+.share-badge{
+    color: white;
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #c2c0c0;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
 
+/*sacco all shares css*/
+.sacco-shares-image-container{
+    background: url('https://www.datavisor.com/wp-content/uploads/2020/04/homepage_bg__3.jpg') no-repeat center/cover;
+    display: flex;
+    height: 15rem;
+    width: 100%;
+}
+.sacco-logo-image{
+    margin-top: 8rem;
+    margin-left: 15rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.sacco-logo-image img{
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    border: 2px solid black;
+
+}
+.sacco-logo-image h5{
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.sacco-logo-image span i{
+    font-size: 14px;
+    color: rgb(106, 196, 34);
+    margin-left: 10px;
+}
+.sacco-shares-accordion{
+    padding-top: 20px;
+}
+.sacco-information-accordion{
+    display: flex;
+    justify-content: space-between;
+}
+.accordion-sacco-website p{
+
+    font-weight: 600;
+}
+.accordion-sacco-head-quartor p{
+    font-weight: 600;
+}
+.sacco-shares-hr{
+    border: 1px solid #b6b6b6;
+}
+
+#loading-bar {
+    transition: width 0.3s ease-in-out;
+}
+
+.sacco-shares-skeleton{
+    padding-right: 20px;
+}
+
+/*end of the sacco all shares css*/
 /*responsive design for share.php file*/
-@media (max-width: 620px) {
+@media (max-width: 768px) {
     .responsive-margin{
         margin-top: 1.3em;
         margin-bottom: 1.3em;
@@ -862,5 +1043,24 @@ hr{
     }
     .responsive-margin-shares-information-container{
         margin-top: 1.3em;
+    }
+    .sacco-logo-image{
+        margin-left: 0.8rem;
+    }
+    .sacco-shares-accordion{
+        padding-top: 30px;
+    }
+    .search-main-container{
+        display: none;
+    }
+    .sacco-shares-skeleton{
+        padding-right: 10px;
+    }
+/*    hiding data-tables element on small screen*/
+    div.dataTables_wrapper div.dataTables_length, div.dataTables_wrapper div.dataTables_filter, div.dataTables_wrapper div.dataTables_info, div.dataTables_wrapper div.dataTables_paginate{
+        display: none;
+    }
+    .sm-scree-disable{
+        display: none;
     }
 }

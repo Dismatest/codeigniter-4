@@ -3,23 +3,44 @@ html{
     font-size: 70%;
 }
 header{
-    position: absolute;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 68px;
-    background: rgb(61, 61, 61);
+    background: rgb(94, 92, 92);
     color: white;
     position: fixed;
-    top: 0;
+    top: 2px;
     z-index: 100;
 }
+.btn1{
+    font-size: 25px;
+    cursor: pointer;
+}
 header .logo{
-    font-size: 30px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 600;
     color: white;
     letter-spacing: 2px;
+}
+header .logo::after{
+    content: " ";
+    display: block;
+    width: 0;
+    height: 2px;
+    background: rgb(214, 178, 214);
+    transition: 300ms ease-out;
+
+}
+header .logo:hover{
+
+    color: white !important;
+
+}
+header .logo:hover::after{
+    width: 100%;
+    transition: 300ms ease-out;
 }
 header .navbar2{
     position: relative;
@@ -28,38 +49,52 @@ header .navbar2{
     align-items: center;
 }
 header .navbar2 a{
-    font-size: 1.7rem;
+    font-size: 1.2rem;
     font-weight: 500;
     margin: 0 0.5rem;
     color: white;
     padding: 1rem 1.5rem;
 }
 a.active{
-    transition: 0.6s;
-    border-bottom: 2px solid rgb(214, 178, 214);
-    animation: animateNavLinks 1s;
-}
-
-@keyframes animateNavLinks {
-    0% {
-        transform: translateX(-5rem) scale(0.9);
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(0rem) scale(1);
-        opacity: 1;
-    }
+    color: rgb(214, 178, 214) !important;
 }
 
 header .navbar2 a:hover{
-    transition: 0.6s;
-    border-bottom: 2px solid rgb(214, 178, 214);
+
+    color: rgb(214, 178, 214);
+    transition: 0.5s;
 
 }
-header .btn{
+
+header .navbar2 a::after{
+    content: " ";
+    display: block;
+    width: 0;
+    height: 2px;
+    background: rgb(214, 178, 214);
+    transition: 300ms ease-out;
+}
+
+header .navbar2 a:hover::after{
+    width: 100%;
+    transition: 300ms ease-out;
+}
+
+header .btn1{
     font-size: 25px;
     cursor: pointer;
     display: none;
+}
+.nav-my-bids{
+    font-size: 12px;
+    height: 20px;
+    width: 20px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    position: absolute;
+    top: -4px;
+    left: 82px;
 }
 @media (max-width: 900px){
     html{
@@ -70,7 +105,7 @@ header .btn{
     }
 }
 @media (max-width:768px){
-    header .btn{
+    header .btn1{
         display: block;
     }
     header .navbar2{
@@ -90,7 +125,7 @@ header .btn{
         right: 0;
         transition: 0.6s;
     }
-    header .navbar2 .close-btn{
+    header .navbar2 .close-btn-x{
         position: absolute;
         top: 0;
         left: 0;
@@ -102,7 +137,6 @@ header .btn{
         margin: 0.5rem 15px;
     }
     header .navbar2 a:hover{
-        background:rgb(197, 227, 197);
         color: white;
     }
     header .logo{

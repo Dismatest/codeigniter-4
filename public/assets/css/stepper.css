@@ -1,12 +1,37 @@
+.membership-title h5{
+    font-size: 13px;
+    font-weight: 600;
+    color: grey;
 
+}
+.membership-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.back-icon{
+
+    font-size: 1.4rem;
+    cursor: pointer;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    background: rgb(214, 187, 212);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    margin-right: 5rem;
+
+}
 main {
     height: 50vh;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
     position: relative;
 }
-@media (max-width: 620px){
+@media screen and (max-width: 620px){
     main{
         height: 40vh;
         display: flex;
@@ -14,12 +39,11 @@ main {
         flex-direction: column;
         position: relative;
     }
+
 }
 .stepper {
-    width: 20rem;
+    width: 60%;
     display: flex;
-    justify-content: center;
-    align-items: center;
     position: absolute;
     top: 1%;
 }
@@ -28,7 +52,7 @@ main {
 .step--2,
 .step--3,
 .step--4 {
-    width: 5rem;
+    width: 100%;
     padding: 0.5rem 0;
     background: #fff;
     color: #666;
@@ -47,7 +71,7 @@ main {
     width: 25rem;
     box-shadow: 0.2rem 0.2rem 0.5rem rgba(51, 51, 51, 0.2);
     display: none;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     overflow: hidden;
 }
 .form--header-container {
@@ -59,37 +83,28 @@ main {
 }
 
 .form--header-title {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
 }
 
-.form--header-text {
-    padding: 0.5rem 0;
+.information-main-wrapper{
+    margin-top: 1.5rem;
 }
 
 .stepper-input-fields {
-    padding: 0.4rem;
-    margin-top: 0.5rem;
-    margin-left: 15px;
-    width: 22rem;
+    padding: 1rem;
+    width: 60%;
     display: block;
     outline: none;
     border: 1px solid #bdbdbb;
+    border-radius: 0.3rem;
 
 }
 
-.form__btn {
-    background: #867272;
-    color: #fff;
-    outline: none;
-    border: none;
-    padding: 0.5rem 0.7rem;
-    width: 7rem;
-    margin: 1rem auto;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.5s ease-in-out;
+.stepper-input-fields:focus{
+    border: 1px solid rgb(214, 187, 212);
 }
-.form--message-text {
+
+.form--message-text{
     width: 25rem;
     background: #fff;
     color: #444;
@@ -99,10 +114,24 @@ main {
     box-shadow: 0.2rem 0.2rem 0.5rem rgba(51, 51, 51, 0.2);
     animation: fadeIn 0.8s;
     border-radius: 1rem;
+    display: none;
+}
+
+.form__btn {
+    background: linear-gradient(to right, rgb(214, 187, 212), #8d7585);
+    color: #fff;
+    outline: none;
+    border: none;
+    padding: 0.8rem 5rem;
+    margin: 1rem auto;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.5s ease-in-out;
+    border-radius: 0.3rem;
 }
 
 .form-active {
-
+    width: 60%;
     display: block;
 }
 .form-active-animate {
@@ -114,9 +143,8 @@ main {
 }
 
 .step-active {
-    background: #666;
+    background: linear-gradient(to right, rgb(214, 187, 212), #8d7585);
     color: #fff;
-    border: 1px solid #666;
 }
 @keyframes moveRight {
     0% {
@@ -147,4 +175,47 @@ main {
     100% {
         opacity: 1;
     }
+}
+
+/*custom search input field*/
+
+.custom-select-input {
+    position: relative;
+    width: 60%; /* set the width of the select field */
+}
+
+.select-input-field {
+    width: 100%;
+    padding: 1rem;
+    cursor: pointer;
+    border: 1px solid #bdbdbb;
+    border-radius: 0.3rem;
+}
+.select-input-field:focus{
+    border: 1px solid rgb(214, 187, 212);
+}
+.select-options-fields {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+    max-height: 200px; /* set the maximum height of the dropdown */
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.select-options-fields li {
+    list-style-type: none;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(233, 233, 233);
+}
+
+.select-options-fields li:hover {
+    background-color: #f0f0f0;
 }

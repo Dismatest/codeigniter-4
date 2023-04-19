@@ -3,6 +3,10 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseService;
+use App\Services\UserDataService;
+use App\Services\UserSaccoMembership;
+use App\Services\UserShares;
+use App\Services\IsApproved;
 
 /**
  * Services Configuration file.
@@ -17,16 +21,44 @@ use CodeIgniter\Config\BaseService;
  * method format you should use for your service methods. For more examples,
  * see the core Services file at system/Config/Services.php.
  */
+
 class Services extends BaseService
 {
-    /*
-     * public static function example($getShared = true)
-     * {
-     *     if ($getShared) {
-     *         return static::getSharedInstance('example');
-     *     }
-     *
-     *     return new \CodeIgniter\Example();
-     * }
-     */
+    public static function userData($getShared = true)
+      {
+          if ($getShared) {
+             return static::getSharedInstance('userData');
+          }
+
+          return new UserDataService();
+     }
+
+    public static function membershipData($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('membershipData');
+        }
+
+        return new UserSaccoMembership();
+    }
+
+
+    public static function userShears($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('userShares');
+        }
+
+        return new UserShares();
+    }
+
+    public static function isApproved($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('isApprovedShares', false);
+        }
+
+        return new IsApproved();
+    }
 }
+

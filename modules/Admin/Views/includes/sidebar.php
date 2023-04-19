@@ -13,14 +13,17 @@
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-contacts menu-icon"></i>
             </a>
+
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="<?= 'manage-shares' ?>">Manage Shares</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= 'create_share' ?>">Sell Shares</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= 'manage-shares' ?>">Shares on Sale</a></li>
                 </ul>
             </div>
+
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="">
+            <a class="nav-link" href="<?= 'reports' ?>">
                 <span class="menu-title">Reports</span>
                 <i class="mdi mdi-table-large menu-icon"></i>
             </a>
@@ -33,33 +36,22 @@
             </a>
             <div class="collapse" id="general-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="<?= 'new-members' ?>">Approve New Members </a></li>
-                </ul>
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="<?= 'manage-users' ?>""> Manage Members </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/manage-new-users') ?>""> Manage Members </a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="">
-                <span class="menu-title">Transactions</span>
-                <i class="mdi mdi-cash-usd menu-icon"></i>
-            </a>
-        </li>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" href="<?= 'upload_files'?>">
-                <span class="menu-title">Legal files</span>
+                <span class="menu-title">Terms & conditions</span>
                 <i class="mdi mdi-arrange-bring-forward menu-icon"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<?= 'notifications' ?>">
-                <span class="menu-title">Notifications</span>
-                <i class="mdi mdi-medical-bag menu-icon"></i>
+            <a class="nav-link" href="<?= 'new_user' ?>">
+                <span class="menu-title">New User</span>
+                <i class="mdi mdi-account-circle menu-icon"></i>
             </a>
         </li>
-
     </ul>
 </nav>
 <!-- partial -->

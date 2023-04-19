@@ -86,5 +86,6 @@
 </div>
 
 <?= $this->include('includes/footer.php'); ?>
+<?= $this->include('includes/small-footer.php'); ?>
 <?= $this->endSection(); ?>
 

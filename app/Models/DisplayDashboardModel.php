@@ -41,9 +41,10 @@ class DisplayDashboardModel extends Model
         $builder = $this->db->table('shares_on_sale');
         $builder->select('shares_on_sale.is_verified');
         $builder->where('shares_on_sale.user_id', $data['userData']->user_id);
-        $result = $builder->get();
-        if (count($result->getResultArray()) > 0) {
-            return $result->getResultArray();
+        $builder->orderBy('shares_on_sale.created_at', 'ASC');
+        $result = $builder->get()->getRow();
+        if ($result != null) {
+            return $result;
         } else {
             return array();
         }
@@ -54,11 +55,10 @@ public function is_Member(){
     $uuid = session()->get('currentLoggedInUser');
     $data['userData'] = $this->getCurrentUserInformation($uuid);
     $builder = $this->db->table('sacco_membership');
-    $builder->select('users.fname, users.lname, sacco.name, sacco_membership.is_approved');
+    $builder->select('users.fname, users.lname, sacco.name');
     $builder->join('users', 'users.user_id = sacco_membership.user_id');
     $builder->join('sacco', 'sacco.sacco_id = sacco_membership.sacco_id');
     $builder->where('users.user_id', $data['userData']->user_id);
-    $builder->where('sacco_membership.is_approved', '1');
     $result = $builder->get();
     if (count($result->getResultArray()) == 1) {
         return $result->getResultArray();
@@ -66,6 +66,20 @@ public function is_Member(){
         return array();
     }
 
+}
+
+public function membershipStatus(){
+        $user_id = session()->get('user_id');
+        $builder = $this->db->table('sacco_membership');
+        $builder->select('sacco_membership.is_approved, sacco_membership.approved_at, sacco.name');
+        $builder->join('sacco', 'sacco.sacco_id = sacco_membership.sacco_id');
+        $builder->where('sacco_membership.user_id', $user_id);
+        $result = $builder->get()->getRow();
+        if ($result != null) {
+            return $result;
+        } else {
+            return array();
+        }
 }
     public function updatePassword($password, $id)
     {
@@ -176,6 +190,32 @@ public function is_Member(){
         }
 
     }
+
+    public function updatePaymentData($amount, $mpesaReceiptNumber, $phone, $date, $merchantRequestID, $checkoutRequestID)
+    {
+        $builder = $this->db->table('transactions');
+        $builder->where('merchantRequestID', $merchantRequestID);
+        $builder->where('checkoutRequestID', $checkoutRequestID);
+        $builder->update(['amount' => $amount, 'mpesaReceiptNumber' => $mpesaReceiptNumber, 'phoneNumber' => $phone, 'transactionDate' => $date]);
+        log($builder->getCompiledUpdate());
+        if ($this->db->affectedRows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public function insertError($data)
+    {
+        $builder = $this->db->table('errors');
+        $builder->insert($data);
+        if ($this->db->affectedRows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 //    member commission
     public function findAllRecords(){
         $builder = $this->db->table('set_commission');
@@ -198,5 +238,130 @@ public function is_Member(){
         } else {
             return null;
         }
+    }
+    public function getTransactions($user_id){
+        $builder = $this->db->table('transactions');
+        $builder->select('u1.fname as buyer_fname, u1.lname as buyer_lname, u1.phone as buyer_phone, transactions.amount,  
+        transactions.status, shares_on_sale.user_id, shares_on_sale.cost_per_share, shares_on_sale.shares_on_sale, 
+        shares_on_sale.total, sacco.name');
+        $builder->join('users as u1', 'u1.uniid = transactions.user_id');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = transactions.share_id');
+        $builder->join('sacco','sacco.sacco_id = shares_on_sale.sacco_id');
+        $builder->where('shares_on_sale.user_id', $user_id);
+        $builder->where('transactions.status', '1');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
+    public function verifyMemberNumber($member_number, $user_id){
+        $builder = $this->db->table('sacco_shares');
+        $builder->select('sacco_shares.*, sacco.name');
+        $builder->join('sacco', 'sacco.sacco_id = sacco_shares.sacco_id');
+        $builder->where('sacco_shares.membership_number', $member_number);
+        $builder->where('sacco_shares.user_id', $user_id);
+        $result = $builder->get();
+        if (count($result->getResultArray()) == 1) {
+            return $result->getRowArray();
+        } else {
+            return false;
+        }
+    }
+
+    public function getAllSaccos(){
+        $builder = $this->db->table('sacco');
+        $builder->select('sacco.sacco_id, sacco.name');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
+    public function saved($data){
+        $builder = $this->db->table('saved');
+        $builder->insert($data);
+        if ($this->db->affectedRows() > 0) {
+            return $this->insertID; //returning the id of the last inserted data
+        } else {
+            return false;
+        }
+    }
+
+    public function getSaccoCostPerShare($sacco_id){
+        $builder = $this->db->table('set_price_per_share');
+        $builder->select('price_per_share');
+        $builder->where('sacco_id', $sacco_id);
+        $result = $builder->get();
+        if (count($result->getResultArray()) == 1) {
+            return $result->getRow()->price_per_share;
+        } else {
+            return false;
+        }
+    }
+
+    public function saveNotification($data){
+        $builder = $this->db->table('notification');
+        $builder->insert($data);
+        if ($this->db->affectedRows() > 0) {
+            return $this->insertID; //returning the id of the last inserted data
+        } else {
+            return false;
+        }
+    }
+
+    public function getUserSharesStatus($user_id){
+
+        $builder = $this->db->table('shares_on_sale');
+        $builder->select('shares_on_sale.shares_on_sale, shares_on_sale.total, shares_on_sale.is_verified, sacco.name, share_messages.reason');
+        $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id');
+        $builder->join('users', 'users.user_id = shares_on_sale.user_id');
+        $builder->join('share_messages', 'share_messages.share_id = shares_on_sale.uuid', 'left');
+        $builder->where('shares_on_sale.user_id', $user_id);
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
+    public function delete_bid_shares($share_id, $user_id){
+        $builder = $this->db->table('bid_share');
+        $builder->where('user_id', $user_id);
+        $builder->where('share_on_sale_id', $share_id);
+        $builder->delete();
+        if ($this->db->affectedRows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getSaccoShares(){
+        $builder= $this->db->table('sacco');
+        $builder->select('sacco.*');
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
+    public function getAllSaccoShares($id){
+
+        $builder = $this->db->table('sacco');
+        $builder->select('sacco.name, shares_on_sale.*');
+        $builder->join('shares_on_sale', 'shares_on_sale.sacco_id = sacco.sacco_id', 'left');
+        $builder->where('sacco.uuid', $id);
+        $builder->where('shares_on_sale.is_verified', '1');
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
+    public function getSaccoName($id){
+        $builder = $this->db->table('sacco');
+        $builder->select('name, location, website');
+        $builder->where('uuid', $id);
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
+    public function getActiveShares(){
+        $builder = $this->db->table('sacco');
+        $builder->select('sacco.name, shares_on_sale.shares_on_sale');
+        $builder->join('shares_on_sale', 'shares_on_sale.sacco_id = sacco.sacco_id', 'left');
+        $builder->where('shares_on_sale.is_verified', '1');
+        $result = $builder->get();
+        return $result->getResultArray();
     }
 }

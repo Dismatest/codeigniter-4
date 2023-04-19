@@ -1,23 +1,51 @@
+<div id="loading-bar"
+     style="position: fixed; top: 0; left: 0; height: 2px; width: 40%; background-color: rgb(214, 178, 214);"></div>
 
 <nav class="navbar navbar-expand-lg pb-5 pt-5">
     <header>
-        <a href="<?= base_url().'/welcome_page' ?>" class='logo'>Shares</a>
+        <a href="<?= base_url('/') ?>" class='logo'>Shares</a>
         <nav class="navbar2">
-            <div class="btn">
-                <i class="fa fa-times close-btn"></i>
+            <div class="btn1">
+                <i class="fas fa-circle-xmark close-btn-x"></i>
             </div>
-            <a href="<?= base_url().'/welcome_page' ?>">Home</a>
+
             <?php if (session()->has('currentLoggedInUser')) : ?>
-                <a href="<?= base_url().'/my_bids' ?>">My Bids</a>
-                <a href="<?= base_url().'/dashboard' ?>">Dashboard</a>
-                <a href="<?= base_url('/') ?>">Logout</a>
+                <a href="<?= base_url('notifications') ?>"><i class="fas fa-bell fa-fw fa-sm m-2"></i>Notifications</a>
+                <a href="<?= base_url('sell-now') ?>"><i class="fas fa-circle-plus fa-fw fa-sm m-2"></i>Sell Shares</a>
+                <a href="<?= base_url('index') ?>"><i class="fas fa-hand-holding-dollar fa-fw fa-sm m-2"></i>Buy Shares</a>
+                <a href="<?= base_url('my_bids') ?>" style="position: relative;"><i
+                        class="fas fa-chess-king fa-fw fa-sm m-2"></i>My Bids
+
+                    <?php if (session()->has('sellers_received_bids')) : ?>
+
+                            <?php if (session()->get('sellers_received_bids') > 0) : ?>
+                            <span class="bg-warning nav-my-bids">
+                                <?= session()->get('sellers_received_bids') ?>
+                                   </span>
+                            <?php endif; ?>
+
+                    <?php endif; ?>
+                    <?php if (session()->has('buyers_received_bids')) : ?>
+
+                        <?php if (session()->get('buyers_received_bids') > 0) : ?>
+                            <span class="bg-warning nav-my-bids">
+                            <?= session()->get('buyers_received_bids') ?>
+                            </span>
+                        <?php endif; ?>
+
+                    <?php endif; ?>
+
+                </a>
+                <a href="<?= base_url('profile') ?>"><i class="fas fa-user fa-fw fa-sm m-2"></i>Profile</a>
+
             <?php else: ?>
-                <a href="<?= base_url().'/register' ?>">Register</a>
-                <a href="<?= base_url('/') ?>">Login</a>
+                <a href="<?= base_url('register') ?>"><i class="fas fa-grip fa-fw fa-sm m-2"></i>About Us</a>
+                <a href="<?= base_url('register') ?>"><i class="fas fa-circle-user fa-fw fa-sm m-2"></i>Register</a>
+                <a href="<?= base_url('login') ?>"><i class="fas fa-arrow-right-from-bracket fa-fw fa-sm m-2"></i>Login</a>
             <?php endif; ?>
         </nav>
-        <div class="btn">
+        <div class="btn1">
             <i class="fas fa-bars menu-btn"></i>
         </div>
     </header>
- </nav>
+</nav>
