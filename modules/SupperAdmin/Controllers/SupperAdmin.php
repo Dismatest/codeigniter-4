@@ -22,11 +22,13 @@ class SupperAdmin extends BaseController
     {
         $allUsers = $this->loginActivityModel->findAllUsers();
         $allSacco = $this->loginActivityModel->findAllSaccoCount();
+        $allTransactions = $this->loginActivityModel->findAllTransactions();
 
         $data = [
             'dashboardTitle' => 'Dashboard',
             'allUsers' => $allUsers,
             'allSacco' => $allSacco,
+            'allTransactions' => $allTransactions,
 
         ];
         return view('Modules\SupperAdmin\Views\dashboard', $data);
@@ -464,5 +466,33 @@ class SupperAdmin extends BaseController
         }
         return view('Modules\SupperAdmin\Views\set-commission', $data);
     }
+
+    public function auditTrail(){
+        $data = [
+            'auditTrailTitle' => 'Audit Trail',
+            'auditTrails' => $this->loginActivityModel->findAllAuditTrail(),
+        ];
+
+        return view('Modules\SupperAdmin\Views\audit-trail', $data);
+    }
+public function auditTrailDelete($error_id){
+   $error = $this->loginActivityModel->deleteAuditTrail($error_id);
+   if($error){
+    return redirect()->to('supperAdmin/audit_trail')->with('success', 'Audit trail deleted successfully');
+    }else{
+        return redirect()->to('supperAdmin/audit_trail')->with('fail', 'Audit trail not deleted');
+   }
+}
+
+public function viewTransactions(){
+        $supperAdmin_id = session()->get('currentLoggedInUser');
+        $data = [
+            'viewTransactionsTitle' => 'View Transactions',
+            'viewTransactions' => $this->loginActivityModel->viewTransactions($supperAdmin_id),
+        ];
+
+        return view('Modules\SupperAdmin\Views\view-transactions', $data);
+}
+
 
 }

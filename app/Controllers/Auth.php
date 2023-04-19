@@ -99,7 +99,7 @@ class Auth extends BaseController
                     }
                 }else{
                     session()->setTempdata('fail', 'Can`t find the user with that email', 20);
-                    return redirect()->back();
+                    return redirect()->to('/');
                 }
             }
 
@@ -186,16 +186,16 @@ class Auth extends BaseController
                 $query = $this->userModel->insert($usersData);
                 if($query){
                     $message = "Hello".$sanitizeFname."\n Your account was created successfully, please activate your account using the following link \n".anchor(base_url('activate/'.$usersData['uniid']),' Activate now','');
-                    $emailSubject = "Password reset link";
+                    $emailSubject = "Account Activation Link";
                     $setFrom = 'billclintonogot88@gmail.com';
                     $messageTitle = "Sacco Product Application";
                     if($this->sendEmail($fname, $email, $setFrom, $messageTitle, $emailSubject, $message)){
-                        return redirect()->to(base_url('/login'))->with('success', 'An activation email has been sent to your email, please activate your account');
+                        return redirect()->to(base_url('/'))->with('success', 'An activation email has been sent to your email, please activate your account');
                     }else{
-                        return redirect()->to(base_url('/login'))->with('fail', 'we can not send an activation email now');
+                        return redirect()->to(base_url('/'))->with('fail', 'we can not send an activation email now');
                     }
                 }else{
-                    return redirect()->to(base_url('/login'))->with('fail', 'registration failed');
+                    return redirect()->to(base_url('/'))->with('fail', 'registration failed');
                 }
 
             }
@@ -210,7 +210,7 @@ class Auth extends BaseController
 
         $this->email->setSubject("$emailSubject");
 
-        $email_template = view('email_template', [
+        $email_template = view('email_template_account_creation', [
             'name' => $name,
             'message' => $message
         ]);
@@ -356,7 +356,11 @@ public function changePassword(){
         }
         if(session()->has('currentLoggedInUser')){
             session()->remove('currentLoggedInUser');
-            return redirect()->to(base_url(' /login'))->with('success', 'You have logged out');
+//            return redirect()->to(base_url(' /login'))->with('success', 'You have logged out');
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'You have logged out'
+            ]);
         }
     }
 }

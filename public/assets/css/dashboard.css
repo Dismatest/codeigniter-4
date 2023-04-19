@@ -145,8 +145,36 @@ tbody>tr>td{
 .no-registration-info {
     border: 1px dashed rgb(225, 225, 90);
     border-radius: 4px;
-    padding: 5px 6px;
+    padding: 20px 6px;
     margin-bottom: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.no-registration-info img{
+    height: 120px;
+}
+.clip-the-path{
+    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+    background-color: var(--text-color);
+    height: 40px;
+    width: 20em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 6px;
+    text-align: center;
+}
+.clip-the-path1{
+    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+    background-color: var(--primary-color);
+    height: 60px;
+    width: 21em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 6px;
+    text-align: center;
 }
 .no-membership-button a{
     color: rgb(225, 225, 90);
@@ -158,7 +186,6 @@ no-membership-button a:hover{
 .no-registration-info>p{
     font-size: 12px;
     font-weight: 300;
-    color: grey;
     letter-spacing: 1px;
 }
 .dashboard-shares-balance{
@@ -274,7 +301,9 @@ no-membership-button a:hover{
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
+    border-radius: 0.3rem;
 }
+
 
 .customer-selling-button1 {
     width: 20%;
@@ -297,12 +326,53 @@ no-membership-button a:hover{
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
+    width: 49%;
+}
+
+.confirm-sell-shares-btn3 {
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
     width: 100%;
+}
+
+.confirm-sell-shares-btn2 {
+    background: linear-gradient(to right, rgb(100, 72, 100), rgb(214, 178, 214));
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    width: 49%;
+}
+
+.confirm-sell-shares-btn2:hover {
+    opacity: 0.8;
+    color: white !important;
+}
+
+.non-members-form{
+    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    width: 49%;
 }
 
 .confirm-sell-shares-btn:hover {
     opacity: 0.8;
-    color: black;
+    color: white !important;
 }
 
 /* Extra styles for the cancel button */
@@ -310,7 +380,7 @@ no-membership-button a:hover{
 /* Center the image and position the close button */
 
 .container1 {
-    padding: 16px;
+   padding-top: 10px;
 }
 .divider{
     display: flex;
@@ -321,6 +391,9 @@ no-membership-button a:hover{
 span.psw {
     float: right;
     padding-top: 16px;
+}
+.request-registration-link{
+    padding: 12px;
 }
 
 /* The Modal (background) */
@@ -342,21 +415,24 @@ span.psw {
 .modal-content-user {
     background-color: #fefefe;
     margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-    border: 1px solid #888;
+    border: none;
+    border-radius: 4px;
+    padding: 16px;
     width: 50%; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button (x) */
-.imgcontainer{
+.imgContainer{
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    padding-bottom: 20px;
 }
 .x-close-button {
     position: absolute;
-    right: 25px;
-    top: 5px;
+    right: 0;
+    top: 2px;
     color: #000;
     font-weight: 300;
     border: 1px solid rgb(143, 141, 141);
@@ -380,15 +456,20 @@ span.psw {
 }
 .shares-sell-heading{
     font-weight: 500;
-    font-size: 14px;
-    color: grey;
+    font-size: 13px;
 }
 .x-close-button:hover,
 .x-close-button:focus {
     color: red;
     cursor: pointer;
 }
-
+.offer-buttons span{
+    padding: 8px 20px;
+    border: 1px solid rgb(214, 178, 214);
+    border-radius: 4rem;
+    cursor: pointer;
+    margin: 10px 0;
+}
 /* Add Zoom Animation */
 .animate {
     -webkit-animation: animatezoom 0.6s;

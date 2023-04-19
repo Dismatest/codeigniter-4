@@ -40,18 +40,8 @@
                     </div>
                     <div class="">
                             <div class="d-flex">
-                                <?php if($is_approved == true): ?>
-                                    <a href="#" class="buy-button" id="display-sell-now-btn" onclick="document.getElementById('id01').style.display='block'">Place a bid</a>
-                                <?php elseif($is_approved == false) : ?>
-                                    <div class="membership-info">
-                                        <p>
-                                            Hello <?= ucfirst(session()->get('fname')) ?>, we have verified that you are not a member of <?= $share['name'] ?> sacco. Kindly
-                                            submit your registration details in the form bellow in order to become a member of the sacco, after then you should be able
-                                            to make your purchase. Thank you.
-                                        </p>
-                                    </div>
 
-                                <?php endif; ?>
+                                    <a href="#" class="buy-button" id="display-sell-now-btn">BUY SHARES</a>
                             </div>
                     </div>
                 </div>
@@ -62,18 +52,47 @@
 
 <!--start of the bid model-->
         <div id="id01" class="user-share-model">
-            <form class="modal-content-user animate" action="<?= $share['uuid'].'/bid' ?>" method="post" id="form">
-                <div class="imgcontainer">
-                    <span onclick="document.getElementById('id01').style.display='none'" class="x-close-button" title="Close Modal"><i class="fa-solid fa-x close-font-icon"></i></span>
+            <div class="modal-content-user animate">
+                <div class="imgContainer">
+                    <span class="x-close-button" id="modal01-close" title="Close Modal"><i class="fa-solid fa-x close-font-icon"></i></span>
                 </div>
 
                 <div class="container1">
-                    <label for="shares"><b class="shares-sell-heading">Your Bid Amount (ksh)</b></label>
+                    <label for="shares"><b class="shares-sell-heading text-warning"><i class="fas fa-circle-exclamation" style="padding-right: 5px;"></i>Please confirm if you are a member of <?= $share['name'] ?> sacco !</b></label>
+                    <input type="hidden" class="customer-selling-button" name="bid" id="shares-for-sale-input-1" value="<?= $share['total']?>">
+                    <div class="d-flex justify-content-between pt-5">
+                        <button  class="confirm-sell-shares-btn" id="modal2Display">Yes, I am a member</button>
+                        <a href="<?= base_url('share/'.$share['uuid'].'/request_membership'); ?>" class="confirm-sell-shares-btn2 text-center">NO, I am not a member</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!--        modal two-->
+
+        <div id="id02" class="user-share-model">
+            <form class="modal-content-user animate" action="<?= $share['uuid'].'/bid' ?>" method="post" id="form">
+                <div class="imgContainer">
+                    <span class="x-close-button" id="modal02-close" title="Close Modal"><i class="fa-solid fa-x close-font-icon"></i></span>
+                </div>
+
+                <div class="container1">
+                    <label for="shares"><b class="shares-sell-heading">Place your bid | Make an offer (ksh)</b></label>
+                    <div class="d-flex align-items-center justify-content-around offer-buttons">
+                        <span>500</span>
+                        <span>500</span>
+                        <span>500</span>
+                        <span>500</span>
+                    </div>
                     <input type="text" class="customer-selling-button" name="bid" id="shares-for-sale-input-1" value="<?= $share['total']?>">
-                    <button type="submit" class="confirm-sell-shares-btn" id="sell-now-btn">Place a bid</button>
+                    <button type="submit" class="confirm-sell-shares-btn3" id="sell-now-btn">SEND</button>
                 </div>
             </form>
         </div>
+
+
 <!-- end of the modal-->
 
        <div class="col-md-5">
@@ -105,78 +124,15 @@
                 </div>
                 
                 <div class="shares-save">
+                    <input type="hidden" value="<?= $share['uuid']?>" id="ajax-share-id" name="ajax-share-id">
+                    <input type="hidden" value="<?= session()->get('user_id') ?>" id="ajax-user-id" name="ajax-user-id">
                     <span class="share-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-regular fa-share-from-square" style="padding: 4px;"></i></span>
-                    <span class="save-button"><a href="#"><i class="fa-regular fa-bookmark" style="padding: 4px;"></i></span></a>
+                    <span class="save-button" id="save-share-button"><a href="#"><i class="fa-regular fa-bookmark" style="padding: 4px;"></i></span></a>
                 </div>
             </div>
         </div>
 
-        <?php if($is_approved == false): ?>
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="membership-title">
-                        <h5>Membership Registration Form</h5>
-                        <?php if(session()->getTempdata('success')): ?>
-                            <div class="alert alert-success" id="hideTempMessage">
-                                <?= session()->getTempdata('success') ?>
-                            </div>
-                        <?php else: ?>
-                            <?php if(session()->getTempdata('fail')): ?>
-                                    <div class="alert alert-danger" id="hideTempMessage">
-                                    <?= session()->getTempdata('fail') ?>
-                                </div>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                    </div>
-                    <main>
-                        <div class="stepper">
-                            <div class="step--1 step-active">Step 1</div>
-                            <div class="step--2">Step 2</div>
-                            <div class="step--3">Step 3</div>
-                            <div class="step--4">Finish</div>
-                        </div>
-                        <form class="form form-active" method="post" action="">
-                            <div class="form--header-container">
-                                <h1 class="form--header-title">
-                                    Personal Information
-                                </h1>
-                            </div>
-                            <labe for="fname" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500;">First Name</labe>
-                            <input type="text" class="stepper-input-fields" value="<?= $user['fname'] ?>" name="fname">
-                            <labe for="lname" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500; padding-top: 5px;">Last Name</labe>
-                            <input type="text" class="stepper-input-fields" value="<?= $user['lname'] ?>" name="lname">
-                            <button class="form__btn" id="btn-1">Next</button>
-                        </form>
-                        <form class="form" method="post" action="">
-                            <div class="form--header-container">
-                                <h1 class="form--header-title">
-                                    Personal Information
-                                </h1>
-                            </div>
-                            <labe for="phone" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500;">Phone Number</labe>
-                            <input type="text"class="stepper-input-fields" value="<?= $user['phone'] ?>" name="phone">
-                            <labe for="email" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500; padding-top: 5px;">Email Address</labe>
-                            <input type="text" class="stepper-input-fields" value="<?= $user['email'] ?>" name="email">
-                            <button class="form__btn" id="btn-2-prev">Previous</button>
-                            <button class="form__btn" id="btn-2-next">Next</button>
-                        </form>
-                        <form class="form" method="post" action="">
-                            <div class="form--header-container">
-                                <h1 class="form--header-title">
-                                    Personal Information
-                                </h1>
-                            </div>
-                            <labe for="sacco-name" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500;">Sacco Name</labe>
-                            <input type="text" class="stepper-input-fields" value="<?= $share['name'] ?>" name="sacco-name">
-                            <labe for="identification" class="d-flex justify-content-start" style="margin-left: 15px; font-weight: 500; padding-top: 5px;">ID Number</labe>
-                            <input type="text" class="stepper-input-fields" placeholder="ID" name="identification">
-                            <button class="form__btn" id="btn-3">Submit</button>
-                        </form>
-                        <div class="form--message"></div>
-                    </main>
-                </div>
-            </div>
-        <?php endif; ?>
+
 
         <!-- share posted share modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

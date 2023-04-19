@@ -63,7 +63,7 @@ html{
     }
 }
 .description-section h5{
-    font-size: 2rem;
+    font-size: 20px;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: white;
@@ -76,7 +76,11 @@ html{
     font-weight: 300;
     padding: 0.5rem 0;
 }
+.top-button{
+    margin-top: 60px;
+}
 .description-section a{
+
     border: 1px solid purple;
     color: white;
     cursor: pointer;
@@ -179,6 +183,11 @@ html{
     overflow: hidden;
 
 }
+.shares-heading{
+    font-size: 14px;
+    font-weight: 500;
+    padding-right: 20px;
+}
 .sacco-read-more{
     border: 1px solid purple;
     color: black;
@@ -207,6 +216,28 @@ html{
 @media all and (max-width:620px){
     .main-row-container{
         row-gap: 1.5em;
+    }
+    .header-two-content{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .list-shares-main-container{
+        row-gap: 3.0em;
+        box-sizing: border-box;
+    }
+    .header-content-3 h6{
+        color: grey;
+        font-size: 13px;
+        font-weight: 300;
+    }
+    .header-content-3-select span{
+        color: grey;
+        font-size: 13px;
+        font-weight: 300;
+    }
+    #shares-heading1{
+        display: none;
     }
 }
 

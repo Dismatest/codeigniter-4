@@ -12,6 +12,8 @@ use App\Models\SharesOnSale;
 use App\Models\SaccoShares;
 use App\Models\BidShares;
 use CodeIgniter\I18n\Time;
+use mysql_xdevapi\Exception;
+
 class Home extends BaseController
 
 
@@ -47,95 +49,55 @@ class Home extends BaseController
         return view('welcome_page', $data);
     }
     public function indexPage() {
+        return view('index');
+    }
+
+    public function search(){
 
         $pager = \Config\Services::pager();
-        $globalTime = [];
+        $searchOne = $this->request->getPost('searchOne');
+        $searchTwo = $this->request->getPost('searchTwo');
+        $sort = $this->request->getPost('sort');
+
+        // Prepare query to get all records
         $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name, sacco.sacco_id')
             ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
             ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
             ->where('shares_on_sale.is_verified', '1')
-            ->orderBy('shares_on_sale.created_at', 'ASC')
-            ->paginate(10);
+            ->orderBy('shares_on_sale.created_at', 'ASC');
 
-
-        foreach ($shares as $share) {
-            $time = $share['created_at'];
-            $parse = Time::parse($time);
-            $time = $parse->humanize();
-            $globalTime = $time;
+        // Apply search filters
+        if (!empty($searchOne)) {
+            $shares = $shares->groupStart()
+                ->orLike('sacco.name', '%' . $searchOne . '%')
+                ->groupEnd();
         }
-        $data = [
-            'indexTitle' => 'welcome to our platform',
+
+        if (!empty($searchTwo)) {
+            $shares = $shares->groupStart()
+                ->orLike('shares_on_sale.total', '%' . $searchTwo . '%')
+                ->orLike('shares_on_sale.shares_on_sale', '%' . $searchTwo . '%')
+                ->groupEnd();
+        }
+
+        if (!empty($sort)) {
+            $shares = $shares->orLike('shares_on_sale.created_at', $sort);
+        }
+
+        // Get paginated results
+        $perPage = 10; // Set the number of records per page
+        $shares = $shares->paginate($perPage, 'default', $pager->getCurrentPage());
+
+        // Get the pager links
+        $pagerLinks = $pager->links('default', 'full-pagination');
+
+        // Add the pager links to the JSON response
+        $responseData = [
             'shares' => $shares,
-            'time' => $globalTime,
-            'pager' => $this->sharesOnSale->pager,
+            'pagerLinks' => $pagerLinks
         ];
 
-        return view('index', $data);
-    }
-    public function dashboard() {
-
-        $data = [];
-        global $sacco_id;
-        global $membership_number;
-        global $is_approved;
-        $uniid = session()->get('currentLoggedInUser');
-        $userData = $this->displayDashboard->getCurrentUserInformation($uniid);
-        $userShares = $this->displayDashboard->getUserShares();
-        $is_a_member = $this->displayDashboard->is_Member();
-        $is_approved = $this->displayDashboard->is_Verified();
-        $member_commission = $this->displayDashboard->findAllRecords();
-
-
-        foreach ($is_approved as $approved){
-            $is_approved = $approved['is_verified'];
-        }
-        if($userShares) {
-
-        foreach ($userShares as $share){
-            $sacco_id = $share['sacco_id'];
-            $membership_number = $share['membership_number'];
-        }
-
-        }
-        if($this->request->getMethod() == 'post'){
-            $shares = $this->request->getVar('shares', FILTER_SANITIZE_STRING);
-            $price = $this->request->getVar('price', FILTER_SANITIZE_STRING);
-            $total = $this->request->getVar('total', FILTER_SANITIZE_STRING);
-
-            $shareData = [
-
-                'uuid'   => md5(str_shuffle('abcdefghijklmnopqrstuvwxyz1234567890'.time())),
-                'user_id'     => $userData->user_id,
-                'sacco_id' => $sacco_id,
-                'membership_number' => $membership_number,
-                'cost_per_share'  => $price,
-                'shares_on_sale' => $shares,
-                'total'  => $total,
-
-            ];
-            $postShare = $this->displayDashboard->saveShareData($shareData);
-            if(!empty($postShare))
-            {
-                session()->setTempdata('fail', 'Something went wrong', 3);
-                return redirect()->to(base_url('dashboard'));
-            }else{
-                session()->setTempdata('success', 'You have successfully posted shares for sale', 3);
-                return redirect()->to(base_url('dashboard'));
-            }
-
-        }
-
-        $data = [
-            'dashboardTitle' => 'Dashboard',
-            'userData' => $userData,
-            'userShares' => $userShares,
-            'is_approved' => $is_approved,
-            'is_a_member' => $is_a_member,
-            'member_commission' => $member_commission[0]['commission'],
-        ];
-
-        return view('dashboard', $data);
+        return $this->response->setJSON($responseData);
     }
 
     public function forgotPassword(){
@@ -207,7 +169,7 @@ class Home extends BaseController
         }
     }
 
-public function passwordReset($uniid=null){
+    public function passwordReset($uniid=null){
         $data = [];
 
         if(!empty($uniid)){
@@ -263,7 +225,7 @@ public function passwordReset($uniid=null){
         return view('reset-password-form', $data);
 }
 
-public function expiryTime($date){
+    public function expiryTime($date){
         $updated_time = strtotime($date);
         $currentTime = time();
         $difference_time = ($currentTime - $updated_time)/60;
@@ -370,8 +332,8 @@ public function expiryTime($date){
 
     function newAccessToken()
     {
-        $consumer_key="c4KMRJZw99EOBa9a0QjdMa8GebbLI6OT";
-        $consumer_secret="FUmXydWV8gRbq2E8";
+        $consumer_key="3AYA63kiam57dzjJSGnGVnmS3z6fSEAR";
+        $consumer_secret="OIvi32V0JF3GuHIP";
         $credentials = base64_encode($consumer_key.":".$consumer_secret);
         $url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
 
@@ -398,35 +360,36 @@ public function expiryTime($date){
         global $errors;
         global $trim_phone;
         $price = $this->request->getGet('total');
+        $share_id = $this->request->getGet('share_id');
         $userId = session()->get('currentLoggedInUser');
         $getUser = $this->users->where('uniid', $userId)->first();
         $phone = $getUser['phone'];
         $processedPhone = $this->processPhoneNumber($phone);
 
         $phone_code = $this->request->getPost('phone-code');
-        $myphone = $this->request->getPost('phone');
+        $myPhone = $this->request->getPost('phone');
         $trim_phone = ltrim($phone_code, '+');
 
-        $phone_number = $trim_phone.$myphone;
+        $phone_number = $trim_phone.$myPhone;
 
         $mpesa_check_box = $this->request->getPost('mpesa-check-box');
 
         if($mpesa_check_box == 'on'){
-            $url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+
+            $url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
             $curl_post_data = [
-                'BusinessShortCode' =>174379,
-                'Password' => 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMzAyMTMxOTA3',
+                'BusinessShortCode' => getenv('MPESA_SHORTCODE'),
+                'Password' => "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMzAyMTMxOTA3",
                 'Timestamp' => "20230302131907",
-                'TransactionType' => 'CustomerPayBillOnline',
+                'TransactionType' => "CustomerPayBillOnline",
                 'Amount' => 1, // $price
                 'PartyA' => $phone_number,
-                'PartyB' => 174379,
+                'PartyB' => getenv('MPESA_PARTYB'),
                 'PhoneNumber' => $phone_number,
-                'CallBackURL' => 'https://0554-197-232-79-73.eu.ngrok.io/payment_callback',
+                'CallBackURL' => "https://5e41-197-232-79-73.in.ngrok.io/payment_callback",
                 'AccountReference' => "saccoPayment",
-                'TransactionDesc' => "buy shares"
+                'TransactionDesc' => "buy shares",
             ];
-
 
             $data_string = json_encode($curl_post_data);
 
@@ -444,9 +407,19 @@ public function expiryTime($date){
                 curl_close($curl);
                 die('error occurred during curl exec. Additional info: ' . var_export($info));
             }else{
-//                return redirect()->to('dashboard');
+
+
+                $response = json_decode($curl_response, true);
+                curl_close($curl);
+                $data = [
+                    'share_id' => $share_id,
+                    'user_id' => $userId,
+                    'merchantRequestID' => $response['MerchantRequestID'],
+                    'checkoutRequestID' => $response['CheckoutRequestID'],
+                ];
+                $this->displayDashboard->savePaymentsData($data);
             }
-            curl_close($curl);
+
         }else{
             $errors = 'Please ensure you have checked the mpesa payment option here before you can continue continue';
         }
@@ -464,31 +437,49 @@ public function expiryTime($date){
 
     }
 
-    public function paymentConfirmationCallBack(){
-        $response = file_get_contents('php://input');
-        $path = WRITEPATH.'/payme.json';
-        file_put_contents($path, $response);
-    }
-
     public function paymentCallback(){
 
         $response = file_get_contents('php://input');
-        $json = json_dencode($response, true);
+        log_message("error", "Response: " . $response);
 
-        $data = [
-            'amount' => $json['Body']['stkCallback']['CallbackMetadata']['Item'][0]['Value'],
-            'mpesaReceiptNumber' => $json['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value'],
-            'transactionDate' => $json['Body']['stkCallback']['CallbackMetadata']['Item'][3]['Value'],
-            'phoneNumber' => $json['Body']['stkCallback']['CallbackMetadata']['Item'][4]['Value'],
-        ];
+        $json = json_decode($response, true);
 
-        $savePayment = $this->displayDashboard->savePaymentsData($data);
-        if($savePayment) {
-            echo 'Payment was successful';
-        }else{
-            echo 'Payment was not successful';
+        $merchantRequestID = $json['Body']['stkCallback']['MerchantRequestID'];
+
+        if($json['Body']['stkCallback']['ResultCode'] == 0) {
+            $checkoutRequestID = $json['Body']['stkCallback']['CheckoutRequestID'];
+            $amount = 0;
+            $mpesaReceiptNumber = '';
+            $phone = '';
+            $date ='';
+
+            foreach($json['Body']['stkCallback']['CallbackMetadata']['Item'] as $params){
+                switch ($params['Name']){
+                    case 'Amount':
+                        $amount = $params['Value'];
+                        break;
+                    case 'MpesaReceiptNumber':
+                        $mpesaReceiptNumber = $params['Value'];
+                        break;
+                    case 'PhoneNumber':
+                        $phone = $params['Value'];
+                        break;
+                    case 'TransactionDate':
+                        $date = $params['Value'];
+                        break;
+                }
+            }
+            try {
+                $this->displayDashboard->updatePaymentData($amount, $mpesaReceiptNumber, $phone, $date, $merchantRequestID, $checkoutRequestID);
+
+            }catch (\CodeIgniter\Database\Exceptions\DataBaseException $e){
+                $data = [
+                    'error' => $e,
+                ];
+                $this->displayDashboard->insertError($data);
+            }
         }
-
+        return 'ok';
     }
 
     public function saccoMembership(){
@@ -523,6 +514,7 @@ public function expiryTime($date){
                 $identification = $this->request->getVar('identification');
                 $sacco_id = $this->request->getVar('selectName');
 
+                session()->set('request_joining_sacco_id', $sacco_id);
 
                 $membership = [
                     'user_id' => $user['user_id'],
@@ -560,6 +552,66 @@ public function expiryTime($date){
             'sacco' => $sacco,
         ];
         return view('sacco-membership', $data);
+    }
+
+    public function dashboard() {
+
+        $sacco_id = '';
+        $membership_number = '';
+        $userServices = service('userData');
+        $membershipService = service('membershipData');
+        $userShares = $this->displayDashboard->getUserShares();
+        $is_a_member = $this->displayDashboard->is_Member();
+        $is_approved = $this->displayDashboard->is_Verified();
+        $member_commission = $this->displayDashboard->findAllRecords();
+
+        if($userShares) {
+
+            foreach ($userShares as $share){
+                $sacco_id = $share['sacco_id'];
+                $membership_number = $share['membership_number'];
+            }
+
+        }
+        if($this->request->getMethod() == 'post'){
+            $shares = $this->request->getVar('shares', FILTER_SANITIZE_STRING);
+            $price = $this->request->getVar('price', FILTER_SANITIZE_STRING);
+            $total = $this->request->getVar('total', FILTER_SANITIZE_STRING);
+
+            $shareData = [
+
+                'uuid'   => md5(str_shuffle('abcdefghijklmnopqrstuvwxyz1234567890'.time())),
+                'user_id'     => $userServices->getUserData()->user_id,
+                'sacco_id' => $sacco_id,
+                'membership_number' => $membership_number,
+                'cost_per_share'  => $price,
+                'shares_on_sale' => $shares,
+                'total'  => $total,
+
+            ];
+            $postShare = $this->displayDashboard->saveShareData($shareData);
+            if(!empty($postShare))
+            {
+                session()->setTempdata('fail', 'Something went wrong', 3);
+                return redirect()->to(base_url('dashboard'));
+            }else{
+                session()->setTempdata('success', 'You have successfully posted shares for sale', 3);
+                return redirect()->to(base_url('dashboard'));
+            }
+
+        }
+
+        $data = [
+            'dashboardTitle' => 'Dashboard',
+            'userData' => $userServices->getUserData(),
+            'userShares' => $userShares,
+            'is_approved' => $is_approved,
+            'is_a_member' => $is_a_member,
+            'member_commission' => $member_commission[0]['commission'],
+            'is_requested' => $membershipService->getUserRegistration(),
+        ];
+
+        return view('dashboard', $data);
     }
 
     public function bid($id = null){
@@ -694,6 +746,225 @@ public function expiryTime($date){
         }
 
     }
+
+    public function savedShares(){
+
+        $userServices = service('userData');
+        $userShares = $this->displayDashboard->getUserShares();
+        $is_a_member = $this->displayDashboard->is_Member();
+
+        $data = [
+            'userData' => $userServices->getUserData(),
+            'userShares' => $userShares,
+            'is_a_member' => $is_a_member,
+
+        ];
+        return view('saved', $data);
+    }
+
+    public function profile(){
+        $userServices = service('userData');
+        $userShares = $this->displayDashboard->getUserShares();
+        $is_a_member = $this->displayDashboard->is_Member();
+        $data = [
+            'userData' => $userServices->getUserData(),
+            'userShares' => $userShares,
+            'is_a_member' => $is_a_member,
+        ];
+        return view('settings', $data);
+    }
+
+    public function needHelp(){
+        $userServices = service('userData');
+        $userShares = $this->displayDashboard->getUserShares();
+        $is_a_member = $this->displayDashboard->is_Member();
+        $data = [
+            'userData' => $userServices->getUserData(),
+            'userShares' => $userShares,
+            'is_a_member' => $is_a_member,
+        ];
+        return view('help', $data);
+    }
+    public function activeShares(){
+        $userServices = service('userData');
+        $is_a_member = $this->displayDashboard->is_Member();
+        $data = [
+            'userData' => $userServices->getUserData(),
+            'is_a_member' => $is_a_member,
+        ];
+      return view('active_shares', $data);
+    }
+
+    public function yourShareStatus(){
+        $userServices = service('userData');
+        $user_id = $userServices->getUserData()->user_id;
+        $getShares = $this->displayDashboard->getUserSharesStatus($user_id);
+        if($getShares){
+            $response = [
+                'message' => 'success',
+                'userShares' => $getShares,
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function shareHistory(){
+        $user_id = session()->get('user_id');
+        $userServices = service('userData');
+        $userShares = $this->displayDashboard->getUserShares();
+        $is_a_member = $this->displayDashboard->is_Member();
+        $user_share_history = $this->displayDashboard->getTransactions($user_id);
+        $data = [
+            'userData' => $userServices->getUserData(),
+            'userShares' => $userShares,
+            'is_a_member' => $is_a_member,
+            'user_share_history' => $user_share_history,
+        ];
+        return view('share_history', $data);
+    }
+
+    public function membershipStatus(){
+        $userServices = service('userData');
+        $userShares = $this->displayDashboard->getUserShares();
+        $is_a_member = $this->displayDashboard->is_Member();
+        $membership_status = $this->displayDashboard->membershipStatus();
+        $data = [
+            'userData' => $userServices->getUserData(),
+            'userShares' => $userShares,
+            'is_a_member' => $is_a_member,
+            'membership_status' => $membership_status,
+        ];
+        return view('membership_status', $data);
+    }
+
+
+    public function sell(){
+        return view('sell');
+    }
+
+    public function sellNow(){
+        $member_commission = $this->displayDashboard->findAllRecords();
+        $userShares = $this->displayDashboard->getUserShares();
+        $getAllSacco = $this->displayDashboard->getAllSaccos();
+
+        $data = [
+            'member_commission' => $member_commission[0]['commission'],
+            'userShares' => $userShares,
+            'saccos' => $getAllSacco,
+        ];
+        return view('sell_now', $data);
+    }
+
+    public function sellNowAjax(){
+
+        $userServices = service('userData');
+
+        if($this->request->getMethod() == 'post'){
+            $sacco_id = $this->request->getPost('sacco_id');
+            $shares = $this->request->getPost('share');
+            $price = $this->request->getPost('price');
+            $membership_number = $this->request->getPost('member_number');
+            $total = $this->request->getPost('total');
+
+            $shareData = [
+
+                'uuid'   => md5(str_shuffle('abcdefghijklmnopqrstuvwxyz1234567890'.time())),
+                'user_id'     => $userServices->getUserData()->user_id,
+                'sacco_id' => $sacco_id,
+                'membership_number' => $membership_number,
+                'cost_per_share'  => $price,
+                'shares_on_sale' => $shares,
+                'total'  => $total,
+
+            ];
+            $postShare = $this->displayDashboard->saveShareData($shareData);
+            return $this->response->setJSON($postShare);
+    }
+    }
+
+    public function verifyMemberNumber(){
+        if($this->request->getMethod() == 'post'){
+            $member_number = $this->request->getPost('verify');
+            $user_id = session()->get('user_id');
+            $share = $this->displayDashboard->verifyMemberNumber($member_number, $user_id);
+            if($share){
+                $response = [
+                    'status' => 200,
+                    'message' => 'Member number verified successfully',
+                    'share'=> $share,
+                ];
+                return $this->response->setJSON($response);
+            }else{
+                $response = [
+                    'status' => 400,
+                    'message' => 'Membership number do not exists',
+                ];
+                return $this->response->setJSON($response);
+            }
+        }
+    }
+
+    public function saveShare($share_id){
+
+        $ajax_share_id = $this->request->getVar('ajax-share-id');
+        $user_id = session()->get('user_id');
+        if($share_id == $ajax_share_id){
+
+            $shareData = [
+                'user_id' => $user_id,
+                'share_id' => $share_id,
+            ];
+            if($this->displayDashboard->saved($shareData)){
+                $response = [
+                    'status' => 200,
+                    'message' => 'Share saved successfully',
+                ];
+                return $this->response->setJSON($response);
+            }else{
+                $response = [
+                    'status' => 400,
+                    'message' => 'Share not saved',
+                ];
+                return $this->response->setJSON($response);
+            }
+        }
+    }
+
+    public function getSaccoCostPerShare()
+    {
+        if ($this->request->getMethod() == 'post') {
+
+            try {
+                $sacco_id = $this->request->getPost('sacco_id');
+                $sacco = $this->displayDashboard->getSaccoCostPerShare($sacco_id);
+                if ($sacco) {
+                    $response = [
+                        'status' => 200,
+                        'sacco_cost_per_share' => $sacco,
+                    ];
+                    return $this->response->setJSON($response);
+                } else {
+                    $response = [
+                        'status' => 400,
+                    ];
+                    return $this->response->setJSON($response);
+                }
+            } catch (\Exception $e) {
+                // Handle the exception here
+                $response = [
+                    'status' => 500,
+                    'error' => $e->getMessage(),
+                ];
+                return $this->response->setJSON($response);
+            }
+        }
+    }
+
+    public function requestMembership(){
+
+        return view ('request-membership');
+    }
+
     public function messages(){
         return view('messages');
     }

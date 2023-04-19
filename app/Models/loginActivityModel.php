@@ -51,6 +51,14 @@ class LoginActivityModel extends Model{
         return $builder->countAllResults();
     }
 
+    public function findAllTransactions(){
+        $builder = $this->db->table('transactions');
+        $builder->selectSum('amount');
+        $query = $builder->get();
+        return $query->getRow()->amount;
+
+    }
+
     //all the supperAdmin shares model methods
     public function findAllAprovedShares(){
         $builder = $this->db->table('shares_on_sale');
@@ -185,4 +193,34 @@ class LoginActivityModel extends Model{
         }
     }
 
+    public function findAllAuditTrail(){
+        $builder = $this->db->table('errors');
+        $builder->select('errors.*');
+        return $builder->get()->getResultArray();
+
+    }
+
+    public function deleteAuditTrail($id){
+        $builder = $this->db->table('errors');
+        $builder->where('error_id', $id);
+        $builder->delete();
+        if($this->db->affectedRows() > 0){
+            return true;
+        }
+    }
+
+    public function viewTransactions($user_id){
+
+        $builder = $this->db->table('transactions');
+        $builder->select('u1.fname as buyer_fname, u1.lname as buyer_lname, u1.phone as buyer_phone, u2.fname as seller_fname, 
+        u2.lname as seller_lname, u2.phone as buyer_phone, transactions.transaction_id, transactions.amount, transactions.mpesaReceiptNumber, transactions.transactionDate, 
+        transactions.phoneNumber, transactions.status, shares_on_sale.cost_per_share, shares_on_sale.membership_number, shares_on_sale.shares_on_sale, 
+        shares_on_sale.total');
+        $builder->join('users as u1', 'u1.uniid = transactions.user_id');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = transactions.share_id');
+        $builder->join('users as u2', 'u2.user_id = shares_on_sale.user_id');
+        $query = $builder->get();
+        return $query->getResultArray();
+
+    }
 }

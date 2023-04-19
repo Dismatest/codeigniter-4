@@ -25,8 +25,10 @@
     </title>
     <link rel="stylesheet" href="<?= base_url('assets/vendors/mdi/css/materialdesignicons.min.css')?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendors/css/vendor.bundle.base.css')?>">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/admin.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/sacco.css') ?>">
 </head>
 <body>
 
@@ -38,8 +40,24 @@
 <script src="<?= base_url('assets/js/jquery.cookie.js')?>" type="text/javascript"></script>
 <script src="<?= base_url('assets/js/off-canvas.js')?>"></script>
 <script src="<?=base_url('assets/js/hoverable-collapse.js')?>"></script>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script src="<?=base_url('assets/js/misc.js')?>"></script>
 <script src="<?= base_url('assets/js/todolist.js')?>"></script>
 <script src="<?= base_url('assets/js/sacco-admin.js')?>"></script>
+<script>
+
+    <?php if(session()->getFlashdata('success')) : ?>
+    $(document).ready(function () {
+        alertify.set('notifier','position', 'bottom-right');
+        alertify.success("<?= session()->getFlashdata('success') ?>");
+    });
+    <?php elseif(session()->getFlashdata('fail')) : ?>
+    $(document).ready(function () {
+        alertify.set('notifier','position', 'bottom-right');
+        alertify.error("<?= session()->getFlashdata('fail') ?>");
+    });
+    <?php endif; ?>
+
+</script>
 </body>
 </html>

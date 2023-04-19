@@ -27,7 +27,6 @@
                                 <th> Phone Number </th>
                                 <th> Membership Number </th>
                                 <td> Shares Amount </td>
-                                <td> Cost </td>
                                 <td> Total </td>
                                 <td> Date </td>
                                 <td> Status </td>
@@ -42,20 +41,21 @@
                                     <td><?= $share['phone'] ?></td>
                                     <td><?= $share['membership_number'] ?></td>
                                     <td><?= $share['shares_on_sale'] ?></td>
-                                    <td><?= $share['cost_per_share'] ?></td>
-                                    <td><?= $share['total'] ?></td>
+                                    <td>Ksh: <?= $share['total'] ?></td>
                                     <?php if(isset($time) && !empty($time)): ?>
                                     <td><?= $time ?></td>
                                     <?php endif; ?>
                                     <?php if ($share['is_verified'] == 0): ?>
-                                        <td><a href="<?= 'verify-share/'.$share['uuid'] ?>" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><label class="badge badge-gradient-danger">Pending</label></a></td>
+                                        <td><label class="badge badge-gradient-warning">Pending</label></td>
                                     <?php else: ?>
-                                        <td><label class="badge badge-gradient-success">Verified</label></td>
+                                        <td><label class="badge badge-gradient-success">Approved</label></td>
                                     <?php endif; ?>
                                     <td>
-                                        <a href="<?= 'delete-share/' . $share['uuid'] ?>" >
-                                            <i class="mdi mdi-delete" style="font-size: 22px; color: grey;"></i>
+
+                                        <a href="<?= 'delete-share/'.$share['uuid'] ?>" class="btn btn-gradient-danger btn-rounded btn-icon" style="display: grid; place-items: center; width: 20px; height: 20px; margin: 0 3px;">
+                                            <i class="mdi mdi-delete"></i>
                                         </a>
+
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -71,16 +71,18 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="staticBackdropLabel">Share verification</h5>
+                                        <h5 class="modal-title" id="staticBackdropLabel">Approve Share</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Are you sure you want to verify this share?</p>
+
+                                        <p>Are you sure you want to approve this share?</p>
 
                                         <form method="post" action="<?= 'verify-share/'.$share['uuid'] ?>">
                                             <?= csrf_field() ?>
-                                            <button type="submit" class="btn btn-primary">Verify</button>
+                                            <button type="submit" class="btn btn-primary approve-btn">Verify</button>
                                         </form>
+
 
                                     </div>
                                 </div>

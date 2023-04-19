@@ -6,7 +6,7 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class='footer-about'>
                         <div class="footer-logo">
-                            <a href=""><img src="<?= base_url().'/assets/images/img.png'?>" alt="img"></a>
+                            <a href=""><img src="<?= base_url().'/assets/images/shares-logo.png'?>" alt="img"></a>
                         </div>
                         <p>We value our customers as we serve you to the best of your satisfaction.</p>
                     </div>

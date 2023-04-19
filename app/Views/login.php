@@ -16,7 +16,7 @@
                     ?>
                     <div class="alert alert-success" id="hideTempMessage"><?= session()->getTempData('success') ?></div>
                     <?php
-                }else if(!empty(session()->getTempdata('fail'))){
+                }elseif(!empty(session()->getTempdata('fail'))){
                     ?>
                     <div class="alert alert-danger" id="hideTempMessage"><?= session()->getTempdata('fail') ?></div>
                     <?php

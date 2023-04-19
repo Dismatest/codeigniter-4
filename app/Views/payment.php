@@ -1,6 +1,12 @@
 <?= $this->extend("client_base/base.php");?>
 <?= $this->section('content');?>
 
+    <script>
+        setTimeout(function (){
+            $('#hideTempMessage').hide();
+        }, 3000)
+    </script>
+
     <div class="load"></div>
 <nav class="navbar navbar-light bg-light">
   <div class="container">
@@ -17,6 +23,11 @@
 
 <div class="container">
     <div class="borders">
+        <?php if(!empty(session()->getTempdata('success'))): ?>
+            <div class="alert alert-success" id="hideTempMessage"><?= session()->getTempData('success') ?></div>
+        <?elseif(!empty(session()->getTempdata('fail'))): ?>
+            <div class="alert alert-danger" id="hideTempMessage"><?= session()->getTempdata('fail') ?></div>
+        <?php endif; ?>
         <div class="payment-icon">
             <span><i class="fa-solid fa-shop-lock"></i></span>
             <h6 class="payment-heading">Secure Checkout Payment</h6>
@@ -28,7 +39,11 @@
             </div>
             <div id="card-content">
                 <h6>Total</h6>
-                <p>Ksh: <?= $total ?></p>
+                <?php if(!empty($total)): ?>
+                    <p>Ksh: <?= $total ?></p>
+                <?php else: ?>
+                <p>Ksh: 0.0</p>
+                <?php endif; ?>
             </div>
         </div>
         <div class="select-payment-method">

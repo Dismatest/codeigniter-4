@@ -63,14 +63,13 @@
 </body>
 <script>
     <?php if(session()->getFlashdata('success')) : ?>
-
     $(document).ready(function () {
-        alertify.set('notifier','position', 'top-center');
+        alertify.set('notifier','position', 'bottom-right');
         alertify.success("<?= session()->getFlashdata('success') ?>");
     });
     <?php elseif(session()->getFlashdata('error')) : ?>
     $(document).ready(function () {
-        alertify.set('notifier','position', 'top-center');
+        alertify.set('notifier','position', 'bottom-right');
         alertify.error("<?= session()->getFlashdata('error') ?>");
     });
     <?php endif; ?>

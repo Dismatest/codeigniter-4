@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     $('#upload-form').on('submit', function(event) {
         event.preventDefault();
@@ -32,6 +33,218 @@ $(document).ready(function() {
     });
 });
 
+// ajax request for viewing the data
+
+$(document).ready(function() {
+    $(document).on('click', '.mark-as-read', function() {
+
+        let data_id = $(this).data('id');
+
+        $.ajax({
+            method: 'POST',
+            url: '/admin/get_each_share_notification',
+            data:{
+                share_id: data_id,
+            },
+
+            success: function(response) {
+                $.each(response, function(key, value) {
+                    const date = new Date(value.created_at);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const formattedDate = `${month}/${day}/${year}`;
+
+                    $('#notification-seller-name').text(value.fname +' '+ value.lname);
+                    $('#buyer-member-number').text(value.membership_number);
+                    $('#notification-shares').text(value.shares_on_sale);
+                    $('#notification-sacco').text(value.name);
+                    $('#notification-share-value').text(value.total);
+                    $('#notification-date').text(formattedDate);
+                    $('#notification-reject').attr({'data-id': value.uuid, 'data-name': value.user_id});
+                    $('#notification-approve').attr({'data-id': value.uuid, 'data-name': value.user_id});
+
+                });
+            },
+            error: function(error) {
+                console.log(error);
+            }
+
+        });
+    });
+});
+// ajax view shares in notification
+
+// reject and approve shares ajax request
+$(document).ready(function() {
+    $('#notification-reject').on('click', function() {
+        let share_id = $(this).data('id');
+        let user_id = $(this).data('name');
+        let reason = $('#reason').val();
+
+        if(reason === '') {
+            $('.reject-share-errors').css('display', 'block');
+            $('#reason').css('border', '1px solid red');
+            return false;
+        }else{
+
+            $('.reject-share-errors').css('display', 'none');
+            $('#reason').css('border', '1px solid #ced4da');
+        }
+
+        $.ajax({
+            method: 'POST',
+            url: '/admin/reject_share',
+            data:{
+                share_id: share_id,
+                user_id: user_id,
+                reason: reason,
+            },
+            success: function(response) {
+                if(response.status === 'success') {
+                    $('#notificationsModalReport').modal('hide');
+                    updateRejectShares(share_id, user_id);
+                    $('#reason').val('');
+                    $('#displayShareNotifications').empty();
+                    displaySingleShare();
+                    alertify.set('notifier','position', 'bottom-right');
+                    alertify.success(response.message);
+
+                }
+            },
+
+            error: function(error) {
+                console.log(error);
+            }
+
+        });
+    });
+});
+
+function updateRejectShares(share_id, user_id) {
+    $.ajax({
+        url: '/admin/update_reject_shares',
+        method: 'POST',
+        data:{
+            share_id: share_id,
+            user_id: user_id,
+        },
+        success: function(response) {
+            console.log(response);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+
+    });
+}
+$(document).ready(function() {
+    $('#notification-approve').on('click', function() {
+        let share_id = $(this).data('id');
+        let user_id = $(this).data('name');
+       $.ajax({
+           url: '/admin/approve_share',
+           method: 'POST',
+           data:{
+                    share_id: share_id,
+                    user_id: user_id,
+                },
+              success: function(response) {
+                  $('#notificationsModalReport').modal('hide');
+                  $('#displayShareNotifications').empty();
+                  displaySingleShare();
+                  alertify.set('notifier','position', 'bottom-right');
+                  alertify.success(response.message);
+              },
+                error: function(error) {
+                    console.log(error);
+                }
+
+       });
+    });
+});
+
+// end of reject and approve shares ajax request
+
+$(document).ready(function() {
+    displaySingleShare();
+});
+
+    function displaySingleShare(){
+        $.ajax({
+            url: '/admin/view_share_notification',
+            method: 'GET',
+            success: function(response) {
+                let countAllResult = Object.keys(response).length;
+                $('#notification-count').text(countAllResult);
+                $.each(response, function(key, value) {
+                    let row = '<tr>' +
+
+                        '<td>' + value.fname + ' ' + value.lname + '</td>' +
+                        '<td>' + value.membership_number + '</td>' +
+                        '<td>' + value.shares_on_sale + '</td>' +
+                        '<td>' + 'Ksh: ' + value.total + '</td>' +
+                        '<td>' +
+                        '<button class="btn btn-sm btn-primary mark-as-read" data-bs-toggle="modal" data-bs-target="#notificationsModalReport" data-id="' + value.uuid + '">View</button>' +
+                        '</td>' +
+                        '</tr>'
+
+                    $('#notificationTable tbody').append(row);
+                });
+
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
+
+
+// end
+
+$(document).ready(function() {
+
+    $(document).on('click', '.view-btn', function() {
+        var data_id = $(this).data('id');
+        $.ajax({
+            method: 'POST',
+            url: 'reports/view',
+            data:{
+                report_id: data_id,
+            },
+            success: function(response) {
+                $.each(response, function(key, value) {
+                    $('#seller-name').text(value[0].seller_fname + ' ' + value[0].seller_lname);
+                    $('#buyer-name').text(value[0].buyer_fname + ' ' + value[0].buyer_lname);
+                    $('#shares-sold').text(value[0].shares_on_sale);
+                    $('#share-value').text(value[0].total);
+                    $('#amount').text(value[0].amount);
+                    $('#mpesaReceiptNumber').text(value[0].mpesaReceiptNumber);
+                    $('#date').text(value[0].transactionDate);
+                });
+        }
+    });
+    });
+
+});
+
+// approve shares ajax request
+$(document).ready(function() {
+    $(document).on('click', '.approve-share', function() {
+        var share_id = $(this).data('id');
+        $.ajax({
+            method: 'POST',
+            url: 'manage_shares/approve',
+            data:{
+                share_id: share_id,
+            },
+            success: function(response) {
+                alertify.set('notifier','position', 'bottom-right');
+                alertify.success(response.status);
+        }
+    });
+    });
+});
 
 // js for the admin file upload
 document.querySelectorAll(".drop-zone--input").forEach(element => {

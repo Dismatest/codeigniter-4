@@ -1,30 +1,23 @@
 .sacco-image{
     display: flex;
     align-items: center;
+
 }
 .card-body a{
     text-decoration: none;
 }
 .image-tag{
     border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    border: 1px dashed black;
+    height: 60px;
+    width: 60px;
+    border: 1px solid #ddd;
+    padding: 5px;
+    object-fit: cover;
+    transition: 300ms ease-out;
 }
-.image-subtitle{
-    letter-spacing: 2px;
-    color: grey;
-    font-size: 15px;
-    font-weight: 600;
-    text-transform: uppercase;
-    padding-left: 10px;
-}
-.sacco-full-name{
-    letter-spacing: 2px;
-    font-weight: 600;
-    color: grey;
-    font-size: 15px;
-    padding: 4px 0;
+.image-tag:hover{
+    transform: scale(1.1);
+    box-shadow: 0 0 2px 1px var(--primary-color) !important;
 }
 h5::first-letter{
     text-transform: uppercase;
@@ -33,34 +26,33 @@ h5::first-letter{
     display: flex;
     justify-content: space-between;
 }
-.shares-price-description{
-    letter-spacing: 2px;
-    color: grey;
-    font-size: 12px;
+
+.list-share-sell-button{
+    background: rgb(214, 178, 214);
+    color: white;
 }
+.list-share-sell-button:hover{
+    background: rgb(224, 191, 224) !important;
+    color: #eee9e9 !important;
+    transition: 300ms ease-out;
+}
+
 .shares-container-wrapper{
     display: flex;
-    justify-content: space-around;
-}
-.shares-container-wrapper-content1{
-    width: 100%;
-    border-right:
-            1px solid black;
-    display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin-right: 2em;
+    padding-left: 15px;
+
 }
-.shares-container-wrapper-content2{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.shares-container-wrapper h5{
+    font-size: 14px;
+    font-weight: 500;
+    color: black;
 }
-.shares-price-value{
-    letter-spacing: 2px;
-    color: rgb(103, 180, 103);
+.shares-container-wrapper span{
     font-size: 12px;
+    font-weight: 300;
+    color: black;
+    margin-bottom: 5px;
 }
 .customize-card{
     position: relative;
@@ -71,11 +63,6 @@ h5::first-letter{
     -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
     transition: 0.5s;
     border-radius: 3px;
-}
-.customize-card:hover{
-    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
-    background: rgb(206, 201, 201);
-    transition: 0.5s;
 }
 .ribbon {
     position: absolute;
@@ -89,15 +76,15 @@ h5::first-letter{
     font-size: 10px;
     font-weight: bold;
     color: #FFF;
-    text-transform: uppercase;
+    text-transform: lowercase;
     text-align: center;
     line-height: 20px;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     width: 100px;
     display: block;
-    background: #79A70A;
-    background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+    background: var(--primary-color);
+    background: var(--primary-color);
     box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
     position: absolute;
     top: 19px; right: -21px;
@@ -106,17 +93,17 @@ h5::first-letter{
     content: "";
     position: absolute; left: 0px; top: 100%;
     z-index: -1;
-    border-left: 3px solid #79A70A;
+    border-left: 3px solid var(--primary-color);
     border-right: 3px solid transparent;
     border-bottom: 3px solid transparent;
-    border-top: 3px solid #79A70A;
+    border-top: 3px solid var(--primary-color);
 }
 .ribbon span::after {
     content: "";
     position: absolute; right: 0px; top: 100%;
     z-index: -1;
     border-left: 3px solid transparent;
-    border-right: 3px solid #79A70A;
+    border-right: 3px solid var(--primary-color);
     border-bottom: 3px solid transparent;
-    border-top: 3px solid #79A70A;
+    border-top: 3px solid var(--primary-color);
 }

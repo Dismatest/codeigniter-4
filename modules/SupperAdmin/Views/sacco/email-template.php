@@ -36,13 +36,12 @@
 </head>
 <body>
 <div class="container">
-    <h1>New Message Received from M-Zawadi sacco portal.</h1>
-    <p><strong>Hello, Sacco</strong> <?= $name ?></p>
-    <p>You have received this message because you have requested to register with M-Zawadi sacco portal web application.</p>
+    <h1>New Message Received from Sacco Hisa.</h1>
+    <p>You have received this message because you have requested to register with Sacco Hisa.</p>
     <p><strong>Message:</strong> <?= $message; ?></p>
     <p><strong>Thank You.</p>
     <div class="footer">
-        <p>&copy; <?php echo date('Y'); ?> M-Zawadi.com</p>
+        <p>&copy; <?php echo date('Y'); ?> SaccoHisa.com</p>
     </div>
 </div>
 </body>

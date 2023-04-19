@@ -35,4 +35,11 @@ $routes->group('supperAdmin', ['namespace' => 'Modules\SupperAdmin\Controllers']
     $routes->get('manage-shares', 'SupperAdmin::manageShares');
     $routes->match(['post', 'get'], 'manage-shares/delete/(:alphanum)', 'SupperAdmin::manageSharesDelete/$1');
     $routes->match(['post', 'get'], 'manage-shares/edit/(:alphanum)', 'SupperAdmin::manageSharesEdit/$1');
+
+    //audit trail routes
+
+    $routes->get('audit_trail', 'SupperAdmin::auditTrail');
+    $routes->get('delete-audit-trail/(:num)', 'SupperAdmin::auditTrailDelete/$1');
+
+    $routes->get('view-transactions', 'SupperAdmin::viewTransactions');
 });
