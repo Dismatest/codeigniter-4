@@ -323,6 +323,8 @@ $(document).ready(function () {
                 },
                 submitHandler: function (form) {
 
+                    $('#register').addClass('disabled');
+                    $('#register').text('Please wait...');
                     $.ajax({
                         method: 'POST',
                         url: '/admin/new_user_post',
@@ -338,6 +340,7 @@ $(document).ready(function () {
                                 alertify.error(response.messages.phone + " " + response.messages.email);
                             }
                             if (response.status === 200) {
+                                $('#create-new-users').trigger('reset');
                                 $('#registerModal').modal('hide');
                                 alertify.set('notifier', 'position', 'bottom-right');
                                 alertify.success(response.messages);
@@ -354,6 +357,10 @@ $(document).ready(function () {
 
                         error: function (error) {
                             console.log(error);
+                        },
+                        complete: function (xhr, status) {
+                            $('#register').removeClass('disabled');
+                            $('#register').text('Save');
                         }
 
                     });

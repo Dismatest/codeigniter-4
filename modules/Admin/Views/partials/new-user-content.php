@@ -66,7 +66,7 @@
 
                             <div class="form-group">
                                 <label for="selectInput" class="form-label">Upload csv*</Your></label>
-                                <input type="file" class="form-control form-control-lg" placeholder="Cost Per Share" name="cost">
+                                <input type="file" class="form-control" placeholder="Cost Per Share" name="cost">
 
                             </div>
                             <div class="mt-3">
