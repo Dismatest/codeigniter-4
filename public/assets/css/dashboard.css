@@ -1,80 +1,135 @@
+.terms-error{
+    border: 1px solid red;
+}
+.terms-heading {
+    padding-top: 20px;
+    color: #1bcfb4;
+}
 
-#col-content-section{
+div.dataTables_wrapper div.dataTables_length, div.dataTables_wrapper div.dataTables_filter, div.dataTables_wrapper div.dataTables_info, div.dataTables_wrapper div.dataTables_paginate{
+    color: #1bcfb4;
+}
+
+div.dataTables_wrapper div.dataTables_filter input, div.dataTables_wrapper div.dataTables_length select{
+    padding: 10px 20px;
+}
+
+div.dataTables_wrapper div.dataTables_filter input:focus{
+    border: 1px solid #1bcfb4;
+}
+
+.terms-param {
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+.error {
+    border-color: red;
+    color: red;
+}
+
+.show-success-message {
+    display: none !important;
+}
+
+.valid {
+    border-color: green;
+}
+
+.help-block {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+#col-content-section {
     background-color: white;
     border-radius: 4px;
     box-shadow: 0 0 10px rgb(234, 234, 234);
     padding: 12px;
 }
 
-.col-content-section2{
+.col-content-section2 {
     background-color: white;
     border-radius: 4px;
     box-shadow: 0 0 10px rgb(234, 234, 234);
     padding: 12px;
 }
 
-#col-content-section-confirm-selling{
+#col-content-section-confirm-selling {
     background-color: white;
     border-radius: 4px;
     box-shadow: 0 0 10px rgb(234, 234, 234);
     padding: 12px;
 }
-.user-profile-info{
+
+.user-profile-info {
     display: flex;
     justify-content: space-between;
 }
-.user-profile-avatar{
+
+.user-profile-avatar {
     font-size: 24px;
     height: 30px;
 }
-.user-profile-name{
+
+.user-profile-name {
     font-weight: 300;
     color: var(--text-color);
     font-size: 14px;
 }
-.user-profile-edit{
+
+.user-profile-edit {
     font-size: 16px;
 }
-.user-info-details{
+
+.user-info-details {
     padding-top: 12px;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
 }
 
-.user-info-details .user-information1 h6{
+.user-info-details .user-information1 h6 {
     font-size: 12px;
     color: grey;
 }
-.user-info-details .user-information2 h6{
+
+.user-info-details .user-information2 h6 {
     font-size: 12px;
     color: grey;
 }
-#col-content-section-two{
+
+#col-content-section-two {
     background-color: white;
     border-radius: 4px;
     box-shadow: 0 0 10px rgb(234, 234, 234);
     padding: 12px;
 }
-.profile-container-content{
+
+.profile-container-content {
     padding: 10px 12px;
     display: flex;
     justify-content: space-between;
 }
-#selling-history-icon{
+
+#selling-history-icon {
     font-size: 18px;
-    color:rgb(155, 4, 155);
+    color: rgb(155, 4, 155);
 
 }
-.selling-history{
+
+.selling-history {
     font-size: 14px;
     font-weight: 300;
     color: var(--text-color);
 }
-.dashboardDataTable{
+
+.dashboardDataTable {
     margin: 10px;
 }
-#example .btn{
+
+#example .btn {
     margin: 10px 3px 10px 0;
     border-radius: 0;
     background-color: rgb(214, 178, 214);
@@ -83,65 +138,77 @@
     border: none;
     color: white;
 }
-.dashboardDataTable .btn:hover{
+
+.dashboardDataTable .btn:hover {
     color: grey;
 }
-table>thead{
+
+table > thead {
     background-color: rgb(219, 218, 218);
 }
-thead>tr>th{
+
+thead > tr > th {
     font-size: 12px;
     color: grey;
 }
-tbody>tr>td{
+
+tbody > tr > td {
     font-size: 12px;
     color: grey;
 }
-.dataTables_info{
+
+.dataTables_info {
     font-size: 12px;
 }
-.td-button{
+
+.td-button {
     border: none;
     cursor: pointer;
     height: 30px;
     width: 30px;
     border-radius: 50%;
-    
+
 }
-#td-button-icon{
-    color:rgb(155, 4, 155);
+
+#td-button-icon {
+    color: rgb(155, 4, 155);
     font-size: 14px;
     display: grid;
     place-items: center;
 }
-.view{
+
+.view {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 8px 12px;
 }
-.view h6{
+
+.view h6 {
     font-size: 12px;
     color: grey;
     font-weight: 300;
 }
 
-.view-icon{
+.view-icon {
     font-size: 14px;
     cursor: pointer;
 }
-.dashboard-heading{
+
+.dashboard-heading {
     font-size: 14px;
     font-weight: 600;
     color: grey;
     padding: 12px;
     text-align: center;
 }
-.dashboard-heading h6{
+
+.dashboard-heading h6 {
     font-size: 14px;
     color: var(--text-color);
     font-weight: 300;
 }
+
 .no-registration-info {
     border: 1px dashed rgb(225, 225, 90);
     border-radius: 4px;
@@ -151,10 +218,12 @@ tbody>tr>td{
     justify-content: center;
     align-items: center;
 }
-.no-registration-info img{
+
+.no-registration-info img {
     height: 120px;
 }
-.clip-the-path{
+
+.clip-the-path {
     clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
     background-color: var(--text-color);
     height: 40px;
@@ -165,7 +234,8 @@ tbody>tr>td{
     padding-bottom: 6px;
     text-align: center;
 }
-.clip-the-path1{
+
+.clip-the-path1 {
     clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
     background-color: var(--primary-color);
     height: 60px;
@@ -175,22 +245,27 @@ tbody>tr>td{
     justify-content: center;
     padding-bottom: 6px;
 }
-.no-membership-button a{
+
+.no-membership-button a {
     color: rgb(225, 225, 90);
     font-size: 14px;
 }
-no-membership-button a:hover{
+
+no-membership-button a:hover {
     color: grey;
 }
-.no-registration-info>p{
+
+.no-registration-info > p {
     font-size: 12px;
     font-weight: 300;
     letter-spacing: 1px;
 }
-.dashboard-shares-balance{
+
+.dashboard-shares-balance {
     display: none;
 }
-.share-balance{
+
+.share-balance {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -198,18 +273,21 @@ no-membership-button a:hover{
     margin: 0 12px;
     padding: 8px;
 }
-.dashboard-shares-balance>h6{
-    font-size:12px;
+
+.dashboard-shares-balance > h6 {
+    font-size: 12px;
     color: black;
     font-weight: 300;
     padding: 0 8px;
 }
-.dashboard-sell{
+
+.dashboard-sell {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
 }
-.dashboard-sell-button{
+
+.dashboard-sell-button {
     margin: 10px 12px;
     padding: 10px 40px;
     cursor: pointer;
@@ -220,27 +298,32 @@ no-membership-button a:hover{
     color: white;
     background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
 }
-.dashboard-sell>h6{
-    font-size:12px;
+
+.dashboard-sell > h6 {
+    font-size: 12px;
     color: black;
     font-weight: 300;
     margin: 12px;
 }
-.confirm-shares-on-sale-heading{
+
+.confirm-shares-on-sale-heading {
     font-size: 14px;
     font-weight: 300;
     color: grey;
     padding: 12px;
 }
-.submit-shares-for-sale-form{
+
+.submit-shares-for-sale-form {
     margin: 10px;
 }
-.shares-for-sale-input-label{
+
+.shares-for-sale-input-label {
     font-size: 14px;
     color: grey;
     font-weight: 300;
 }
-.shares-on-sales-input-field{
+
+.shares-on-sales-input-field {
     padding: 10px;
     border: none;
     border-bottom: 1px solid grey;
@@ -250,10 +333,12 @@ no-membership-button a:hover{
     width: 100%;
     box-sizing: border-box;
 }
-.shares-on-sales-input-field:focus{
+
+.shares-on-sales-input-field:focus {
     outline: none;
 }
-.shares-for-sale-cost-per-share{
+
+.shares-for-sale-cost-per-share {
     border: none;
     font-size: 14px;
     font-weight: 300;
@@ -262,26 +347,31 @@ no-membership-button a:hover{
     box-sizing: border-box;
     pointer-events: none;
 }
-.shares-for-sale-cost-per-share:focus{
+
+.shares-for-sale-cost-per-share:focus {
     outline: none;
 }
-.shares-on-sale-cost-price{
+
+.shares-on-sale-cost-price {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     padding: 12px 0;
 }
-.shares-on-sale-cost-price>span{
+
+.shares-on-sale-cost-price > span {
     font-size: 14px;
     color: grey;
     font-weight: 300;
 }
-.shares-on-sale-cost-price>p{
+
+.shares-on-sale-cost-price > p {
     font-size: 14px;
     color: grey;
     font-weight: 300;
 }
-.submit-shares-on-sale{
+
+.submit-shares-on-sale {
     padding: 10px 40px;
     box-sizing: border-box;
     cursor: pointer;
@@ -303,9 +393,9 @@ no-membership-button a:hover{
     border-radius: 0.3rem;
 }
 
-.customer-selling-button:focus{
+.customer-selling-button:focus {
     outline: none;
-    border: 1px solid rgb(214, 187, 212);
+    border: 1px solid #1bcfb4;
 }
 
 
@@ -317,13 +407,15 @@ no-membership-button a:hover{
     border: 1px dashed #ccc;
     box-sizing: border-box;
 }
-.customer-selling-button1:focus{
+
+.customer-selling-button1:focus {
     outline: none;
     border: 1px solid rgb(214, 187, 212);
 }
+
 /* Set a style for all buttons */
 .confirm-sell-shares-btn {
-    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    background: #1bcfb4;
     color: white;
     padding: 10px 20px;
     margin: 8px 0;
@@ -336,7 +428,7 @@ no-membership-button a:hover{
 }
 
 .confirm-sell-shares-btn3 {
-    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    background: #1bcfb4;
     color: white;
     padding: 10px 20px;
     margin: 8px 0;
@@ -348,32 +440,18 @@ no-membership-button a:hover{
     border-radius: 0.3em;
 }
 
-.confirm-sell-shares-btn2 {
-    background: linear-gradient(to right, rgb(100, 72, 100), rgb(214, 178, 214));
-    color: white;
-    padding: 10px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    width: 49%;
-    border-radius: 0.3em;
-}
-
-.first-modal-buttons{
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding-top: 10px;
-}
-
-.confirm-sell-shares-btn2:hover {
+.confirm-sell-shares-btn3:hover {
     opacity: 0.8;
     color: white !important;
 }
 
-.non-members-form{
+.first-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.non-members-form {
     background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
     color: white;
     padding: 14px 20px;
@@ -395,9 +473,25 @@ no-membership-button a:hover{
 /* Center the image and position the close button */
 
 .container1 {
-   padding-top: 10px;
+    padding-top: 10px;
 }
-.divider{
+
+.container2 {
+    padding-top: 0;
+}
+
+.confirm-bidding {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-bottom {
+    padding-bottom: 5px;
+}
+
+.divider {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -407,10 +501,16 @@ span.psw {
     float: right;
     padding-top: 16px;
 }
-.request-registration-link{
+
+.request-registration-link {
     padding: 12px;
 }
 
+.payment-amount{
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding-top: 10px;
+}
 /* The Modal (background) */
 .user-share-model {
     display: none; /* Hidden by default */
@@ -421,9 +521,23 @@ span.psw {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
     padding-top: 60px;
+}
+
+.user-payment-model {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    padding-top: 10px;
 }
 
 /* Modal Content/Box */
@@ -435,15 +549,15 @@ span.psw {
     padding: 16px;
     width: 50%; /* Could be more or less, depending on screen size */
 }
-
 /* The Close Button (x) */
-.imgContainer{
+.imgContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     padding-bottom: 20px;
 }
+
 .x-close-button {
     position: absolute;
     right: 0;
@@ -460,36 +574,68 @@ span.psw {
     transition: 300ms ease-in-out;
 
 }
-.close-font-icon{
+
+.close-font-icon {
     font-size: 10px;
     font-weight: 200;
 }
-.x-close-button:hover{
-    background-color:  rgb(214, 178, 214);
+
+.x-close-button:hover {
+    background-color: #1bcfb4;
     color: white !important;
     border: none;
 }
-.shares-sell-heading{
+
+.shares-sell-heading {
     font-weight: 500;
     font-size: 13px;
 }
-.icon-exclamation{
-    color: var(--primary-color);
+
+.confirm-bidding {
+    padding-bottom: 4rem;
+}
+
+.bid-confirm-icon {
+    font-size: 40px;
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    background: #1bcfb4;
+    color: white;
+    border-radius: 50%;
+}
+
+.bid-error-icon {
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    background: #a68e8b;
+    color: white;
+    border-radius: 50%;
+}
+
+.icon-exclamation {
     font-size: 15px;
     padding-right: 5px;
 }
+
 .x-close-button:hover,
 .x-close-button:focus {
     color: red;
     cursor: pointer;
 }
-.offer-buttons span{
+
+.offer-buttons span {
     padding: 8px 20px;
-    border: 1px solid rgb(214, 178, 214);
+    border: 1px solid #1bcfb4;
     border-radius: 4rem;
     cursor: pointer;
     margin: 10px 0;
 }
+
 /* Add Zoom Animation */
 .animate {
     -webkit-animation: animatezoom 0.6s;
@@ -497,20 +643,28 @@ span.psw {
 }
 
 @-webkit-keyframes animatezoom {
-    from {-webkit-transform: scale(0)}
-    to {-webkit-transform: scale(1)}
+    from {
+        -webkit-transform: scale(0)
+    }
+    to {
+        -webkit-transform: scale(1)
+    }
 }
 
 @keyframes animatezoom {
-    from {transform: scale(0)}
-    to {transform: scale(1)}
+    from {
+        transform: scale(0)
+    }
+    to {
+        transform: scale(1)
+    }
 }
 
 /* bid and share status */
-.reject-link{
+.reject-link {
     padding: 10px 30px;
     cursor: pointer;
-    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
+    background: #1bcfb4;
     color: white;
     font-size: 14px;
     border: none;
@@ -518,24 +672,27 @@ span.psw {
     font-weight: 300;
     border-radius: 0.3rem;
 }
-.accept-link{
+
+.accept-link {
     padding: 10px 30px;
     cursor: pointer;
     color: gray;
     font-size: 14px;
-    border: 1px solid rgb(214, 178, 214);
+    border: 1px solid #1bcfb4;
     margin: 5px;
     font-weight: 300;
     border-radius: 0.3rem;
 }
 
-.bid-content{
+.bid-content {
     margin-top: 20px;
 }
-.bid-content >p{
+
+.bid-content > p {
     font-size: 12px;
     color: grey;
 }
+
 .bid-badge {
     color: rgb(234, 255, 0);
     padding: 4px 8px;
@@ -543,131 +700,154 @@ span.psw {
     border-radius: 5px;
     font-weight: 500;
 }
-.bid-badge-approved{
+
+.bid-badge-approved {
     color: rgb(0, 255, 0);
     padding: 4px 8px;
     text-align: center;
     border-radius: 5px;
     font-weight: 500;
 }
-.toggle-bid{
+
+.toggle-bid {
     margin: 5px;
 }
-.bid-content2{
+
+.bid-content2 {
     display: none;
     margin-top: 20px;
     animation: display 1s;
 }
+
 .bid-table {
     border-collapse: collapse;
     width: 100%;
     font-family: ubuntu, sans-serif;
 }
-thead{
+
+thead {
     /*background: linear-gradient(to right, #da8cff, #9a55ff);*/
     background: linear-gradient(to right, rgb(224, 224, 224, 0.2), rgb(224, 224, 224, 0.5));
 }
+
+
 .bid-table th,
 .bid-table td {
     border: none;
     padding: 12px;
 }
+
 .bid-table th {
-    color: white;
+    color: black;
     font-size: 14px;
     font-weight: 500;
 }
+
 tr:nth-child(even):hover {
     background-color: rgb(224, 224, 224);
 }
-.fa-circle-info{
+
+.fa-circle-info {
     font-size: 18px;
     cursor: pointer;
     color: #d0cece;
 }
-#agreement-container{
+
+#agreement-container {
     background-color: white;
     border-radius: 4px;
     box-shadow: 0 0 10px rgb(234, 234, 234);
     padding: 12px;
 }
-.agreement-title h3{
+
+.agreement-title h3 {
     font-size: 14px;
     font-weight: 400;
     color: var(--text-color);
 }
 
 @media (max-width: 620px) {
-    .agreement-title h3{
+    .agreement-title h3 {
         font-size: 10px;
         font-weight: 300;
         padding-bottom: 10px;
     }
 }
-.pdf-file{
+
+.pdf-file {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
 }
-.terms-of-use p{
+
+.terms-of-use p {
     font-size: 12px;
     color: grey;
     font-weight: 300;
     pading: 10px 0;
 }
-.terms-of-use input[type="checkbox"]{
+
+.terms-of-use input[type="checkbox"] {
     width: 13px;
     height: 13px;
     margin-left: 10px;
 }
-.terms-of-use{
+
+.terms-of-use {
     display: flex;
     align-items: center;
 }
-.sell-shares-terms-and-conditions{
+
+.sell-shares-terms-and-conditions {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 5px 0;
 }
-.container1 .sell-shares-terms-and-conditions span{
+
+.container1 .sell-shares-terms-and-conditions span {
     font-size: 12px;
     color: grey;
     font-weight: 300;
 }
-#error-message{
+
+#error-message {
     color: #c57878;
     font-weight: 300;
 }
-.active>.page-link, .page-link.active{
-    background-color:  rgb(214, 178, 214);
+
+.active > .page-link, .page-link.active {
+    background-color: #1bcfb4;
     color: white;
     z-index: 1;
     border-color: grey;
 }
 
-.reject-accept-delete{
+.reject-accept-delete {
     width: 30px;
     height: 30px;
     display: grid;
     place-items: center;
-    background: rgb(214, 178, 214);
+    background: #1bcfb4;
     border-radius: 50%;
     cursor: pointer;
     margin-left: 10px;
-    color: grey;
+    color: white;
 }
-.download-agreement-form{
+
+.download-agreement-form {
     width: 20px;
     height: 20px;
     display: grid;
     place-items: center;
-    background: rgb(214, 178, 214);
+    background: #1bcfb4;
     border-radius: 50%;
     cursor: pointer;
     margin-right: 10px;
+    color: white !important;
 }
+
 /*animating the flash messages*/
 .move-out-flash {
     animation: moveLeftflash 0.5s ease-out;
@@ -683,14 +863,16 @@ tr:nth-child(even):hover {
         opacity: 0;
     }
 }
+
 /*end of animating flash messages*/
 
 /*start of the related shares css */
-.related-shares-title{
+.related-shares-title {
     font-size: 14px;
     font-weight: 500;
     text-align: center;
 }
+
 /*end of the related shares csaa*/
 
 /*start of the search shares section*/
@@ -707,32 +889,28 @@ tr:nth-child(even):hover {
 
 /*responsive design for dashboard*/
 @media screen and (max-width: 768px) {
-    .responsive-margin-container{
+    .responsive-margin-container {
         margin-top: 1.3em;
     }
 
-    div.dataTables_wrapper div.dataTables_length select{
+    div.dataTables_wrapper div.dataTables_length select {
         display: flex;
         flex-flow: row;
     }
-    .clip-the-path{
+
+    .clip-the-path {
         height: 100px;
         width: 20em;
         overflow: hidden;
     }
+
     .user-share-model {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        padding-top: 50px;
+        padding-top: 40px;
     }
+    .user-payment-model {
+        padding-top: 40px;
+    }
+
     .modal-content-user {
         background-color: #fefefe;
         margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
@@ -742,27 +920,13 @@ tr:nth-child(even):hover {
         width: 100%; /* Could be more or less, depending on screen size */
         height: 80dvh;
     }
+
     .confirm-sell-shares-btn {
-        padding: 8px 10px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: 500;
-        width: 49%;
-        border-radius: 0.3em;
+        font-size: 10px;
+        padding: 6px 30px;
+        margin: 4px 0;
     }
 
-    .confirm-sell-shares-btn2 {
-        padding: 8px 10px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: 500;
-        width: 49%;
-        border-radius: 0.3em;
-    }
     .container1 {
         display: flex;
         flex-direction: column;
@@ -771,25 +935,57 @@ tr:nth-child(even):hover {
         height: 100%;
     }
 
-    .offer-buttons span{
+    .offer-buttons span {
         margin-left: 10px;
     }
 
-    .shares-sell-heading{
+    .shares-sell-heading {
         font-size: 12px;
+
     }
-    .action-links{
+
+    .action-links {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
     }
+
     .reject-link {
         padding: 8px 20px;
         font-size: 12px;
     }
+
     .accept-link {
         padding: 8px 20px;
         font-size: 12px;
+    }
+
+    .first-modal-buttons {
+        display: flex;
+    }
+
+    .first-modal-button{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .confirm-sell-shares-btn3 {
+        font-size: 10px;
+    }
+
+    .terms-heading {
+        padding-top: 40px;
+    }
+    .terms-param{
+        font-size: 10px;
+    }
+    .bid-table th{
+        font-size: 10px;
+    }
+    .reject-accept-delete {
+        width: 20px;
+        height: 20px;
     }
 }

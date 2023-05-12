@@ -9,6 +9,7 @@ class DisplayDashboardModel extends Model
     {
 
         $builder = $this->db->table('users');
+        $builder = $builder->select('user_id, , uniid, fname, lname');
         $query = $builder->where('uniid', $id);
         $result = $query->get();
         if (count($result->getResultArray()) == 1) {
@@ -184,7 +185,7 @@ public function membershipStatus(){
         $builder = $this->db->table('transactions');
         $builder->insert($data);
         if ($this->db->affectedRows() > 0) {
-            return $this->insertID; //returning the id of the last inserted data
+            return true; //returning the id of the last inserted data
         } else {
             return false;
         }
@@ -320,7 +321,7 @@ public function membershipStatus(){
 
     public function delete_bid_shares($share_id, $user_id){
         $builder = $this->db->table('bid_share');
-        $builder->where('user_id', $user_id);
+        $builder->where('buyer_id', $user_id);
         $builder->where('share_on_sale_id', $share_id);
         $builder->delete();
         if ($this->db->affectedRows() > 0) {
@@ -332,7 +333,7 @@ public function membershipStatus(){
 
     public function getSaccoShares(){
         $builder= $this->db->table('sacco');
-        $builder->select('sacco.*');
+        $builder->select('sacco.uuid, sacco.name');
         $result = $builder->get();
         return $result->getResultArray();
     }

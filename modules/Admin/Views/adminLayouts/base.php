@@ -25,6 +25,7 @@
     </title>
     <link rel="stylesheet" href="<?= base_url('assets/vendors/mdi/css/materialdesignicons.min.css')?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendors/css/vendor.bundle.base.css')?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/select2.min.css')?>">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/admin.css') ?>">
@@ -41,6 +42,7 @@
 <script src="<?= base_url('assets/js/off-canvas.js')?>"></script>
 <script src="<?=base_url('assets/js/hoverable-collapse.js')?>"></script>
 <script src="<?=base_url('assets/js/jq.validation.js')?>"></script>
+<script src="<?=base_url('assets/js/select2.min.js')?>"></script>
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script src="<?=base_url('assets/js/misc.js')?>"></script>
 <script src="<?= base_url('assets/js/todolist.js')?>"></script>
@@ -60,5 +62,7 @@
     <?php endif; ?>
 
 </script>
+<?= $this->renderSection('admin-post-shares-script') ?>
+<?= $this->renderSection('admin-update-profile-script') ?>
 </body>
 </html>

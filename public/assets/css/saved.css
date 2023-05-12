@@ -1,9 +1,4 @@
-:root{
-    --primary-color: rgb(214, 178, 214);
-    --text-color: #607d8b;
-    --background-color: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
-    --background-hoover: linear-gradient(to right, rgb(214, 178, 214), rgb(114, 90, 114));
-}
+
 .main-saved-container{
     background-color: white;
     border-radius: 4px;
@@ -474,7 +469,7 @@ input:checked + .slider:before {
 }
 .sell-heading h5{
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     padding: 5px 0;
 }
 
@@ -494,9 +489,9 @@ input:checked + .slider:before {
 }
 
 .verify-account{
-    color: black;
+    color: white;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     padding: 8px 0;
     background: var(--background-color);
     border-radius: 5px;
@@ -533,34 +528,27 @@ input:checked + .slider:before {
 }
 
 .verify-input input:focus{
-    border: 1px solid rgb(214, 187, 212);
+    border: 1px solid var(--background-color);
 }
 
 .verify-input-button{
-
     margin-top: 20px;
     background: var(--background-color);
     border: none;
     padding: 10px 80px;
     border-radius: 5px;
-    font-weight: 500;
+    font-weight: 600;
+    color: white;
+}
+.verify-input-button:hover{
+    background: #64b2a6;
+    color: white;
+}
+.container-padding{
+    padding: 20px 0;
+
 }
 
-@media screen and (max-width: 768px) {
-    .sell-main-section {
-        margin-top: 20px;
-        width: 100%;
-        padding: 20px;
-    }
-
-    .sell-heading h5:after {
-        content: ' ';
-        display: block;
-        width: 40px;
-        height: 2px;
-        background: var(--background-color);
-    }
-}
 @media screen and (max-width: 768px) {
     .sell-main-section1 {
         margin-top: 20px;
@@ -574,6 +562,23 @@ input:checked + .slider:before {
         width: 40px;
         height: 2px;
         background: var(--background-color);
+    }
+    .sell-main-section {
+        margin-top: 20px;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .sell-heading h5:after {
+        content: ' ';
+        display: block;
+        width: 40px;
+        height: 2px;
+        background: var(--background-color);
+    }
+    .container-padding{
+        padding: 10px 0;
+
     }
 
 }
@@ -669,7 +674,11 @@ input:checked + .slider:before {
 }
 
 .verify-input-1 input:focus{
-    border: 1px solid rgb(214, 187, 212);
+    border: 1px solid var(--background-color);
+}
+
+.verify-input-1 input:focus::placeholder{
+    color: var(--background-color);
 }
 
 .settings-top{

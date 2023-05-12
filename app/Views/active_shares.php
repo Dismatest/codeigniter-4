@@ -6,6 +6,17 @@
 <div class="container">
     <div class="row settings-top">
 
+        <?php
+        if(!empty(session()->getFlashdata('success'))){
+            ?>
+            <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+            <?php
+        }elseif(!empty(session()->getFlashdata('fail'))){
+            ?>
+            <div class="alert alert-danger"><?= session()->getFlashdata('fail') ?></div>
+            <?php
+        }
+        ?>
         <?= $this->include('includes/saved-sidebar.php'); ?>
 
         <div class="col-md-7 settings-top-social-media">

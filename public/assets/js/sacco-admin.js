@@ -38,7 +38,6 @@ $(document).ready(function () {
     $(document).on('click', '.mark-as-read', function () {
 
         let data_id = $(this).data('id');
-
         $.ajax({
             method: 'POST',
             url: '/admin/get_each_share_notification',
@@ -91,6 +90,8 @@ $(document).ready(function () {
             $('#reason').css('border', '1px solid #ced4da');
         }
 
+        $('#notification-reject').addClass('disabled').html('<i class="mdi mdi-spin mdi-loading"></i> Please wait ...');
+
         $.ajax({
             method: 'POST',
             url: '/admin/reject_share',
@@ -114,6 +115,10 @@ $(document).ready(function () {
 
             error: function (error) {
                 console.log(error);
+            },
+
+            complete: function () {
+                $('#notification-reject').removeClass('disabled').html('Reject');
             }
 
         });
@@ -142,6 +147,7 @@ $(document).ready(function () {
     $('#notification-approve').on('click', function () {
         let share_id = $(this).data('id');
         let user_id = $(this).data('name');
+        $('#notification-approve').addClass('disabled').html('<i class="mdi mdi-spin mdi-loading"></i> Please wait ...');
         $.ajax({
             url: '/admin/approve_share',
             method: 'POST',
@@ -180,7 +186,7 @@ function displaySingleShare() {
             $.each(response, function (key, value) {
                 let row = '<tr>' +
 
-                    '<td>' + value.fname + ' ' + value.lname + '</td>' +
+                    '<td class="my-tr">' + value.fname + ' ' + value.lname + '</td>' +
                     '<td>' + value.membership_number + '</td>' +
                     '<td>' + value.shares_on_sale + '</td>' +
                     '<td>' + 'Ksh: ' + value.total + '</td>' +
@@ -195,6 +201,9 @@ function displaySingleShare() {
         },
         error: function (error) {
             console.log(error);
+        },
+        complete: function () {
+            $('#notification-approve').removeClass('disabled').html('Approve');
         }
     });
 }
@@ -302,7 +311,6 @@ $(document).ready(function () {
                         maxlength: 'Phone number must not exceed 12 characters',
                     }
 
-
                 },
                 highlight: function (element) {
                     $(element).addClass('error');
@@ -335,21 +343,20 @@ $(document).ready(function () {
                             phone: phone.val(),
                         },
                         success: function (response) {
-                            if(response.error === true){
+                            if (response.error === true) {
                                 alertify.set('notifier', 'position', 'bottom-right');
                                 alertify.error(response.messages.phone + " " + response.messages.email);
                             }
                             if (response.status === 200) {
                                 $('#create-new-users').trigger('reset');
-                                $('#registerModal').modal('hide');
                                 alertify.set('notifier', 'position', 'bottom-right');
                                 alertify.success(response.messages);
                             }
-                            if(response.status === 201){
+                            if (response.status === 201) {
                                 alertify.set('notifier', 'position', 'bottom-right');
                                 alertify.error(response.messages);
                             }
-                            if(response.status === 500){
+                            if (response.status === 500) {
                                 alertify.set('notifier', 'position', 'bottom-right');
                                 alertify.error(response.messages);
                             }
@@ -370,6 +377,82 @@ $(document).ready(function () {
             });
         }
     );
+});
+
+// js for the admin csv upload
+$(document).ready(function () {
+    $('#csv-upload').on('click', function () {
+
+        $.validator.addMethod("csv", function(value, element) {
+            return this.optional(element) || /\.(csv)$/i.test(value);
+        }, "Please upload a valid CSV file");
+
+        $('#csv-form-upload').validate({
+            errorClass: 'error',
+            validClass: 'valid',
+            rules: {
+                file: {
+                    required: true,
+                    csv: true
+                }
+            },
+            messages: {
+                file: {
+                    required: "Please select a CSV file"
+                }
+            },
+            highlight: function (element) {
+                $(element).addClass('error');
+            },
+            unhighlight: function (element) {
+                $(element).removeClass('error');
+            },
+            errorPlacement: function (error, element) {
+                error.addClass('help-block');
+                element.parents('.form-group').addClass('has-error');
+                error.appendTo(element.parent());
+            },
+            success: function (label) {
+                label.parents('.form-group').removeClass('has-error');
+            },
+            onkeyup: function (element) {
+                $(element).valid();
+            },
+            submitHandler: function (form) {
+
+                $('#csv-upload').addClass('disabled');
+                $('#csv-upload').text('Please wait...');
+
+                $.ajax({
+                    method: 'POST',
+                    url: '/admin/new_user_post_csv',
+                    data: new FormData($('#csv-form-upload')[0]),
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.status === 200) {
+                            $('#csv-form-upload').trigger('reset');
+                            alertify.set('notifier', 'position', 'bottom-right');
+                            alertify.success(response.messages);
+                        }
+                        if(response.status === 500){
+                            alertify.set('notifier', 'position', 'bottom-right');
+                            alertify.error(response.messages);
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    },
+                    complete: function (xhr, status) {
+                        $('#csv-upload').removeClass('disabled');
+                        $('#csv-upload').text('Upload');
+                    }
+                });
+            }
+
+        });
+
+    });
 });
 document.querySelectorAll(".drop-zone--input").forEach(element => {
     const dropZoneElement = element.closest(".drop-zone");
@@ -427,6 +510,24 @@ function updateThumbnail(dropZoneElement, file) {
 }
 
 
+// displaying the sacco image
+
+$(document).ready(function () {
+    let profile = $('#profile-image-go');
+    $.ajax({
+        method: 'GET',
+        url: '/admin/get_sacco_image',
+        success: function (response) {
+            if (response.status === 200) {
+                let saccoProfile = response.data[0].logo;
+                let saccoBaseUrl = '/uploads/sacco-logo';
+                let saccoProfileUrl = saccoBaseUrl + '/'+saccoProfile;
+                profile.attr('src', saccoProfileUrl);
+            }
+        }
+    })
+});
+
 // chart js for the admin page
 document.addEventListener('DOMContentLoaded', function () {
     const adminCtx = document.getElementById('adminChart').getContext('2d');
@@ -436,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 labels: ['Jan', 'Feb', 'Match', 'April', 'May', 'June'],
                 datasets: [{
-                    label: 'Transaction history',
+                    label: 'Six months transaction history',
                     data: [12, 19, 3, 5, 6, 3],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -469,31 +570,37 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+
+    const ctx = document.getElementById('adminLineChart').getContext('2d')
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Match', 'April', 'May', 'June'],
+            datasets: [{
+                label: 'Six months transaction history',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                fill: false,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                }
+            }
+        }
+    });
+
+
 });
 
 
-// displaying create shares more details form
-const displayCreateSharesForm = document.getElementById('selectMemberName');
-displayCreateSharesForm.addEventListener('change', function () {
-        const display = document.getElementById('display-share-form');
-        display.style.display = 'block';
-    }
-);
-
-const sharesAmountInput = document.querySelector('input[name="sharesAmount"]');
-const costPerShareInput = document.querySelector('input[name="cost"]');
-const totalCostInput = document.querySelector('input[name="total"]');
-
-sharesAmountInput.addEventListener('change', calculateTotalCost);
-costPerShareInput.addEventListener('input', calculateTotalCost);
-
-function calculateTotalCost() {
-
-    const sharesAmount = Number(sharesAmountInput.value);
-    const costPerShare = Number(costPerShareInput.value);
-
-    totalCostInput.value = sharesAmount * costPerShare;
-}
 
 
 

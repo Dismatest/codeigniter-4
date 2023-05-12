@@ -86,6 +86,29 @@ form .register-button input{
     font-size: 12px;
     font-weight: 300;
 }
+
+
+
+/*customizing the supperAdmin*/
+
+.btn-gradient-primary{
+    background: #1bcfb4 !important;
+}
+.bg-gradient-primary{
+    background: #1bcfb4 !important;
+}
+
+.sidebar .nav .nav-item.active > .nav-link .menu-title{
+    color: #1bcfb4 !important;
+}
+.sidebar .nav .nav-item.active > .nav-link i{
+    color: #1bcfb4 !important;
+}
+.sidebar .nav.sub-menu .nav-item .nav-link.active{
+    color: #1bcfb4 !important;
+}
+
+/*end of the css*/
 @media (max-width: 584px) {
     .registration-container-2{
         max-width: 100%;

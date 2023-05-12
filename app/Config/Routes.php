@@ -24,14 +24,17 @@ $routes->group('', function($routes){
 //$routes->group('', function($routes){
     $routes->group('', ['filter'=>'isLoggedInFilter'], function($routes){
     $routes->match(['get', 'post'], 'index', 'Home::indexPage');
-    $routes->match(['get', 'post'], 'dashboard', 'Home::dashboard');
     $routes->match(['get', 'post'], 'share/(:alphanum)', 'Home::share/$1');
     $routes->match(['get', 'post'], 'update-profile', 'Profile::updateProfile');
     $routes->match(['get', 'post'], 'share/(:alphanum)/bid', 'Home::bid/$1/bid');
-    $routes->match(['get', 'post'], 'my_bids', 'Home::bids');
+    $routes->get('has_bid/(:alphanum)/', 'Home::hasBid/$1');
+    $routes->get('has_active_bid/(:alphanum)/', 'Home::hasActiveBid/$1');
     $routes->match(['get', 'post'], 'my_bids/accept/(:num)', 'Home::acceptBid/$1');
     $routes->match(['get', 'post'], 'my_bids/reject/(:num)', 'Home::rejectBid/$1');
     $routes->match(['get', 'post'], 'payment/initiate_payment', 'Home::payment');
+    $routes->post('payment/confirm_payment', 'Home::confirmPayment');
+    $routes->post('payment/get_bid', 'Home::getBid');
+
     $routes->match(['get', 'post'], 'sacco_membership', 'Home::saccoMembership');
     $routes->match(['get', 'post'], 'saved', 'Home::savedShares');
     $routes->match(['get', 'post'], 'profile', 'Home::profile');
@@ -45,6 +48,7 @@ $routes->group('', function($routes){
     $routes->match(['get', 'post'], 'saved/your_share_history/(:alpahnum)', 'Home::saveShare/1$');
     $routes->match(['get', 'post'], 'sell', 'Home::sell');
     $routes->match(['get', 'post'], 'sell-now/', 'Home::sellNow');
+    $routes->match(['get', 'post'], 'my_bids', 'Home::bids');
     $routes->match(['get', 'post'], 'share/(:alphanum)/request_membership', 'Home::requestMembership/$1');
     $routes->post('share/save_new_membership', 'Home::saveMembershipAjax');
     $routes->match(['get', 'post'], 'notifications', 'Home::notifications');

@@ -1,6 +1,3 @@
-<div id="loading-bar"
-     style="position: fixed; top: 0; left: 0; height: 2px; width: 40%; background-color: rgb(214, 178, 214);"></div>
-
 <nav class="navbar navbar-expand-lg pb-5 pt-5">
     <header>
         <a href="<?= base_url('/') ?>" class='logo'>Shares</a>
@@ -36,7 +33,7 @@
                     <?php endif; ?>
 
                 </a>
-                <a href="<?= base_url('profile') ?>"><i class="fas fa-user fa-fw fa-sm m-2"></i>Profile</a>
+                <a href="<?= base_url('profile') ?>"><i class="fas fa-user fa-fw fa-sm m-2"></i>My Account</a>
 
             <?php else: ?>
                 <a href="<?= base_url('register') ?>"><i class="fas fa-grip fa-fw fa-sm m-2"></i>About Us</a>

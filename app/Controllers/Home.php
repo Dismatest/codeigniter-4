@@ -12,6 +12,7 @@ use App\Models\Notification;
 use App\Models\SharesOnSale;
 use App\Models\SaccoShares;
 use App\Models\BidShares;
+use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\I18n\Time;
 use mysql_xdevapi\Exception;
 
@@ -19,6 +20,7 @@ class Home extends BaseController
 
 
 {
+    use ResponseTrait;
     public $displayDashboard;
     public $email;
     public $shares;
@@ -47,13 +49,13 @@ class Home extends BaseController
 
     public function welcomePage()
     {
-        try{
+        try {
             $getActiveShares = $this->displayDashboard->getActiveShares();
             $data = [
                 'activeShares' => $getActiveShares,
                 'WelcomePageTitle' => 'welcome to share market',
             ];
-        }catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
+        } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
             $data = [
                 'error' => $e,
             ];
@@ -331,81 +333,100 @@ class Home extends BaseController
         }
     }
 
-
-    public function payment()
+    public function confirmPayment()
     {
-        global $errors;
-        global $trim_phone;
-        $price = $this->request->getGet('total');
-        $share_id = $this->request->getGet('share_id');
-        $userId = session()->get('currentLoggedInUser');
-        $getUser = $this->users->where('uniid', $userId)->first();
-        $phone = $getUser['phone'];
-        $processedPhone = $this->processPhoneNumber($phone);
+        $myPhone = $this->request->getPost('phoneNumber');
+        $price = $this->request->getPost('bidAmount');
+        $share_id = $this->request->getPost('shareId');
+        $buyerId = $this->request->getPost('buyerId');
 
-        $phone_code = $this->request->getPost('phone-code');
-        $myPhone = $this->request->getPost('phone');
-        $trim_phone = ltrim($phone_code, '+');
+        $url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
+        $curl_post_data = [
+            'BusinessShortCode' => getenv('MPESA_SHORTCODE'),
+            'Password' => "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMzAyMTMxOTA3",
+            'Timestamp' => "20230302131907",
+            'TransactionType' => "CustomerPayBillOnline",
+            'Amount' => $price, // $price
+            'PartyA' => $myPhone,
+            'PartyB' => getenv('MPESA_PARTYB'),
+            'PhoneNumber' => $myPhone,
+            'CallBackURL' => "http://20.38.38.48/payment_callback",
+            'AccountReference' => "saccoHisa",
+            'TransactionDesc' => "buy shares",
+        ];
 
-        $phone_number = $trim_phone . $myPhone;
+        $data_string = json_encode($curl_post_data);
 
-        $mpesa_check_box = $this->request->getPost('mpesa-check-box');
 
-        if ($mpesa_check_box == 'on') {
-
-            $url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
-            $curl_post_data = [
-                'BusinessShortCode' => getenv('MPESA_SHORTCODE'),
-                'Password' => "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMzAyMTMxOTA3",
-                'Timestamp' => "20230302131907",
-                'TransactionType' => "CustomerPayBillOnline",
-                'Amount' => 1, // $price
-                'PartyA' => $phone_number,
-                'PartyB' => getenv('MPESA_PARTYB'),
-                'PhoneNumber' => $phone_number,
-                'CallBackURL' => "http://20.38.38.48/payment_callback",
-                'AccountReference' => "saccoPayment",
-                'TransactionDesc' => "buy shares",
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Authorization:Bearer ' . $this->newAccessToken()));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+        $curl_response = curl_exec($curl);
+        $data = json_encode($curl_response);
+        log_message('error', $data);
+        if ($curl_response === false) {
+            $info = curl_getinfo($curl);
+            curl_close($curl);
+            $response = [
+                'status' => 500,
+                'message' => 'We could not process your payment, try again later',
             ];
+            return $this->response->setJSON($response);
+        } else {
+            $response = json_decode($curl_response, true);
+            if ($response['ResponseCode'] == 0) {
 
-            $data_string = json_encode($curl_post_data);
-
-
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Authorization:Bearer ' . $this->newAccessToken()));
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
-            $curl_response = curl_exec($curl);
-            if ($curl_response === false) {
-                $info = curl_getinfo($curl);
-                curl_close($curl);
-                die('error occurred during curl exec. Additional info: ' . var_export($info));
-            } else {
-
-
-                $response = json_decode($curl_response, true);
-                curl_close($curl);
                 $data = [
                     'share_id' => $share_id,
-                    'user_id' => $userId,
+                    'user_id' => $buyerId,
                     'merchantRequestID' => $response['MerchantRequestID'],
                     'checkoutRequestID' => $response['CheckoutRequestID'],
                 ];
-                $this->displayDashboard->savePaymentsData($data);
+
+                $saveResponse = $this->displayDashboard->savePaymentsData($data);
+                if ($saveResponse) {
+                    $response = [
+                        'status' => 200,
+                        'message' => 'Payment Pending, please check your phone to complete the payment',
+                    ];
+                    return $this->respond($response);
+                } else {
+                    $response = [
+                        'status' => 500,
+                        'message' => 'We could not process your payment, please, try again later',
+                    ];
+                    return $this->respond($response);
+                }
+                curl_close($curl);
             }
 
+        }
+    }
+
+    public function getBid()
+    {
+        $bid_id = $this->request->getPost('bidId');
+        $share_id = $this->request->getPost('shareId');
+
+        $bid = $this->bidShares->select('bid_share.bid_id, bid_share.share_on_sale_id, bid_share.bid_amount, bid_share.action, users.uniid, users.phone')
+            ->join('users', 'bid_share.buyer_id = users.uniid')
+            ->where('bid_id', $bid_id)
+            ->where('share_on_sale_id', $share_id)
+            ->where('action', '1')
+            ->first();
+        if ($bid) {
+            return $this->response->setJSON($bid);
         } else {
-            $errors = 'Please ensure you have checked the mpesa payment option here before you can continue continue';
+            $response = [
+                'message' => 'there was an error',
+            ];
+
+            return $this->response->setJSON($response);
         }
 
-        $data = [
-            'total' => $price,
-            'phone' => $processedPhone,
-            'errors' => $errors,
-        ];
-        return view('payment', $data);
     }
 
     public function processPhoneNumber($phone)
@@ -474,67 +495,50 @@ class Home extends BaseController
         return view('sacco-membership', $data);
     }
 
-    public function dashboard()
+    public function bid($id = null)
     {
+        $uuid = session()->get('currentLoggedInUser');
+        $user = $this->users
+            ->select('users.fname, users.lname, users.uniid')
+            ->where('uniid', $uuid)->first();
+        $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name')
+            ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
+            ->where('shares_on_sale.uuid', $id)
+            ->where('shares_on_sale.is_verified', '1')
+            ->first();
 
-        $sacco_id = '';
-        $membership_number = '';
-        $userServices = service('userData');
-        $membershipService = service('membershipData');
-        $userShares = $this->displayDashboard->getUserShares();
-        $is_a_member = $this->displayDashboard->is_Member();
-        $is_approved = $this->displayDashboard->is_Verified();
-        $member_commission = $this->displayDashboard->findAllRecords();
-
-        if ($userShares) {
-
-            foreach ($userShares as $share) {
-                $sacco_id = $share['sacco_id'];
-                $membership_number = $share['membership_number'];
-            }
-
-        }
         if ($this->request->getMethod() == 'post') {
-            $shares = $this->request->getVar('shares', FILTER_SANITIZE_STRING);
-            $price = $this->request->getVar('price', FILTER_SANITIZE_STRING);
-            $total = $this->request->getVar('total', FILTER_SANITIZE_STRING);
+            $bid = $this->request->getVar('bid');
 
-            $shareData = [
-
-                'uuid' => md5(str_shuffle('abcdefghijklmnopqrstuvwxyz1234567890' . time())),
-                'user_id' => $userServices->getUserData()->user_id,
-                'sacco_id' => $sacco_id,
-                'membership_number' => $membership_number,
-                'cost_per_share' => $price,
-                'shares_on_sale' => $shares,
-                'total' => $total,
-
+            $bidData = [
+                'buyer_id' => $user['uniid'],
+                'share_on_sale_id' => $id,
+                'bid_amount' => $bid,
+                'seller_id' => $shares['user_id'],
+                'sacco_id' => $shares['sacco_id'],
+                'action' => '0',
             ];
-            $postShare = $this->displayDashboard->saveShareData($shareData);
-            if (!empty($postShare)) {
-                session()->setTempdata('fail', 'Something went wrong', 3);
-                return redirect()->to(base_url('dashboard'));
+
+            if ($this->bidShares->save($bidData)) {
+                $response = [
+                    'status' => '200',
+                    'message' => 'Your bid was placed successfully, please wait for the seller to approve your bid',
+                ];
+
+                return $this->response->setJSON($response);
             } else {
-                session()->setTempdata('success', 'You have successfully posted shares for sale', 3);
-                return redirect()->to(base_url('dashboard'));
+                $response = [
+                    'status' => '500',
+                    'message' => 'Something went wrong',
+                ];
+
+                return $this->response->setJSON($response);
             }
-
         }
-
-        $data = [
-            'dashboardTitle' => 'Dashboard',
-            'userData' => $userServices->getUserData(),
-            'userShares' => $userShares,
-            'is_approved' => $is_approved,
-            'is_a_member' => $is_a_member,
-            'member_commission' => $member_commission[0]['commission'],
-            'is_requested' => $membershipService->getUserRegistration(),
-        ];
-
-        return view('dashboard', $data);
     }
 
-    public function bid($id = null)
+    public function hasBid($id = null)
     {
         $uuid = session()->get('currentLoggedInUser');
         $user = $this->users->where('uniid', $uuid)->first();
@@ -547,95 +551,85 @@ class Home extends BaseController
 
 
         if ($shares['user_id'] == $user['user_id']) {
-            session()->setTempdata('fail', 'You are the owner of this share, you can`t place a bid.', 3);
-            return redirect()->back()->to(base_url() . '/share/' . $id);
-        }
-
-        if ($this->request->getMethod() == 'post') {
-            $bid = $this->request->getVar('bid');
-
-            $bidData = [
-                'user_id' => $user['user_id'],
-                'share_on_sale_id' => $shares['share_on_sale_id'],
-                'bid_amount' => $bid,
-                'seller_id' => $shares['user_id'],
-                'sacco_id' => $shares['sacco_id'],
-                'action' => '0',
+            $response = [
+                'status' => '500',
+                'message' => 'You cannot bid for your own shares',
             ];
 
-            $has_bid = $this->bidShares->where('user_id', $user['user_id'])
-                    ->where('share_on_sale_id', $shares['share_on_sale_id'])
-                    ->countAllResults() == 1;
-            if (!$has_bid) {
-                if ($this->bidShares->save($bidData)) {
-                    $sessionData = [
-                        'user_bid_id' => $user['user_id'],
-                        'share_on_sale_bid_id' => $shares['share_on_sale_id'],
-                        'bid_amount' => $bid,
-                        'seller_bid_id' => $shares['user_id'],
-                    ];
-                    session()->set($sessionData);
-                    session()->setTempdata('success', 'Your bid offer has been successfully sent to the share owner', 3);
-                    return redirect()->back()->to(base_url() . '/share/' . $id);
-                } else {
-                    session()->setTempdata('fail', 'Your bid was not placed, please try again', 3);
-                    return redirect()->back()->to(base_url() . '/share/' . $id);
-                }
-            } else {
-                session()->setTempdata('fail', 'Your already have an active bid, go to my_bids and purchase', 3);
-                return redirect()->back()->to(base_url() . '/share/' . $id);
-            }
+            return $this->response->setJSON($response);
         }
+    }
+
+    public function hasActiveBid($id = null)
+    {
+        $uuid = session()->get('currentLoggedInUser');
+        $user = $this->users->where('uniid', $uuid)->first();
+
+        $has_bid = $this->bidShares
+                ->select('bid_share.*')
+                ->where('buyer_id', $user['uniid'])
+                ->where('share_on_sale_id', $id)
+                ->where('action', '0')
+                ->countAllResults() == 1;
+
+        if ($has_bid) {
+            $response = [
+                'status' => '200',
+                'message' => 'You have already placed a bid for this share',
+            ];
+
+            return $this->response->setJSON($response);
+        }
+
     }
 
     public function bids()
     {
         global $amount;
+        global $id;
         $uuid = session()->get('currentLoggedInUser');
         $userData = $this->displayDashboard->getCurrentUserInformation($uuid);
-        $bid_share = $this->bidShares->select('bid_share.*, shares_on_sale.share_on_sale_id, shares_on_sale.total, shares_on_sale.membership_number ,users.fname, users.lname, sacco.name')
-            ->join('shares_on_sale', 'shares_on_sale.share_on_sale_id = bid_share.share_on_sale_id', 'left')
-            ->join('users', 'users.user_id = bid_share.user_id', 'left')
-            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
+
+//        the seller sees the bids that have been placed on his shares
+
+        $bid_share = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as seller_fname, users.lname as seller_lname, sacco.name')
+            ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'right')
+            ->join('users', 'users.user_id = bid_share.seller_id', 'right')
+            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'right')
             ->where('bid_share.seller_id', $userData->user_id)
             ->where('bid_share.action', '0')
             ->findAll();
 
-        $accepted_bids = $this->bidShares->select('bid_share.*, shares_on_sale.share_on_sale_id, shares_on_sale.uuid, shares_on_sale.membership_number, shares_on_sale.total, users.fname, users.lname, sacco.name')
-            ->join('shares_on_sale', 'shares_on_sale.share_on_sale_id = bid_share.share_on_sale_id', 'left')
-            ->join('users', 'users.user_id = bid_share.seller_id', 'left')
-            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
-            ->where('bid_share.user_id', $userData->user_id)
+//        the seller accepts the bid goes to the buyer
+
+        $accepted_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as buyer_fname, users.lname as buyer_lname, sacco.name, sacco.sacco_id')
+            ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'right')
+            ->join('users', 'users.uniid = bid_share.buyer_id', 'right')
+            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'right')
+            ->where('bid_share.buyer_id', $userData->uniid)
             ->where('bid_share.action', '1')
             ->findAll();
 
-
-        $rejected_bids = $this->bidShares->select('bid_share.*, shares_on_sale.share_on_sale_id, shares_on_sale.uuid, shares_on_sale.total, shares_on_sale.membership_number, users.fname, users.lname, sacco.name')
-            ->join('shares_on_sale', 'shares_on_sale.share_on_sale_id = bid_share.share_on_sale_id', 'left')
-            ->join('users', 'users.user_id = bid_share.seller_id', 'left')
+//        the seller rejects the bid, goes to the buyer
+        $rejected_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.uuid, shares_on_sale.total, shares_on_sale.share_on_sale_id, users.fname as buyer_fname, users.lname as buyer_lname, sacco.name')
+            ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'left')
+            ->join('users', 'users.uniid = bid_share.buyer_id', 'left')
             ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
-            ->where('bid_share.user_id', $userData->user_id)
+            ->where('bid_share.buyer_id', $userData->uniid)
             ->where('bid_share.action', '2')
             ->findAll();
 
+        if ($accepted_bids > 0) {
 
-        foreach ($accepted_bids as $accepted_bid) {
-            $amount = $accepted_bid['bid_amount'];
-            $uuid = $accepted_bid['uuid'];
+            foreach ($accepted_bids as $accepted_bid) {
+                $amount = $accepted_bid['bid_amount'];
+                $id = $accepted_bid['sacco_id'];
+            }
         }
 
-        global $id;
-        if (!empty($accepted_bid)) {
-            $id = $accepted_bid['sacco_id'];
-        } else {
-            $id = '';
-        }
+
         $pdf_view = $this->displayDashboard->getPdfView($id);
 
-        header('Content-type: application/pdf');
-        header('Content-Disposition: inline');
-        header('Content-Transfer-Encoding: binary');
-        header('Accept-Ranges: bytes');
 
         $sellers_received_bids = $this->bidShares->select('bid_share.*')
             ->join('shares_on_sale', 'shares_on_sale.share_on_sale_id = bid_share.share_on_sale_id', 'left')
@@ -643,9 +637,10 @@ class Home extends BaseController
             ->where('bid_share.seller_id', $userData->user_id)
             ->countAllResults();
 
+
         $buyers_received_bids = $this->bidShares->select('bid_share.*')
             ->where('bid_share.action', '2')
-            ->where('bid_share.user_id', $userData->user_id)
+            ->where('bid_share.buyer_id', $userData->uniid)
             ->countAllResults();
 
         $session_data = [
@@ -669,11 +664,16 @@ class Home extends BaseController
     {
         $bids = $this->bidShares->find($id);
         $bidData = [
+            'updated_at' => date('Y-m-d h:i:s'),
             'action' => '1',
         ];
         if ($this->bidShares->update($bids['bid_id'], $bidData)) {
-            session()->setTempdata('success', 'Bid approved', 3);
-            return redirect()->back()->to(base_url() . '/my_bids');
+            session()->setFlashdata('success', 'Share capital bid has been successfully approved, the buyer can now purchase shares', 3);
+            return redirect()->back()->to(base_url() . '/saved/your_active_shares');
+        } else {
+
+            session()->setFlashdata('fail', 'We could not complete your request at the moment, please try again latter');
+            return redirect()->back()->to(base_url() . '/saved/your_active_shares');
         }
     }
 
@@ -681,11 +681,15 @@ class Home extends BaseController
     {
         $bids = $this->bidShares->find($id);
         $bidData = [
+            'updated_at' => date('Y-m-d h:i:s'),
             'action' => '2',
         ];
         if ($this->bidShares->update($bids['bid_id'], $bidData)) {
-            session()->setTempdata('success', 'Bid rejected', 3);
-            return redirect()->back()->to(base_url() . '/dashboard');
+            session()->setFlashdata('success', 'You have successfully rejected a bid that was sent by the buyer', 3);
+            return redirect()->back()->to(base_url() . '/saved/your_active_shares');
+        } else {
+            session()->setFlashdata('fail', 'We could not complete your request at the moment, please try again latter');
+            return redirect()->back()->to(base_url() . '/saved/your_active_shares');
         }
 
     }
@@ -967,7 +971,7 @@ class Home extends BaseController
             return $this->response->setJSON($response);
         } else {
             $response = [
-                'status' => 400,
+                'status' => 500,
                 'message' => 'Bid not deleted',
             ];
             return $this->response->setJSON($response);
@@ -987,7 +991,7 @@ class Home extends BaseController
             return $this->response->setJSON($response);
         } else {
             $response = [
-                'status' => 400,
+                'status' => 500,
                 'message' => 'Bid not deleted',
             ];
             return $this->response->setJSON($response);

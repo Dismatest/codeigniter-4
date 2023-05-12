@@ -21,6 +21,7 @@ class Sacco extends Migration
             'till' => ['type' => 'int', 'constraint' => 10, 'null' => true],
             'commission'        => ['type' => 'int', 'constraint' => 10, 'null' => true],
             'website'    => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+            'logo'    => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
             'password'          => ['type' => 'varchar', 'constraint' => 255],
             'created_at'        => ['type' => 'datetime', 'default' => date('Y-m-d H:i:s'), 'null' => true],
         ]);

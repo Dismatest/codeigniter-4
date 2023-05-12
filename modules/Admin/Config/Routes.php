@@ -45,6 +45,17 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers'], function (
 //    new user
     $routes->get('new_user', 'Admin::newUser');
     $routes->post('new_user_post', 'Admin::newUserPost');
+    $routes->post('new_user_post_csv', 'Admin::newUserPostCsv');
+
+    $routes->get('get-all-app-users', 'Admin::getAllAppUsers');
+    $routes->post('admin-sell-shares', 'Admin::adminSellShares');
+
+    $routes->get('update-account', 'Admin::UpdateAccount');
+    $routes->post('update-sacco-profile', 'Admin::UpdateAccountPost');
+
+    $routes->get('get-updated-profile', 'Admin::getUpdatedProfile');
+
+    $routes->get('get_sacco_image', 'Admin::getSaccoImage');
 //    end
 
 });

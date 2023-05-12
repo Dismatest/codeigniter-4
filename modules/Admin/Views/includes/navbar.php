@@ -14,27 +14,6 @@
                     <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
                 </a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="mdi mdi-email-outline" style="position: relative;"></i>
-                    <span class="bg-warning" style="font-size: 12px; height: 20px; width: 20px; display: grid; place-items: center; border-radius: 50%; position: absolute; top: 10px; left: 16px;">0</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                    <h6 class="p-3 mb-0">Messages</h6>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item preview-item">
-                        <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                            <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
-                            <p class="text-gray mb-0"> 1 Minutes ago </p>
-                        </div>
-                    </a>
-                    <div class="dropdown-divider"></div>
-
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-divider"></div>
-                    <h6 class="p-3 mb-0 text-center">2 new messages</h6>
-                </div>
-            </li>
             <li class="nav-item">
                 <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="<?= 'notifications' ?>">
                     <i class="mdi mdi-bell-outline" style="position: relative;"></i>
@@ -45,12 +24,18 @@
 
                 <li class="nav-item nav-profile dropdown">
                     <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-
+                        <div class="nav-profile-img">
+                            <img src="" alt="image" id="profile-image-go">
+                            <span class="availability-status online"></span>
+                        </div>
                         <div class="nav-profile-text">
                             <p class="mb-1 text-black"><strong>Sacco </strong><?= session()->get('name'); ?></p>
                         </div>
                     </a>
                     <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="<?= 'update-account' ?>">
+                            <i class="mdi mdi-account-box-outline me-2 text-success"></i> Update Account</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="<?= 'change-password' ?>">
                             <i class="mdi mdi-cached me-2 text-success"></i> Change Password </a>
                         <div class="dropdown-divider"></div>

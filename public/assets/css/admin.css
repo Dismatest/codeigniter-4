@@ -1,10 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"');
+:root{
+    --main-background-color: rgb(249, 243, 249);
+    --primary-text-admin-color: #1bcfb4;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito', sans-serif;
+}
+
+
+body{
+    background-color: var(--main-background-color);
+}
+
 .registration-container{
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background: linear-gradient(135deg, #71b7e6, #9b59b6);
 }
 .registration-container-2{
     max-width: 700px;
@@ -12,9 +28,10 @@
     background: white;
     padding:25px 30px;
     border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 .registration-container-2 .registration-title{
-    font-size: 25px;
+    font-size: 1.3rem;
     font-weight: 500;
     position: relative;
     display: flex;
@@ -32,7 +49,7 @@
     width: 120px;
     left: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+    background: var(--primary-text-admin-color);
 }
 .registration-container-2 form .user-details{
     display: flex;
@@ -41,20 +58,27 @@
     margin: 20px 0 12px 0;
 }
 form .user-details .registration-input{
-    margin-bottom: 5px;
+    margin-bottom: 20px;
     width: 100%;
 }
 .user-details .registration-input input{
     height: 40px;
     width: 100%;
-    border-radius: 40px;
+    border-radius: 0.4rem;
     border: 1px solid #ccc;
     padding-left: 15px;
     font-size: 15px;
 }
+
+.user-details .registration-input input:focus{
+    border-color: var(--primary-text-admin-color);
+}
+.user-details .registration-input input:focus::placeholder{
+    color: var(--primary-text-admin-color);
+}
 .user-details .registration-input .registration-details{
     font-weight: 500;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     display: block;
 }
 form .register-button{
@@ -63,15 +87,15 @@ form .register-button{
 }
 form .register-button input{
     height: 100%;
-    padding: 0 40px;
-    border-radius: 40px;
+    padding: 0 50px;
+    border-radius: 0.4rem;
     outline: none;
     color: #fff;
     border: none;
     letter-spacing: 1px;
     font-weight: 500;
     font-size: 18px;
-    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+    background: var(--primary-text-admin-color);
 }
 .terms-and-conditions{
     display: flex;
@@ -100,6 +124,20 @@ form .register-button input{
     }
     .user-details::-webkit-scrollbar{
         width: 0;
+    }
+    .registration-container-2 .registration-title{
+        font-size: 1.0rem;
+    }
+    .user-details .registration-input .registration-details{
+        font-size: 12px;
+        margin-top: 10px;
+    }
+    .user-details .registration-input input::placeholder{
+        font-size: 12px;
+    }
+    form .register-button input{
+        padding: 0 35px;
+        font-size: 13px;
     }
 }
 /*upload files css*/

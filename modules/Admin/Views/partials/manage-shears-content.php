@@ -8,11 +8,12 @@
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                    <span></span>Admin/Manage Shares <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
                 </li>
             </ul>
         </nav>
     </div>
+    <h4 class="text-center pb-2">Manage share capital on sale</h4>
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">

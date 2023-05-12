@@ -11,8 +11,8 @@ header{
     background: rgb(94, 92, 92);
     color: white;
     position: fixed;
-    top: 2px;
-    z-index: 100;
+    top: 0;
+    z-index: 1;
 }
 .btn1{
     font-size: 25px;

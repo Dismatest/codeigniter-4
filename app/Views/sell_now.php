@@ -5,7 +5,7 @@
 
 <div class="load"></div>
 <div class="container">
-    <div class="row pt-5 pb-5">
+    <div class="row container-padding">
 
         <div class="col-md-12">
 
@@ -15,12 +15,12 @@
                     <p id="success-message"></p>
                 </div>
                 <div class="sell-heading">
-                    <h5>Sell Shares</h5>
+                    <h5>Sell Share Capital</h5>
                     <span id="error-message"></span>
                     <span id="clear">clear</span>
                 </div>
                 <div class="verify-account">
-                    <span>Sell Your Shares Here</span>
+                    <span>Sell Your Share Capital Here</span>
                 </div>
                 <form action="" method="post" class="verify-form-2" id="form">
                     <div class="verify-input">
@@ -78,3 +78,8 @@
 <?= $this->include('includes/footer.php'); ?>
 <?= $this->include('includes/small-footer.php'); ?>
 <?= $this->endSection(); ?>
+<?php $this->section('sell-now-script'); ?>
+<script>
+    console.log('sell now script');
+</script>
+<?php $this->endSection(); ?>

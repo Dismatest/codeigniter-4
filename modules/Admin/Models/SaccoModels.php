@@ -353,4 +353,93 @@ class SaccoModels extends Model
         }
     }
 
+    public function insertCsvData($data){
+        try {
+            $builder = $this->db->table('users');
+            $builder->insertBatch($data);
+            if($this->db->affectedRows() > 0){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (\Exception $e) {
+
+            log_message('error', $e->getMessage());
+            log_message('error', $e->getTraceAsString());
+
+            return false;
+        }
+    }
+
+    public function findRecord($email, $phone){
+        try {
+            $builder = $this->db->table('users');
+            $builder->select('*');
+            $builder->where('email', $email);
+            $builder->where('phone', $phone);
+            return $builder->countAllResults();
+
+        } catch (\Exception $e) {
+
+            log_message('error', $e->getMessage());
+            log_message('error', $e->getTraceAsString());
+
+            return false;
+        }
+    }
+
+    public function getAllAppUsers($term){
+        $builder = $this->db->table('users');
+        $builder->select('users.user_id, users.fname, users.lname');
+        $builder->like('users.fname', $term);
+        $builder->orLike('users.lname', $term);
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
+    public function getComission(){
+        $builder = $this->db->table('set_commission');
+        $builder->select('set_commission.commission');
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
+    public function updateSaccoLogo($data, $sacco_id){
+        $builder = $this->db->table('sacco');
+        $builder->where('uuid', $sacco_id);
+        $builder->update(['logo' => $data]);
+        if($this->db->affectedRows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function updateSaccoProfile($contactPhone, $contactEmail, $saccoHeadquarter, $website, $sacco_id){
+        $builder = $this->db->table('sacco');
+        $builder->where('uuid', $sacco_id);
+        $builder->update(['contact_phone' => $contactPhone, 'contact_email' => $contactEmail, 'location' => $saccoHeadquarter, 'website' => $website]);
+        if($this->db->affectedRows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function getUpdatedProfile($sacco_id){
+        $builder = $this->db->table('sacco');
+        $builder->where('uuid', $sacco_id);
+        $builder->select('sacco.contact_phone, sacco.contact_email, sacco.location, sacco.website, sacco.logo');
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
+    public function getSaccoImage($sacco_id){
+        $builder = $this->db->table('sacco');
+        $builder->select('sacco.logo');
+        $builder->where('uuid', $sacco_id);
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
 }

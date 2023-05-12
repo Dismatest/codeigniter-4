@@ -1,4 +1,13 @@
 
+/*global variables for primary color*/
+:root{
+    --primary-color-admin: #4dd9c3;
+    --primary-text-admin-color: #1bcfb4;
+    --secondary-text-color: black;
+    --primary-text-color: #ffffff;
+
+}
+
 .reject-share-errors{
     color: red;
     font-size: 12px;
@@ -9,6 +18,7 @@
 
 .error {
     border-color: red;
+    color: red;
 }
 
 .valid {
@@ -20,3 +30,167 @@
     font-size: 12px;
     margin-top: 5px;
 }
+.select2-search--dropdown .select2-search__field{
+    border-radius: 4px;
+    padding: .7rem .75rem;
+}
+
+.select2-search--dropdown .select2-search__field:focus{
+    border-color: var(--primary-text-admin-color);
+}
+.select2-results__option{
+    padding: 0.5rem 0.75rem;
+    color: var(--secondary-text-color) !important;
+    font-size: 14px;
+    font-weight: 300;
+}
+.transaction-icons-main{
+    display: flex;
+    align-items: center;
+}
+.transaction-icon{
+    background: var(--primary-text-admin-color);
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    margin-right: 10px;
+    border-radius: 3px;
+    color: var(--primary-text-color);
+}
+
+/*changing colors for the admin dashboard*/
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: var(--primary-text-admin-color);
+    color: var(--primary-text-color) !important;
+}
+.select2-myInput-container{
+    padding: 20px !important;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered{
+    padding-top: 8px;
+    font-size: 14px;
+    padding-left: 20px;
+}
+.select2-container .select2-selection--single {
+    height: 45px !important;
+}
+.select2-selection__arrow{
+    padding-top: 7px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow{
+    height: 45px !important;
+}
+
+.btn-gradient-primary{
+    background: var(--primary-text-admin-color) !important;
+}
+.bg-gradient-primary{
+    background: var(--primary-text-admin-color) !important;
+}
+.sidebar .nav .nav-item .nav-link .menu-title{
+    font-weight: 600;
+}
+.sidebar .nav .nav-item.active > .nav-link .menu-title{
+    color: var(--primary-text-color) !important;
+
+}
+.sidebar .nav .nav-item.active > .nav-link i{
+    color: var(--primary-text-admin-color) !important;
+}
+.sidebar .nav.sub-menu .nav-item .nav-link.active{
+    color: var(--primary-text-admin-color) !important;
+}
+
+.sidebar{
+    background: var(--primary-text-admin-color) !important;
+}
+
+.sidebar .nav .nav-item.active {
+    background: var(--primary-text-admin-color) !important;
+
+}
+.sidebar .nav .nav-item.active:hover {
+    background: var(--primary-color-admin) !important;
+    color: var(--secondary-text-color) !important;
+}
+
+.sidebar .nav .nav-item:hover{
+    background: var(--primary-color-admin) !important;
+    color: var(--secondary-text-color) !important;
+}
+.sidebar .nav.sub-menu .nav-item .nav-link{
+    color: var(--secondary-text-color) !important;
+}
+.sidebar .nav.sub-menu .nav-item .nav-link.active{
+    color: var(--primary-text-color) !important;
+}
+.sidebar .nav .nav-item .nav-link i.menu-arrow{
+    color: var(--secondary-text-color) !important;
+}
+.sidebar .nav .nav-item .nav-link i{
+    color: var(--secondary-text-color) !important;
+}
+.sidebar .nav .nav-item.active > .nav-link i{
+    color: var(--primary-text-color) !important;
+}
+
+.sidebar .nav.sub-menu .nav-item .nav-link:before{
+    color: var(--secondary-text-color) !important;
+}
+.sidebar .nav.sub-menu .nav-item .nav-link.active:before{
+    color: var(--primary-text-color) !important;
+}
+
+/*navbar*/
+
+.navbar{
+    background: var(--primary-text-admin-color) !important;
+}
+.navbar .navbar-brand-wrapper{
+    background: var(--primary-text-admin-color) !important;
+}
+.navbar .navbar-menu-wrapper .navbar-toggler{
+    color: var(--secondary-text-color) !important;
+}
+.navbar .navbar-menu-wrapper{
+    color: var(--secondary-text-color) !important;
+}
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .dropdown-toggle:after{
+    color: var(--secondary-text-color) !important;
+}
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .dropdown-menu.navbar-dropdown .dropdown-item:hover{
+    color: var(--secondary-text-color) !important;
+}
+.card .card-body{
+    padding: 10px 20px;
+}
+.mb-5{
+    margin-bottom: 10px !important;
+}
+.mb-3{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+h2, .h2, .h2{
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.form-control:focus{
+    border: 1px solid var(--primary-text-admin-color) !important;
+}
+
+.form-control:focus::placeholder {
+    color: var(--primary-text-admin-color) !important;
+}
+
+
+
+
+

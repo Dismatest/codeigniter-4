@@ -59,11 +59,16 @@
 <!-- end of dataDatable links -->
 <!--swiper.js-->
 <script src="<?= base_url('assets/js/swiper-bundle.min.js'); ?>"></script>
+<script src="<?=base_url('assets/js/jq.validation.js')?>"></script>
 <!--end-->
 <script src="<?= base_url('assets/js/navbar.js'); ?>"></script>
 <script src="<?= base_url('assets/js/app.js'); ?>"></script>
 <script src="<?= base_url('assets/js/loader.js'); ?>"></script>
 <script src="<?= base_url('assets/js/stepper.js'); ?>"></script>
 <script src="<?= base_url('assets/js/user-dashboard.js'); ?>"></script>
+<?= $this->renderSection('share-script') ?>
+<?= $this->renderSection('modal-script') ?>
+<?= $this->renderSection('payment-script') ?>
+<?= $this->renderSection('sell-now-script') ?>
 </body>
 </html>

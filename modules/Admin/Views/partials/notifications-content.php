@@ -3,17 +3,17 @@
         <h3 class="page-title">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
                   <i class="mdi mdi-home"></i>
-                </span> Shares Notifications
+                </span> Admin Dashboard
         </h3>
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                    <span>Admin/Shares on sale</span> <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
                 </li>
             </ul>
         </nav>
     </div>
-
+<h5 class="text-center pb-2">Shares on sale</h5>
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">
@@ -31,7 +31,6 @@
                             </tr>
                             </thead>
                             <tbody id="displayShareNotifications">
-
 
 
                             </tbody>

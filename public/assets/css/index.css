@@ -90,6 +90,7 @@ html{
     padding: 1.2rem 6rem;
     font-size: 1.4rem;
     border-radius: 0.5rem;
+    margin: 2rem;
 }
 .arrow-icon{
     padding-left: 4px;
@@ -199,7 +200,7 @@ html{
     color: black;
     cursor: pointer;
     text-decoration: none;
-    padding: 1rem 4rem;
+    padding: 0.8rem 2rem;
     font-size: 1rem;
     display: flex;
     align-items: center;
@@ -273,6 +274,9 @@ html{
         font-size: 1.2rem;
     }
     .top-button{
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin-top: 5.5rem;
     }
     .welcome-scroll-btn{
@@ -281,5 +285,8 @@ html{
     .sacco-read-more{
         padding: 0.8rem 1.5rem;
         font-size: 0.8rem;
+    }
+    .arrow-icon2{
+        display: none;
     }
 }

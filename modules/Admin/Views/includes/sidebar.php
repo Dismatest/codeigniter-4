@@ -48,7 +48,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="<?= 'new_user' ?>">
-                <span class="menu-title">New User</span>
+                <span class="menu-title">Register member</span>
                 <i class="mdi mdi-account-circle menu-icon"></i>
             </a>
         </li>

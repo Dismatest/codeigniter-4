@@ -11,7 +11,9 @@
                 <p>The platform that allow you sell and buy shares from different sacco within kenya.
                 </p>
                 <div class="top-button">
-                    <a href="<?= 'index' ?>">Go to shares <i class="fa-solid fa-arrow-right arrow-icon2"></i></a>
+                    <a href="<?= 'index' ?>">Buy Shares <i class="fa-solid fa-arrow-right arrow-icon2"></i></a>
+
+                    <a href="<?= 'index' ?>">Sell Shares <i class="fa-solid fa-arrow-right arrow-icon2"></i></a>
                 </div>
 
             </div>

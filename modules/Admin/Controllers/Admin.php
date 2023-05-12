@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Admin\Controllers;
 
 use App\Controllers\BaseController;
@@ -8,6 +9,7 @@ use App\Models\Notification;
 use App\Models\Users;
 use App\Models\SaccoMembership;
 use App\Models\SaccoShares;
+
 class Admin extends BaseController
 {
     public $adminModel;
@@ -43,6 +45,7 @@ class Admin extends BaseController
     {
         return view('Modules\Admin\Views\notifications');
     }
+
     // all the sacco admin shares methods
     public function manageShares()
 
@@ -71,15 +74,13 @@ class Admin extends BaseController
     }
 
 
-
-
     public function deleteShares($id = null)
     {
         try {
 
             $this->adminModel->deleteShares($id);
             return redirect()->to('admin/manage-shares')->with('success', 'Shares deleted successfully');
-        }catch(\CodeIgniter\Database\Exceptions\DataBaseException $e){
+        } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
             return redirect()->to('admin/manage-shares')->with('fail', 'Shares deletion failed');
         }
 
@@ -130,67 +131,16 @@ class Admin extends BaseController
 
     public function createShare()
     {
-
         $saccoID = session()->get('currentLoggedInSacco');
         $sacco = $this->adminModel->getCurrentSaccoInformation($saccoID);
-        $users = $this->userModel->select('users.user_id, users.fname, users.lname, sacco_membership.is_approved, sacco_membership.has_shares')
-            ->join('sacco_membership', 'sacco_membership.user_id = users.user_id')
-            ->where('sacco_membership.is_approved', '1')
-            ->where('sacco_membership.has_shares', '0')
-            ->orderby('users.user_id', 'ASC')
-            ->findAll();
+
+        $getCommission = $this->adminModel->getComission();
 
         $data = [
             'sacco' => $sacco,
-            'users' => $users,
+            'getCommission' => $getCommission,
         ];
 
-        if ($this->request->getMethod() == 'post') {
-            $rules = [
-                'membershipNumber' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Membership number is required',
-                    ]
-                ],
-                'sharesAmount' => [
-                    'rules' => 'required|numeric',
-                    'errors' => [
-                        'required' => 'The amount of share is required',
-                        'numeric' => 'The amount of share must be a number',
-                    ]
-                ],
-                'cost' => [
-                    'rules' => 'required|numeric',
-                    'errors' => [
-                        'required' => 'The share cost is required',
-                        'numeric' => 'The cost per share must be a number',
-                    ]
-                ],
-            ];
-            if ($this->validate($rules)) {
-                $shareData = [
-
-                    'user_id' => $this->request->getPost('selectMemberName'),
-                    'sacco_id' => $this->request->getPost('selectSaccoName'),
-                    'membership_number' => $this->request->getPost('membershipNumber'),
-                    'cost_per_share' => $this->request->getPost('cost'),
-                    'shares_on_sale' => $this->request->getPost('sharesAmount'),
-                    'total' => $this->request->getPost('total'),
-                    'is_verified' => 1,
-
-                ];
-                dd($shareData);
-                $save = $this->adminModel->createShare($shareData);
-                if ($save) {
-                    return redirect()->to('admin/manage-shares')->with('success', 'Shares created successfully');
-                } else {
-                    return redirect()->to('admin/manage-shares')->with('fail', 'Shares creation failed');
-                }
-            } else {
-                $data['validation'] = $this->validator;
-            }
-        }
         return view('Modules\Admin\Views\create-share', $data);
     }
 
@@ -483,7 +433,9 @@ class Admin extends BaseController
         ];
         return view('Modules\Admin\Views\reports', $data);
     }
-    public function viewReports(){
+
+    public function viewReports()
+    {
 
         $sacco_id = session()->get('sacco_id');
         $report_id = $this->request->getPost('report_id');
@@ -514,9 +466,9 @@ class Admin extends BaseController
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        try{
+        try {
             $response = curl_exec($ch);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
             $this->adminModel->insertError($e->getMessage());
         }
@@ -529,7 +481,8 @@ class Admin extends BaseController
     }
 
 
-    public function markAsComplete($report_id){
+    public function markAsComplete($report_id)
+    {
         $sacco_id = session()->get('sacco_id');
         $buyer_fname = '';
         $seller_fname = '';
@@ -543,28 +496,29 @@ class Admin extends BaseController
             $buyer_phone = $transaction_report[0]['buyer_phone'];
             $seller_phone = $transaction_report[0]['seller_phone'];
 
-        }catch(\CodeIgniter\Database\Exceptions\DataBaseException $e){
+        } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
             $this->adminModel->insertError($e->getMessage());
         }
 
-        try{
+        try {
             $this->adminModel->updateTransactionStatus($report_id);
-        }catch(\CodeIgniter\Database\Exceptions\DataBaseException $e){
+        } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
             $this->adminModel->insertError($e->getMessage());
         }
         $seller_text_message = "Congratulations " . $seller_fname . ", your shares has been sold successfully, please wait for payment within 24 hours";
         $buyer_text_message = "Congratulations " . $buyer_fname . ", you have successfully bought shares from " . $seller_fname . ", your shares has been added to your account";
 
-        if($this->text_msg($seller_phone, $seller_text_message) && $this->text_msg($buyer_phone, $buyer_text_message)){
+        if ($this->text_msg($seller_phone, $seller_text_message) && $this->text_msg($buyer_phone, $buyer_text_message)) {
             session()->setFlashdata('success', 'Transaction is completed successfully');
             return redirect()->to(base_url('admin/reports'));
-        }else{
+        } else {
             session()->setFlashdata('fail', 'The transaction has been completed, but the text messages were not sent');
             return redirect()->to(base_url('admin/reports'));
         }
     }
 
-    public function pricePerShare(){
+    public function pricePerShare()
+    {
 
         $sacco_id = session()->get('sacco_id');
         $data = [
@@ -604,7 +558,7 @@ class Admin extends BaseController
                         return redirect()->to(base_url('admin/price_per_share'));
                     }
 
-                }else{
+                } else {
                     $insertPricePerShare = $this->adminModel->insertPricePerShare($insertData);
                     if ($insertPricePerShare) {
                         session()->setFlashdata('success', 'Price per share is set successfully');
@@ -619,14 +573,17 @@ class Admin extends BaseController
 
 
         }
-        return view('Modules\Admin\Views\price_per_share' , $data);
+        return view('Modules\Admin\Views\price_per_share', $data);
     }
-    public function newUser(){
+
+    public function newUser()
+    {
         return view('Modules\Admin\Views\new-user');
     }
 
-    public function newUserPost(){
-        if($this->request->getMethod() == 'post'){
+    public function newUserPost()
+    {
+        if ($this->request->getMethod() == 'post') {
 
             $rules = [
                 'fname' => 'required|min_length[3]|max_length[20]',
@@ -635,7 +592,7 @@ class Admin extends BaseController
                 'phone' => 'required|is_unique[users.phone]',
             ];
 
-            if(!$this->validate($rules)){
+            if (!$this->validate($rules)) {
                 $response = [
                     'error' => true,
                     'messages' => $this->validator->getErrors()
@@ -643,7 +600,7 @@ class Admin extends BaseController
 
                 return $this->response->setJSON($response);
 
-            }else{
+            } else {
                 $fname = $this->request->getPost('fname');
                 $lname = $this->request->getPost('lname');
                 $email = $this->request->getPost('email');
@@ -657,7 +614,7 @@ class Admin extends BaseController
                     'phone' => $phone,
                     'password' => password_hash($password, PASSWORD_DEFAULT),
                     'activation_status' => '1',
-                    'uniid' => md5(str_shuffle('abcdefghijkmnopqstuvwxyz'.time())),
+                    'uniid' => md5(str_shuffle('abcdefghijkmnopqstuvwxyz' . time())),
                     'activation_date' => date('Y-m-d H:i:s'),
                 ];
 
@@ -665,15 +622,15 @@ class Admin extends BaseController
 
                 $sendEmail = $this->sendEmail($fname, $email, $message);
 
-                if($this->adminModel->saveUser($data)) {
-                    if($sendEmail){
+                if ($this->adminModel->saveUser($data)) {
+                    if ($sendEmail) {
                         $response = [
                             'error' => false,
                             'status' => 200,
                             'messages' => 'User created successfully, and password has been shared through email'
                         ];
                         return $this->response->setJSON($response);
-                    }else{
+                    } else {
                         $response = [
                             'error' => false,
                             'status' => 201,
@@ -681,7 +638,7 @@ class Admin extends BaseController
                         ];
                         return $this->response->setJSON($response);
                     }
-                }else{
+                } else {
                     $response = [
                         'error' => true,
                         'status' => 500,
@@ -689,6 +646,63 @@ class Admin extends BaseController
                     ];
                     return $this->response->setJSON($response);
                 }
+            }
+        }
+    }
+
+    public function newUserPostCsv()
+    {
+
+
+        if ($file = $this->request->getFile('file')) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move('./uploads/csv', $newName);
+                $csvFile = './uploads/csv/' . $newName;
+                $csvData = array_map('str_getcsv', file($csvFile));
+                $csvData = array_slice($csvData, 1);
+                $csvData = array_map(function ($csvData) {
+                    return [
+                        'fname' => $csvData[0],
+                        'lname' => $csvData[1],
+                        'email' => $csvData[2],
+                        'phone' => $csvData[3],
+                        'password' => password_hash($csvData[4], PASSWORD_DEFAULT),
+                        'activation_status' => '1',
+                        'uniid' => md5(str_shuffle('abcdefghijkmnopqstuvwxyz' . time())),
+                        'activation_date' => date('Y-m-d H:i:s'),
+                    ];
+                }, $csvData);
+//
+                foreach ($csvData as $user) {
+                    $findRecord = $this->adminModel->findRecord($user['email'], $user['phone']);
+                    if ($findRecord === 0) {
+                        try {
+                            $insertData = $this->adminModel->insertCsvData($user);
+                            if ($insertData) {
+                                $response = [
+                                    'error' => false,
+                                    'status' => 200,
+                                    'messages' => 'Users created successfully'
+                                ];
+                                return $this->response->setJSON($response);
+                            }
+                        } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
+                            $data = [
+                                'error' => $e->getMessage(),
+                            ];
+                            if ($this->adminModel->insertError($data)) {
+                                $response = [
+                                    'error' => true,
+                                    'status' => 500,
+                                    'messages' => 'Users registration failed, please check the logs for more information'
+                                ];
+                                return $this->response->setJSON($response);
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -707,32 +721,35 @@ class Admin extends BaseController
 
         // Set email message
         $this->email->setMessage($email_template);
-        if($this->email->send()){
+        if ($this->email->send()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
 
-    public function viewShareNotification(){
+    public function viewShareNotification()
+    {
         $sacco_id = session()->get('sacco_id');
         $data = $this->adminModel->getShareNotification($sacco_id);
         return $this->response->setJSON($data);
 
     }
 
-    public function viewEachShareNotification(){
+    public function viewEachShareNotification()
+    {
         $share_id = $this->request->getPost('share_id');
         $data = $this->adminModel->getEachShareNotification($share_id);
         return $this->response->setJSON($data);
     }
 
-    public function rejectShare(){
+    public function rejectShare()
+    {
         $sacco_id = session()->get('sacco_id');
         $share_id = $this->request->getPost('share_id');
         $user_id = $this->request->getPost('user_id');
-        $reason= $this->request->getPost('reason');
+        $reason = $this->request->getPost('reason');
         $data = [
             'share_id' => $share_id,
             'user_id' => $user_id,
@@ -740,31 +757,170 @@ class Admin extends BaseController
             'reason' => $reason,
         ];
         $response = $this->adminModel->saveRejectedShare($data);
-        if($response){
+        if ($response) {
             return $this->response->setJSON(['status' => 'success', 'message' => 'The shares has been rejected']);
-        }else{
+        } else {
             return $this->response->setJSON(['status' => 'fail', 'message' => 'An error occurred, please try again']);
         }
 
     }
 
-    public function approveShare(){
+    public function approveShare()
+    {
         $share_id = $this->request->getPost('share_id');
         $user_id = $this->request->getPost('user_id');
-        $response =  $this->adminModel->approveShare($share_id, $user_id);
-        if($response){
+        $response = $this->adminModel->approveShare($share_id, $user_id);
+        if ($response) {
             return $this->response->setJSON(['status' => 'success', 'message' => 'The shares has been approved']);
-        }else{
+        } else {
             return $this->response->setJSON(['status' => 'fail', 'message' => 'An error occurred, please try again']);
         }
 
 
     }
 
-    public function updateRejectShares(){
+    public function updateRejectShares()
+    {
         $share_id = $this->request->getPost('share_id');
         $user_id = $this->request->getPost('user_id');
         $response = $this->adminModel->updateRejectShares($share_id, $user_id);
+        return $this->response->setJSON($response);
+    }
+
+    public function getAllAppUsers()
+    {
+        $search = $this->request->getVar('search');
+        $data = $this->adminModel->getAllAppUsers($search);
+        return $this->response->setJSON($data);
+    }
+
+    public function adminSellShares()
+    {
+        $rules = [
+            'membershipNumber' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Membership number is required',
+                ]
+            ],
+            'sharesAmount' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'The amount of share is required',
+                    'numeric' => 'The amount of share must be a number',
+                ]
+            ],
+            'total' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'The share cost is required',
+                    'numeric' => 'The cost per share must be a number',
+                ]
+            ],
+        ];
+        if ($this->validate($rules)) {
+            $shareData = [
+
+                'uuid' => uniqid(),
+                'user_id' => $this->request->getPost('user_id'),
+                'sacco_id' => $this->request->getPost('sacco_id'),
+                'membership_number' => $this->request->getPost('membershipNumber'),
+                'shares_on_sale' => $this->request->getPost('sharesAmount'),
+                'total' => $this->request->getPost('total'),
+                'is_verified' => 1,
+
+            ];
+            try {
+                $save = $this->adminModel->createShare($shareData);
+                if ($save) {
+                    $response = [
+                        'error' => false,
+                        'status' => 200,
+                        'messages' => 'Shares created successfully'
+                    ];
+                    return $this->response->setJSON($response);
+                }
+            } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
+                $data = [
+                    'error' => $e->getMessage(),
+                ];
+                if ($this->adminModel->insertError($data)) {
+                    $response = [
+                        'error' => true,
+                        'status' => 500,
+                        'messages' => 'Shares registration failed, please check the logs for more information'
+                    ];
+                    return $this->response->setJSON($response);
+                }
+            }
+        } else {
+            $response = [
+                'error' => true,
+                'status' => 500,
+                'messages' => $this->validator->getErrors()
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function UpdateAccount()
+    {
+
+        return view('Modules\Admin\Views\update-account');
+
+    }
+
+    public function UpdateAccountPost()
+    {
+        $contactPhone = $this->request->getPost('contactPersonPhone');
+        $contactEmail = $this->request->getPost('contactPersonEmail');
+        $saccoHeadquarter = $this->request->getPost('saccoHeadquarter');
+        $website = $this->request->getPost('website');
+        $saccoLogo = $this->request->getFile('saccoLogo');
+
+
+        $currentLoggedSacco = session()->get('currentLoggedInSacco');
+
+        if($saccoLogo && $saccoLogo->isValid() && !$saccoLogo->hasMoved()){
+            $newName = $saccoLogo->getRandomName();
+            $saccoLogo->move('uploads/sacco-logo', $newName);
+            $this->adminModel->updateSaccoLogo($newName, $currentLoggedSacco);
+        }
+
+        if($this->adminModel->updateSaccoProfile($contactPhone, $contactEmail, $saccoHeadquarter, $website, $currentLoggedSacco)){
+
+            $response = [
+                'error' => false,
+                'status' => 201,
+                'messages' => 'Sacco profile has been updated successfully'
+            ];
+            return $this->response->setJSON($response);
+        }
+        $response = [
+            'error' => true,
+            'status' => 500,
+            'messages' => 'There was an error updating the account, please try again later'
+        ];
+        return $this->response->setJSON($response);
+    }
+
+    public function getUpdatedProfile(){
+        $currentLoggedSacco = session()->get('currentLoggedInSacco');
+        $data = $this->adminModel->getUpdatedProfile($currentLoggedSacco);
+        $response =[
+            'status' => 200,
+            'data' => $data
+        ];
+        return $this->response->setJSON($response);
+    }
+
+    public function getSaccoImage(){
+        $currentLoggedSacco = session()->get('currentLoggedInSacco');
+        $data = $this->adminModel->getSaccoImage($currentLoggedSacco);
+        $response =[
+            'status' => 200,
+            'data' => $data
+        ];
         return $this->response->setJSON($response);
     }
 }

@@ -10,7 +10,7 @@
                 <?= csrf_field()?>
                 <div class="user-details">
                     <div class="registration-input">
-                        <span class="registration-details">Email</span>
+                        <span class="registration-details">Email Address*</span>
                         <input type="text" placeholder="enter your email" name="email">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('email')) : ?>
@@ -19,7 +19,7 @@
                         <?php endif; ?>
                     </div>
                     <div class="registration-input">
-                        <span class="registration-details">Password</span>
+                        <span class="registration-details">Password*</span>
                         <input type="password" placeholder="enter your password" name="password">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('password')) : ?>

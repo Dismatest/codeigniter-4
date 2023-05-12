@@ -3,17 +3,17 @@
         <h3 class="page-title">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
                   <i class="mdi mdi-home"></i>
-                </span> New Members
+                </span> Admin Dashboard
         </h3>
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                    <span>Admin/Manage New Members</span> <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
                 </li>
             </ul>
         </nav>
     </div>
-
+<h5 class="text-center p-2">Manage New Members</h5>
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">

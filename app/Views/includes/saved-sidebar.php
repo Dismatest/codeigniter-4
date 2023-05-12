@@ -19,7 +19,7 @@
                     <?php if(!empty($userData->fname) && !empty($userData->lname)): ?>
                     <h5><?= ucfirst($userData->fname); ?> <?= ucfirst($userData->lname); ?></h5>
                     <?php endif; ?>
-                    <?php if(!empty($userData)) :?>
+                    <?php if(!empty($userData->phone)) :?>
                     <span><?= $userData->phone; ?></span>
                     <?php endif; ?>
             </div>

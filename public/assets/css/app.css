@@ -2,10 +2,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"');
 :root{
-    --primary-color: rgb(214, 178, 214);
-    --text-color: #7597ad;
-    --background-color: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
-    --background-hoover: linear-gradient(to right, rgb(214, 178, 214), rgb(114, 90, 114));
+    --primary-color: #1bcfb4;
+    --text-color: black;
+    --background-color: #1bcfb4;
+    --background-hoover: #7597ad;
     --main-background-color: rgb(249, 243, 249);
 }
 *{
@@ -318,6 +318,7 @@ form .register-button input{
  
 .footer-link{
     text-decoration: none;
+    padding: 8px 30px
 }
 /* css for the homepage */
 .btn-success{
@@ -640,8 +641,8 @@ span i{
 .payment-heading{
     margin-left: 10px;
     font-weight: 600;
-    font-size: 15px;
-    color: grey;
+    font-size: 1.3em;
+    color: #1bcfb4;
 }
 .cad{
     width: 100%;
@@ -674,8 +675,8 @@ span i{
     cursor: pointer;
 }
 .payment-buttons:hover{
-    border: 1px solid rgb(156, 7, 156);
-    color:rgb(87, 5, 87)
+    border: 1px solid #1bcfb4;
+    color: #1bcfb4;
 }
 .fa-mobile{
     font-size: 30px;
@@ -695,30 +696,29 @@ select>option{
 }
 .user-select{
     width: 100px;
-    height: 30px;
+    height: 28px;
     padding: 5px;
-    font-size: 16px;
+    font-size: 13px;
     font-family: Arial, sans-serif;
     border: 1px solid rgb(225, 225, 225);
     border-radius: 5px;
   }
   .user-select:focus{
-    outline: none;
-  }
-  .phone-details{
-
+    border: 1px solid #1bcfb4;
+      outline: none;
   }
   #phone{
     width: 80%;
-    height: 30px;
+    height: 28px;
     padding: 5px;
-    font-size: 16px;
+    font-size: 13px;
     font-family: Arial, sans-serif;
     border: 1px solid rgb(225, 225, 225);
     border-radius: 5px;
   }
   #phone:focus{
     outline: none;
+      border: 1px solid #1bcfb4;
   }
 .user-input-details{
     margin: 15px 0;
@@ -736,6 +736,9 @@ select>option{
     color: gray; 
     padding: 10px 15px;
 }
+.paycheck{
+    background-color: #1bcfb4 !important;
+}
 .checkbox-container{
     padding: 10px 15px;
     display: flex;
@@ -749,7 +752,7 @@ select>option{
     margin: 15px;
 }
 .checkbox-container:hover {
-    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0 3px 10px 0 rgba(0,0,0,0.75);
   }
 
 .saf-img{
@@ -764,7 +767,7 @@ select>option{
 .footer-link{
     text-decoration: none;
     padding: 8px 40px;
-    border: 1px solid rgb(214, 178, 214);
+    border: 1px solid #1bcfb4;
     border-radius: 4px;
     cursor: pointer;
     color: grey;
@@ -773,12 +776,16 @@ select>option{
 }
 .footer-pay-button{
     border: none;
-    padding: 8px 50px;
+    padding: 8px 40px;
     border-radius: 4px;
-    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
-    cursor: pointer;
+    background: #6aa299;
+    cursor: not-allowed;
     font-size: 13px;
     color: white;
+}
+
+.enabled{
+    background: #1bcfb4;
 }
 .fa-lock{
     padding-right: 5px;
@@ -1031,6 +1038,13 @@ hr{
     padding-right: 20px;
 }
 
+p{
+    margin-bottom: 0 !important;
+}
+.alert{
+    --mdb-alert-margin-bottom: 0 !important;
+}
+
 /*end of the sacco all shares css*/
 /*responsive design for share.php file*/
 @media (max-width: 768px) {
@@ -1062,5 +1076,57 @@ hr{
     }
     .sm-scree-disable{
         display: none;
+    }
+    .payment-desc{
+        font-size: 10px;
+    }
+    .phone-details-sm{
+        display: flex;
+    }
+    #phone {
+        width: 70%;
+        margin-left: 5px;
+        height: 24px;
+        font-size: 12px;
+    }
+    .footer-pay-button{
+        padding: 8px 30px;
+        font-size: 12px;
+    }
+    .fa-mobile{
+        font-size: 18px;
+        margin: 5px 5px;
+    }
+    #card-content{
+        height: 24px;
+        padding: 6px 15px;
+    }
+    .select-payment{
+        display: none;
+    }
+    .user-select{
+        height: 24px;
+        font-size: 12px;
+    }
+    .services{
+        padding: 2px 15px;
+    }
+    .checkbox-container{
+        padding: 4px 15px;
+        margin: 15px;
+    }
+    .payment-buttons{
+        display: none;
+    }
+    .footer-link{
+        width: 100%;
+        font-size: 12px;
+    }
+    .footer-pay-button{
+        width: 100%;
+        font-size: 12px;
+    }
+    .bid-delete-icon{
+        font-size: 10px;
     }
 }

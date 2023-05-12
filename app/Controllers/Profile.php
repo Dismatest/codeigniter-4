@@ -50,7 +50,7 @@ class Profile extends BaseController
                 $avatar = $this->request->getFile('avatar');
                 if($avatar->isValid() && !$avatar->hasMoved()){
                     $avatarName = $avatar->getRandomName();
-                    $avatar->move('./uploads', $avatarName);
+                    $avatar->move('./uploads/profile', $avatarName);
                     if($this->displayDashboard->updateAvatar($avatarName, $uniid)){
                         session()->setTempdata('success', 'Profile image updated successfully', 3);
                         return redirect()->to(base_url('dashboard'));
