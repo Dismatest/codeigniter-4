@@ -11,7 +11,7 @@
                             <div class="shares-container-wrapper pl-2">
                                 <h5><?= $share['name']?></h5>
                                 <span><?= $share['shares_on_sale'] .' '.'shares @ ksh' .' '.$share['total'] ?></span>
-                                <a href="<?= base_url().'/share/'.$share['uuid'] ?>" type="button" class="btn btn-secondary list-share-sell-button">Buy Shares</a>
+                                <a href="<?= base_url().'/share/'.$share['uuid'] ?>" class="list-share-sell-button">Buy Shares</a>
                             </div>
                         </div>
                     </div>

@@ -1,13 +1,7 @@
 <?php $this->extend("client_base/base.php");?>
 <?php $this->section('content');?>
-<!--    <script>-->
-<!--        setTimeout(function (){-->
-<!--            $('#hideTempMessage').hide();-->
-<!--        }, 3000)-->
-<!--    </script>-->
     <section>
         <div class="imgBx">
-            <img src="https://images.unsplash.com/photo-1524508762098-fd966ffb6ef9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="">
         </div>
         <div class="contentBx">
             <div class="formBx">
@@ -22,12 +16,12 @@
                     <?php
                 }
                 ?>
-                <h2>Login</h2>
+                <h2>Login to your account</h2>
                 <form method="post" action="">
                     <?= csrf_field()?>
                     <div class="inputBx">
                         <span>Email</span>
-                        <input type="email" placeholder="enter your email" name="email">
+                        <input type="email" placeholder="enter your email" name="email" value="<?= set_value('email')?>">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('email')) : ?>
                                 <span class="text-danger text-sm"><?= $validation->getError('email') ?></span>

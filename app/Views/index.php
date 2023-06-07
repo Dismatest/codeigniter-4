@@ -11,23 +11,19 @@
     <form method = "post" action = "" id="search-form">
         <div class="col-md-12 d-flex">
 
-            <div class="form-outline flex-wrap m-2">
-                <i class="fas fa-magnifying-glass trailing"></i>
-                <input type="text" id="search-by-sacco" name="searchOne" class="form-control form-control-lg form-icon-trailing"/>
-                <label class="form-label" for="form1" >Search by sacco name</label>
-            </div>
 
-            <div class="form-outline flex-wrap m-2">
-                <i class="fas fa-magnifying-glass trailing"></i>
-                <input type="text" id="search-by-value" name="searchTwo" class="form-control form-control-lg form-icon-trailing"/>
-                <label class="form-label" for="form1" >Search by share value</label>
-            </div>
 
-        <div class="flex-wrap m-2">
-            <div class="input-group">
-                <button type="submit" class="btn btn-secondary p-3" style="background: rgb(214, 178, 214); color: white;">Search</button>
-            </div>
-        </div>
+            <select class="explore-select" id="search-by-sacco" name="searchOne">
+                <option value="all">All Share Capital</option>
+                <?php if(isset($allSacco)):?>
+                    <?php foreach($allSacco as $sacco):?>
+                        <option value="<?= $sacco['sacco_id']?>"><?= $sacco['name']?></option>
+                    <?php endforeach;?>
+                <?php endif;?>
+            </select>
+            <input type="text" id="search-by-value" name="searchTwo" placeholder="search by price value"/>
+            <button type="submit" class="explore-search">Search</button>
+
         </div>
     </form>
     </div>
@@ -40,7 +36,7 @@
 
         <div class="d-flex header-content-3">
             <h6 class="shares-heading" id="shares-heading1">Found: <span class="shares-heading-inner" id="results-found"></span> shares</h6>
-            <h6 class="shares-heading ps-2">Market Status: <span class="shares-heading-inner" style="color: green;">Online</span></h6>
+            <h6 class="shares-heading ps-2">Market Status: <span class="shares-heading-inner" style="color: #1bcfb4;">Online</span></h6>
         </div>
         <div class="header-content-3-select">
             <span style="font-weight: 500; font-size: 14px; padding-right: 15px;">Sort By:</span>

@@ -21,7 +21,7 @@
                 <div class="user-details">
                     <div class="registration-input">
                         <span class="registration-details">First Name</span>
-                        <input type="text" placeholder="enter your first name" name="fname">
+                        <input type="text" placeholder="enter your first name" name="fname" value="<?= set_value('fname')?>">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('fname')) :?>
                                 <span class="text-danger text-sm"><?= $validation->getError('fname') ?></span>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="registration-input">
                         <span class="registration-details">Last Name</span>
-                        <input type="text" placeholder="enter your last name" name="lname">
+                        <input type="text" placeholder="enter your last name" name="lname" value="<?= set_value('lname')?>">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('lname')) :?>
                                 <span class="text-danger text-sm"><?= $validation->getError('lname') ?></span>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="registration-input">
                         <span class="registration-details">Email</span>
-                        <input type="text" placeholder="enter your email" name="email">
+                        <input type="text" placeholder="enter your email" name="email" value="<?= set_value('email')?>">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('email')) :?>
                                 <span class="text-danger text-sm"><?= $validation->getError('email') ?></span>
@@ -48,7 +48,7 @@
                     </div>
                     <div class="registration-input">
                         <span class="registration-details">Phone</span>
-                        <input type="tel" placeholder="enter your phone" name="phone">
+                        <input type="tel" placeholder="enter your phone" name="phone" value="<?= set_value('phone')?>">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('phone')) :?>
                                 <span class="text-danger text-sm"><?= $validation->getError('phone') ?></span>

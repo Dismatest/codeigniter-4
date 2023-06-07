@@ -187,6 +187,48 @@ class SaccoModels extends Model
         $builder->join('shares_on_sale', 'shares_on_sale.uuid = transactions.share_id');
         $builder->join('users as u2', 'u2.user_id = shares_on_sale.user_id');
         $builder->where('shares_on_sale.sacco_id', $sacco_id);
+        $builder->where('transactions.amount !=', '0');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
+    public function getAttemptedTransactions($sacco_id){
+        $builder = $this->db->table('transactions');
+        $builder->select('u1.fname as buyer_fname, u1.lname as buyer_lname, u1.phone as buyer_phone, u2.fname as seller_fname, 
+        u2.lname as seller_lname, u2.phone as seller_phone, transactions.transaction_id, transactions.amount, transactions.mpesaReceiptNumber, transactions.transactionDate, 
+        transactions.phoneNumber, transactions.status, shares_on_sale.membership_number, shares_on_sale.shares_on_sale, 
+        shares_on_sale.total');
+        $builder->join('users as u1', 'u1.uniid = transactions.user_id');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = transactions.share_id');
+        $builder->join('users as u2', 'u2.user_id = shares_on_sale.user_id');
+        $builder->where('shares_on_sale.sacco_id', $sacco_id);
+        $builder->where('transactions.amount', '0');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
+    public function deleteTransaction($id){
+        $builder = $this->db->table('transactions');
+        $builder->where('transaction_id', $id);
+        $builder->delete();
+        if($this->db->affectedRows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function viewCompletedTransactions($sacco_id){
+        $builder = $this->db->table('transactions');
+        $builder->select('u1.fname as buyer_fname, u1.lname as buyer_lname, u1.phone as buyer_phone, u2.fname as seller_fname, 
+        u2.lname as seller_lname, u2.phone as seller_phone, transactions.transaction_id, transactions.amount, transactions.mpesaReceiptNumber, transactions.transactionDate, 
+        transactions.phoneNumber, transactions.status, shares_on_sale.membership_number, shares_on_sale.shares_on_sale, 
+        shares_on_sale.total');
+        $builder->join('users as u1', 'u1.uniid = transactions.user_id');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = transactions.share_id');
+        $builder->join('users as u2', 'u2.user_id = shares_on_sale.user_id');
+        $builder->where('shares_on_sale.sacco_id', $sacco_id);
+        $builder->where('transactions.status', '1');
         $query = $builder->get();
         return $query->getResultArray();
     }
@@ -441,5 +483,57 @@ class SaccoModels extends Model
         $result = $builder->get();
         return $result->getResultArray();
     }
+
+    public function getBidsReport($sacco_id){
+        $builder = $this->db->table('bid_share');
+        $builder->select('bid_share.bid_id, bid_share.created_at, bid_share.bid_amount, sacco.name, users.fname as seller_fname, users.lname as seller_lname, shares_on_sale.shares_on_sale, shares_on_sale.total');
+        $builder->join('sacco', 'sacco.sacco_id = bid_share.sacco_id');
+        $builder->join('users', 'users.user_id = bid_share.seller_id');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id');
+        $builder->where('bid_share.sacco_id', $sacco_id);
+        $builder->orderBy('bid_share.created_at', 'DESC');
+        $result = $builder->get();
+        return $result->getResultArray();
+    }
+
+    public function checkAdminEmail($email){
+        $builder = $this->db->table('sacco');
+        $builder->select('uuid, name, email');
+        $builder->where('email', $email);
+        $query = $builder->get();
+        return $query->getRowArray();
+    }
+
+    public function updateResetTime($uuid){
+        $builder = $this->db->table('sacco');
+        $builder->where('uuid', $uuid);
+        $builder->update(['updated_at' => date('Y-m-d H:i:s')]);
+        if($this->db->affectedRows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    public function verifyUuid($uuid){
+        $builder = $this->db->table('sacco');
+        $builder->select('uuid, name, email, updated_at');
+        $builder->where('uuid', $uuid);
+        $query = $builder->get();
+        return $query->getRowArray();
+    }
+
+    public function updateAdminPassword($uuid, $password){
+        $builder = $this->db->table('sacco');
+        $builder->where('uuid', $uuid);
+        $builder->update(['password' => $password]);
+        if($this->db->affectedRows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
 }

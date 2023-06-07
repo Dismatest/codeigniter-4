@@ -1,85 +1,69 @@
 
 <div class="content-wrapper">
-    <h5 class="text-center text-primary">Set Sacco Details</h5>
+    <div class="page-header">
+        <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-home"></i>
+                </span> SupperAdmin Dashboard
+        </h3>
+        <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span></span>Dashboard/Edit Sacco <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                </li>
+            </ul>
+        </nav>
+    </div>
     <div class="row">
         <div class="col-12 grid-margin">
-            <div class="card">
+            <div class="card card-max-width">
                 <div class="card-body">
-                    <h5 class="text-primary">Contact Person</h5>
+                    <h5 class="buyer-commission-container pb-3"><span><i class="mdi mdi-account-multiple-plus buyer-commission"></i></span>Edit Sacco Details</h5>
+              <?php if(!empty($sacco)) : ?>
                <form method="post" action="">
                    <?= csrf_field()?>
-                   <div class="mb-2 row">
-                       <label for="inputPhone" class="col-sm-2 col-form-label">Phone</label>
-                       <div class="col-sm-10">
-                           <input type="tel" class="form-control" id="inputPhone" placeholder="phone number" name="phone" value="<?= $sacco['contact_phone'] ?>">
+                   <div class="form-group">
+                       <label for="contactPersonPhone" class="form-label">Sacco Contact Person Phone</label>
+                           <input type="tel" class="form-control" id="contactPersonPhone" placeholder="phone number" name="phone" value="<?= $sacco['contact_phone'] ?>">
                            <?php if(isset($validation)) : ?>
                                <?php if($validation->hasError('phone')) :?>
-                                   <span class="text-danger text-sm"><?= $validation->getError('phone') ?></span>
+                                   <span class="text-danger text-sm register-sacco-error"><?= $validation->getError('phone') ?></span>
                                <?php endif; ?>
                            <?php endif; ?>
-                       </div>
                    </div>
-                   <div class="mb-2 row">
-                       <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-                       <div class="col-sm-10">
-                           <input type="text" class="form-control" id="inputEmail" placeholder="email address" name="email" value="<?= $sacco['contact_email'] ?>">
-                           <?php if(isset($validation)) : ?>
-                               <?php if($validation->hasError('email')) :?>
-                                   <span class="text-danger text-sm"><?= $validation->getError('email') ?></span>
-                               <?php endif; ?>
-                           <?php endif; ?>
-                       </div>
-                   </div>
-                   <h5 class="text-primary">Sacco Details</h5>
-                   <div class="mb-2 row">
-                       <label for="inputHeadOffice" class="col-sm-2 col-form-label">Head Office</label>
+                   <div class="form-group">
+                       <label for="inputHeadOffice" class="form-label">Sacco Head Office</label>
                        <div class="col-sm-10">
                            <input type="text" class="form-control" id="inputHeadOffice" placeholder="head office" name="office" value="<?= $sacco['location'] ?>">
                            <?php if(isset($validation)) : ?>
                                <?php if($validation->hasError('office')) :?>
-                                   <span class="text-danger text-sm"><?= $validation->getError('office') ?></span>
+                                   <span class="text-danger text-sm register-sacco-error"><?= $validation->getError('office') ?></span>
                                <?php endif; ?>
                            <?php endif; ?>
                        </div>
                    </div>
-                   <div class="mb-2 row">
-                       <label for="inputWebsite" class="col-sm-2 col-form-label">Website Url</label>
-                       <div class="col-sm-10">
+                   <div class="form-group">
+                       <label for="inputWebsite" class="form-label">Sacco Website Url</label>
                            <input type="text" class="form-control" id="inputWebsite" placeholder="website url" name="website" value="<?= $sacco['website'] ?>">
                            <?php if(isset($validation)) : ?>
                                <?php if($validation->hasError('website')) :?>
-                                   <span class="text-danger text-sm"><?= $validation->getError('website') ?></span>
+                                   <span class="text-danger text-sm register-sacco-error"><?= $validation->getError('website') ?></span>
                                <?php endif; ?>
                            <?php endif; ?>
-                       </div>
                    </div>
-                   <h5 class="text-primary">Payment Details</h5>
-                   <div class="mb-2 row">
-                       <label for="inputTill" class="col-sm-2 col-form-label">Till Number</label>
-                       <div class="col-sm-10">
+                   <div class="form-group">
+                       <label for="inputTill" class="form-label">Till Number</label>
                            <input type="number" class="form-control" id="inputTill" placeholder="till number" name="till" value="<?= $sacco['till'] ?>">
                            <?php if(isset($validation)) : ?>
                                <?php if($validation->hasError('till')) :?>
-                                   <span class="text-danger text-sm"><?= $validation->getError('till') ?></span>
+                                   <span class="text-danger text-sm register-sacco-error"><?= $validation->getError('till') ?></span>
                                <?php endif; ?>
                            <?php endif; ?>
-                       </div>
                    </div>
-                   <h5 class="text-primary">Commission</h5>
-                   <div class="mb-2 row">
-                       <label for="inputCommission" class="col-sm-2 col-form-label">Commission (%)</label>
-                       <div class="col-sm-10">
-                           <input type="number" class="form-control" id="inputCommission" placeholder="set commission" name="commission" value="<?= $sacco['commission'] ?>">
-                           <?php if(isset($validation)) : ?>
-                               <?php if($validation->hasError('commission')) :?>
-                                   <span class="text-danger text-sm"><?= $validation->getError('commission') ?></span>
-                               <?php endif; ?>
-                           <?php endif; ?>
-                       </div>
-                   </div>
-                   <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">Submit</button>
+                   <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">Update</button>
+                   <a href="<?= base_url('supperAdmin/manage-sacco') ?>" class="btn btn-block btn-gradient-danger btn-lg font-weight-medium auth-form-btn">Cancel</a>
                </form>
-
+                <?php endif; ?>
                 </div>
             </div>
         </div>

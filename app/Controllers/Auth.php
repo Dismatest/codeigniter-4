@@ -20,8 +20,7 @@ class Auth extends BaseController
     public $email;
     public function __construct()
     {
-        helper('text');
-        helper('date');
+        helper(['form', 'url', 'text', 'date']);
         $this->userModel = new Users();
         $this->loginActivityModel = new LoginActivityModel();
         $this->getCurrntLoggedInUser = new DisplayDashboardModel();
@@ -88,7 +87,7 @@ class Auth extends BaseController
                                 'phone' => $user['phone'],
                             ];
                             session()->set($sessionData);
-                            return redirect()->to('/index');
+                            return redirect()->to('/explore');
                         }else{
                             session()->setFlashdata('fail', 'Please activate your account or contact the admin');
                             return redirect()->to(base_url('login'));

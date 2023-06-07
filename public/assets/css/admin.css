@@ -1,8 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"');
-:root{
-    --main-background-color: rgb(249, 243, 249);
-    --primary-text-admin-color: #1bcfb4;
-}
 *{
     margin: 0;
     padding: 0;
@@ -15,13 +11,28 @@ body{
     background-color: var(--main-background-color);
 }
 
+.logo-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.logo-container span{
+    font-size: 25px;
+    font-weight: 500;
+    color: #41b4a3;
+}
 .registration-container{
     display: flex;
+    flex-direction: column;
     height: 100vh;
     justify-content: center;
     align-items: center;
     padding: 10px;
 }
+
 .registration-container-2{
     max-width: 700px;
     width: 100%;
@@ -30,6 +41,22 @@ body{
     border-radius: 5px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
+
+.registration-container-2 a{
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: grey;
+}
+.register-sacco-error{
+    padding-top: 5px;
+    font-size: 12px;
+}
+.registration-container-2 a span{
+    font-size: 14px;
+    font-weight: 600;
+    color: #1bcfb4;
+}
 .registration-container-2 .registration-title{
     font-size: 1.3rem;
     font-weight: 500;
@@ -37,19 +64,10 @@ body{
     display: flex;
     justify-content: space-between;
 }
-.registration-container-2 .registration-title span a{
+.registration-container-2 .registration-title span{
     text-decoration: none;
-    font-size: 14px;
+    font-size: 18px;
     color: grey;
-}
-.registration-container-2 .registration-title::before{
-    content: " ";
-    position: absolute;
-    height: 3px;
-    width: 120px;
-    left: 0;
-    bottom: 0;
-    background: var(--primary-text-admin-color);
 }
 .registration-container-2 form .user-details{
     display: flex;
@@ -78,12 +96,12 @@ form .user-details .registration-input{
 }
 .user-details .registration-input .registration-details{
     font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     display: block;
 }
 form .register-button{
     height: 45px;
-    margin: 10px 0;
+    margin: 5px 0;
 }
 form .register-button input{
     height: 100%;
@@ -107,8 +125,8 @@ form .register-button input{
 }
 .terms-and-conditions span a{
     text-decoration: none;
-    font-size: 12px;
-    font-weight: 300;
+    font-size: 14px;
+    font-weight: 600;
 }
 @media (max-width: 584px) {
     .registration-container-2{

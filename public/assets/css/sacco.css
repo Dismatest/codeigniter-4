@@ -15,7 +15,6 @@
     display: none;
 }
 
-
 .error {
     border-color: red;
     color: red;
@@ -188,6 +187,24 @@ h2, .h2, .h2{
 
 .form-control:focus::placeholder {
     color: var(--primary-text-admin-color) !important;
+}
+
+/*data Tables custom css*/
+
+.page-item.active .page-link {
+    color: #fff;
+    background-color: var(--primary-text-admin-color);
+    border-color: var(--primary-text-admin-color);
+    outline: none;
+}
+
+.page-item:not(:first-child) .page-link {
+    color: black;
+}
+
+.btn, .btn-group.open .dropdown-toggle, .btn:active, .btn:focus, .btn:hover, .btn:visited, a, a:active, a:checked, a:focus, a:hover, a:visited, body, button, button:active, button:hover, button:visited, input:active, input:focus, input:hover, input:visited, select, select:active, select:focus, select:visited, textarea, textarea:active, textarea:focus, textarea:hover, textarea:visited{
+    outline: none !important;
+    color: #1bcfb4;
 }
 
 

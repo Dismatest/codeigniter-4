@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    // $('#notificationTable').DataTable();
+    $('#manage-shares').DataTable();
+});
+$(document).ready(function () {
     $('#upload-form').on('submit', function (event) {
         event.preventDefault();
         let myFile = $('#agreementInputField');
@@ -186,7 +190,7 @@ function displaySingleShare() {
             $.each(response, function (key, value) {
                 let row = '<tr>' +
 
-                    '<td class="my-tr">' + value.fname + ' ' + value.lname + '</td>' +
+                    '<td>' + value.fname + ' ' + value.lname + '</td>' +
                     '<td>' + value.membership_number + '</td>' +
                     '<td>' + value.shares_on_sale + '</td>' +
                     '<td>' + 'Ksh: ' + value.total + '</td>' +
@@ -206,6 +210,7 @@ function displaySingleShare() {
             $('#notification-approve').removeClass('disabled').html('Approve');
         }
     });
+
 }
 
 
@@ -537,7 +542,7 @@ document.addEventListener('DOMContentLoaded', function () {
             data: {
                 labels: ['Jan', 'Feb', 'Match', 'April', 'May', 'June'],
                 datasets: [{
-                    label: 'Six months transaction history',
+                    label: 'Monthly Transactions',
                     data: [12, 19, 3, 5, 6, 3],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -578,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
         data: {
             labels: ['Jan', 'Feb', 'Match', 'April', 'May', 'June'],
             datasets: [{
-                label: 'Six months transaction history',
+                label: 'Monthly Transactions',
                 data: [12, 19, 3, 5, 2, 3],
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255, 99, 132, 1)',

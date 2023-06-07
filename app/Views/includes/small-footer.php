@@ -19,7 +19,7 @@
                 </div>
                 <div class="bottom-nav-tags">
                     <a href="<?= base_url('profile') ?>"><i class="fas fa-user bottom-nav-icon"></i></a>
-                    <span>Profile</span>
+                    <span>Account</span>
                 </div>
             </div>
         </div>

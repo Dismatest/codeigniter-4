@@ -1,17 +1,17 @@
 <?php
 
 use Modules\Admin\Controllers\Admin;
+use Modules\Admin\Filters\SaccoAdminLoginFilter;
 
 
-$routes->group('admin', ['namespace' => 'Modules\Admin\Controllers'], function ($routes) {
-    $routes->match(['post','get'],'login', 'Admin::login');
+$routes->group('admin', ['namespace' => 'Modules\Admin\Controllers', 'filter' => SaccoAdminLoginFilter::class], function ($routes) {
     $routes->match(['post','get'],'logout', 'Admin::logout');
     $routes->match(['post','get'],'change-password', 'Admin::changePassword');
     $routes->get('notifications', 'Admin::notifications');
     $routes->get('manage-shares', 'Admin::manageShares');
-    $routes->post('verify-share/(:alphanum)', 'Admin::verifyShares/$1');
+    $routes->post('verify-share/(:segment)', 'Admin::verifyShares/$1');
     $routes->post('manage_shares/approve', 'Admin::approveShare');
-    $routes->get('delete-share/(:alphanum)', 'Admin::deleteShares/$1');
+    $routes->get('delete-share/(:segment)', 'Admin::deleteShares/$1');
     $routes->match(['post', 'get'],'create_share', 'Admin::createShare');
 
     //user management routes
@@ -28,9 +28,19 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers'], function (
 
     $routes->get('upload_files', 'Admin::uploadAgreementFile');
     $routes->post('upload_agreement_files', 'Admin::uploadAgreementFilesDocument');
-    $routes->get('reports', 'Admin::reports');
+
+//  transactions
+    $routes->get('manage-transactions', 'Admin::manageTransactions');
     $routes->post('reports/view', 'Admin::viewReports');
-    $routes->match(['get', 'post'], 'reports/mark_as_complete/(:alphanum)', 'Admin::markAsComplete/$1');
+    $routes->match(['get', 'post'], 'reports/mark_as_complete/(:segment)', 'Admin::markAsComplete/$1');
+
+    $routes->get('completed-transaction', 'Admin::viewCompletedTransactions');
+    $routes->get('pending-transaction', 'Admin::viewPendingTransactions');
+    $routes->match(['get', 'post'], 'delete/attempted-transaction/(:num)', 'Admin::viewRejectedTransactions/$1');
+
+//    bids report
+    $routes->get('bids-report', 'Admin::bidsReport');
+    $routes->post('bids-report/view', 'Admin::viewBidsReport');
 
 //    creating member shares
     $routes->match(['get', 'post'],'price_per_share', 'Admin::pricePerShare');
@@ -58,4 +68,10 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers'], function (
     $routes->get('get_sacco_image', 'Admin::getSaccoImage');
 //    end
 
+});
+
+$routes->group('admin', ['namespace' => 'Modules\Admin\Controllers'], function ($routes) {
+    $routes->match(['post','get'],'login', 'Admin::login');
+    $routes->match(['post','get'],'forgot-password', 'Admin::forgotPassword');
+    $routes->match(['post','get'],'password-reset-link/(:segment)', 'Admin::resetPassword/$1');
 });

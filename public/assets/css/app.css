@@ -1,36 +1,120 @@
 /*login css*/
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"');
-:root{
-    --primary-color: #1bcfb4;
+
+:root {
+    --primary-color: #41b4a3;
     --text-color: black;
     --background-color: #1bcfb4;
-    --background-hoover: #7597ad;
     --main-background-color: rgb(249, 243, 249);
 }
-*{
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Nunito', sans-serif;
 }
-.slider-main-container{
+
+.custom-alert {
+    border-radius: 4px;
+    padding: 15px;
+    background-color: #9bcec6;
+    position: absolute;
+    width: 30%;
+    top: 8%;
+    right: 5px;
+    display: none;
+    z-index: 1;
+}
+
+.custom-alert2 {
+    border-radius: 4px;
+    padding: 15px;
+    background-color: #9bcec6;
+    position: absolute;
+    width: 30%;
+    top: 15%;
+    right: 50px;
+    display: block;
+    z-index: 1;
+}
+
+.custom-alert2-error{
+    border-radius: 4px;
+    padding: 15px;
+    background-color: #dfe1e1;
+    position: absolute;
+    width: 30%;
+    top: 15%;
+    right: 50px;
+    display: block;
+    z-index: 1;
+}
+.alert-main-container{
+    position: relative;
+}
+#save-share{
+    cursor: pointer;
+}
+.check-icon-saved {
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+.saved-message2{
+    color: red;
+}
+.check-icon-saved2 {
+    color: red;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.close-icon-saved {
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.close-icon-saved2 {
+    color: red;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+.slider-main-container {
     position: relative;
     height: 100%;
+}
+
+.shares-heading-inner {
+    color: var(--background-color);
+}
+
+.search-shares {
+    background: var(--background-color);
+    color: white;
+}
+
+span.select2.select2-container.select2-container--default {
+    width: 70% !important;
 }
 
 .swiper {
     width: 50%;
     height: 100%;
 }
-@media screen and (max-width: 768px){
-    .swiper{
+
+@media screen and (max-width: 768px) {
+    .swiper {
         width: 100%;
     }
 }
-body{
+
+body {
     background-color: var(--main-background-color);
 }
+
 body::-webkit-scrollbar {
     width: 6px;
     background-color: #F5F5F5;
@@ -40,80 +124,94 @@ body::-webkit-scrollbar-thumb {
     border-radius: 8px;
     background-color: rgb(234, 234, 234);
 }
-section{
+
+section {
     position: relative;
     width: 100%;
     height: 100vh;
     display: flex;
 }
-section .imgBx:before{
+
+section .imgBx:before {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(225deg, rgb(216, 215, 215), rgb(206, 188, 188));
+    /*background: linear-gradient(225deg, rgb(216 215 215 / 0.1), rgb(210 199 199 / 0.1));*/
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) , url("/assets/images/login-photo.png");
     z-index: 1;
-    mix-blend-mode: screen;
+    mix-blend-mode: multiply;
+    color: var(--primary-color);
+    /*background-blend-mode: lighten;*/
+    background-size: cover;
+    background-position: center;
 }
-section .imgBx{
+
+section .imgBx {
     width: 50%;
     height: 100%;
     position: relative;
 }
-section .imgBx img{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-section .contentBx{
+section .contentBx {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50%;
     height: 100%;
 }
-section .contentBx .formBx{
+
+section .contentBx .formBx {
     width: 50%;
 }
-section .contentBx .formBx h2{
+
+section .contentBx .formBx h2 {
     color: var(--text-color);
     font-weight: 600;
     font-size: 1.5em;
     text-transform: uppercase;
     margin-bottom: 20px;
-    border-bottom: 4px solid var( --primary-color);
+    border-bottom: 4px solid var(--primary-color);
     display: inline-block;
     letter-spacing: 1px;
 }
-section .contentBx .formBx .inputBx{
+
+section .contentBx .formBx .inputBx {
     margin-bottom: 20px;
 }
-section .contentBx .formBx .inputBx span{
-    font-size: 16px;
+
+section .contentBx .formBx .inputBx span {
+    font-size: 14px;
     margin-bottom: 5px;
     display: inline-block;
     color: var(--text-color);
     font-weight: 300;
     letter-spacing: 1px;
 }
-section .contentBx .formBx .inputBx input{
+
+section .contentBx .formBx .inputBx input {
     width: 100%;
-    padding: 10px 20px;
+    padding: 8px 18px;
     outline: none;
     font-weight: 400;
-    border: 1px solid var(--text-color);
-    font-size: 16px;
+    border: 1px solid grey;
+    font-size: 14px;
     letter-spacing: 1px;
-    color: var(--text-color);
+    color: grey;
     background: transparent;
-    border-radius: 30px;
+    border-radius: 0.4rem;
 }
-section .contentBx .formBx .inputBx input[type="submit"]{
+
+section .contentBx .formBx .inputBx input:focus {
+    border: 1px solid var(--background-color);
+}
+
+section .contentBx .formBx .inputBx input:focus::placeholder {
+    color: var(--background-color);
+}
+
+section .contentBx .formBx .inputBx input[type="submit"] {
     background: var(--background-color);
     color: white;
     outline: none;
@@ -121,23 +219,27 @@ section .contentBx .formBx .inputBx input[type="submit"]{
     font-weight: 500;
     cursor: pointer;
 }
-section .contentBx .formBx .inputBx input[type="submit"]:hover{
-    background: var(--background-hoover);
+
+section .contentBx .formBx .inputBx input[type="submit"]:hover {
+    background: var(--primary-color);
 }
-section .contentBx .formBx .remember-me{
+
+section .contentBx .formBx .remember-me {
     margin-bottom: 10px;
     color: var(--text-color);
     font-weight: 400;
     font-size: 14px;
 }
-section .contentBx .formBx .inputBx p{
+
+section .contentBx .formBx .inputBx p {
     color: var(--text-color);
 }
-section .contentBx .formBx .inputBx p a{
+
+section .contentBx .formBx .inputBx p a {
     color: var(--primary-color);
 }
 
-.select-registration{
+.select-registration {
     width: 100%;
     padding: 10px 20px;
     outline: none;
@@ -149,15 +251,17 @@ section .contentBx .formBx .inputBx p a{
     background: transparent;
     border-radius: 30px;
 }
+
 @media (max-width: 768px) {
-    section .imgBx{
+    section .imgBx {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
     }
-    section .contentBx{
+
+    section .contentBx {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -165,45 +269,52 @@ section .contentBx .formBx .inputBx p a{
         height: 100%;
         z-index: 1;
     }
-    section .contentBx .formBx{
+
+    section .contentBx .formBx {
         width: 100%;
         padding: 40px;
         background: rgb(249, 244, 244, 0.7);
         margin: 50px;
     }
-    section .contentBx .formBx h3{
+
+    section .contentBx .formBx h3 {
         color: var(--text-color);
         text-align: center;
         margin: 30px 0 10px;
     }
 }
+
 /*end of the login css*/
 /*start of the register css*/
-.registration-container1{
+.registration-container1 {
     display: flex;
     height: 70vh;
     justify-content: center;
     align-items: center;
     padding: 10px;
 }
-.registration-container{
+
+.registration-container {
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center;
     padding: 10px;
 }
-select #select-registration{
+
+select #select-registration {
     width: 100%;
 }
-.registration-container-2{
+
+.registration-container-2 {
     max-width: 700px;
     width: 100%;
     background: white;
-    padding:25px 30px;
+    padding: 25px 30px;
     border-radius: 5px;
 }
-.registration-container-2 .registration-title{
+
+.registration-container-2 .registration-title {
     font-size: 25px;
     font-weight: 500;
     color: var(--text-color);
@@ -212,7 +323,7 @@ select #select-registration{
     justify-content: space-between;
 }
 
-.registration-container-2 .registration-title1{
+.registration-container-2 .registration-title1 {
     font-size: 14px;
     font-weight: 300;
     color: var(--text-color);
@@ -221,12 +332,13 @@ select #select-registration{
     justify-content: space-between;
 }
 
-.registration-container-2 .registration-title span a{
+.registration-container-2 .registration-title span a {
     text-decoration: none;
     font-size: 14px;
     color: var(--primary-color);
 }
-.registration-container-2 .registration-title::before{
+
+.registration-container-2 .registration-title::before {
     content: " ";
     position: absolute;
     height: 3px;
@@ -236,7 +348,7 @@ select #select-registration{
     background: var(--background-color);
 }
 
-.registration-container-2 .registration-title1::before{
+.registration-container-2 .registration-title1::before {
     content: " ";
     position: absolute;
     height: 3px;
@@ -245,43 +357,55 @@ select #select-registration{
     bottom: 0;
     background: var(--background-color);
 }
-.registration-container-2 form .user-details{
+
+.registration-container-2 form .user-details {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin: 20px 0 12px 0;
 }
-form .user-details .registration-input{
+
+form .user-details .registration-input {
     margin-bottom: 5px;
-    width: calc(100% /2 - 20px);
+    width: calc(100% / 2 - 20px);
 
 }
-.user-details .registration-input input{
+
+.user-details .registration-input input {
     height: 40px;
     width: 100%;
-    border-radius: 40px;
-    border: 1px solid #ccc;
+    border-radius: 0.4rem;
+    border: 1px solid grey;
     color: var(--text-color);
     padding-left: 15px;
-    font-size: 15px;
+    font-size: 13px;
 }
-.user-details .registration-input input::placeholder{
-    color: var(--text-color);
+
+.user-details .registration-input input:focus {
+    border: 1px solid var(--background-color);
 }
-.user-details .registration-input .registration-details{
+
+.user-details .registration-input input:focus::placeholder {
+    color: var(--background-color);
+}
+
+.user-details .registration-input .registration-details {
     color: var(--text-color);
     font-weight: 500;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     display: block;
+    font-size: 14px;
 }
-form .register-button{
+
+form .register-button {
     height: 45px;
     margin: 10px 0;
 }
-form .register-button input{
+
+form .register-button input {
     height: 100%;
     padding: 0 40px;
-    border-radius: 40px;
+    border-radius: 5px;
     outline: none;
     color: #fff;
     border: none;
@@ -290,38 +414,46 @@ form .register-button input{
     font-size: 18px;
     background: var(--background-color);
 }
-.terms-and-conditions{
+
+.terms-and-conditions {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.terms-and-conditions span{
+
+.terms-and-conditions span {
     padding: 0 0 0 5px;
 }
+
 @media (max-width: 584px) {
-    .registration-container-2{
+    .registration-container-2 {
         max-width: 100%;
     }
-    form .user-details .registration-input{
+
+    form .user-details .registration-input {
         margin-bottom: 5px;
         width: 100%;
     }
-    .registration-container-2 form .user-details{
+
+    .registration-container-2 form .user-details {
         max-height: 300px;
         overflow-y: scroll;
     }
-    .user-details::-webkit-scrollbar{
+
+    .user-details::-webkit-scrollbar {
         width: 0;
     }
 }
+
 /*end of the register css*/
- 
-.footer-link{
+
+.footer-link {
     text-decoration: none;
     padding: 8px 30px
 }
+
 /* css for the homepage */
-.btn-success{
+.btn-success {
     background-color: var(--primary-color) !important;
     border: none !important;
 }
@@ -330,53 +462,61 @@ form .register-button input{
     width: 100px;
     height: 30px;
     padding: 5px;
-    font-size: 16px;
+    font-size: 13px;
     font-family: Arial, sans-serif;
-    border: 1px solid rgb(87, 5, 87);
+    border: 1px solid var(--background-color);
     border-radius: 5px;
-  }
-  .home-select :focus{
-    outline: none;
-  }
-  .home-select :hover {
-    cursor: pointer;
-    border: 1px solid #999;
-  }
+}
 
-.user-info{
+.home-select :focus {
+    outline: none;
+}
+
+.home-select :hover {
+    cursor: pointer;
+    border: 1px solid var(--background-color);
+}
+
+.user-info {
     display: flex;
     align-items: baseline;
-    justify-content: space-between;   
+    justify-content: space-between;
 }
-.user-info span{
+
+.user-info span {
     font-size: 12px;
 }
 
-.fa-icon{
+.fa-icon {
     fill: green;
 }
-.user-info span{
+
+.user-info span {
     font-size: 15px;
     color: grey;
 }
-.fa-icon-not-very{
+
+.fa-icon-not-very {
     color: rgb(166, 13, 13);
 }
-.shares-description-sacco-title{
+
+.shares-description-sacco-title {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.share-button{
+
+.share-button {
     cursor: pointer;
-    color:rgb(87, 5, 87);
+    color: rgb(87, 5, 87);
     background-color: rgb(207, 199, 199);
     padding: 4px;
     border-radius: 3px;
     border: none;
     font-size: 15px;
 }
-.save-button>a{
+
+.save-button > a {
     color: rgb(87, 5, 87);
     background-color: rgb(207, 199, 199);
     padding: 4px;
@@ -385,56 +525,67 @@ form .register-button input{
     font-size: 15px;
 
 }
+
 /* modal styles */
-.modal-bg-color{
+.modal-bg-color {
     background-color: rgb(241, 234, 241);
 }
-.modal-title{
+
+.modal-title {
     font-size: 14px;
     font-weight: 300;
     color: grey;
 }
-.close-button{
+
+.close-button {
     border: none;
-    border-radius:3px;
-    color:rgb(87, 5, 87);
+    border-radius: 3px;
+    color: rgb(87, 5, 87);
     font-size: 14px;
 }
-.modal-body{
+
+.modal-body {
     display: flex;
     flex-direction: column;
 }
-span a{
+
+span a {
     text-decoration: none;
     font-size: 15px;
     font-weight: 300;
     color: gray;
 }
-span i{
+
+span i {
     color: gray;
     font-size: 12px;
 }
+
 /* end of the modal styles */
-.price-per-share{
+.price-per-share {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
 }
-.border-col{
+
+.border-col {
     border-radius: 4px;
     padding: 20px;
     background-color: white;
 }
 
-.border-coll{
+.border-coll {
     background-color: white;
     border-radius: 4px;
     padding: 20px;
+    position: relative;
 }
-.share-user-fname-description h5{
+
+.share-user-fname-description h5 {
 
 }
-.membership-info{
+
+.membership-info {
     position: relative;
     padding: 5px 6px;
     display: flex;
@@ -442,6 +593,7 @@ span i{
     align-items: center;
     border-radius: 4px;
 }
+
 .membership-info::before {
     content: '';
     display: block;
@@ -455,6 +607,7 @@ span i{
     border-radius: 4px;
     animation: spin-top-right 10s linear infinite;
 }
+
 .membership-info::after {
     content: '';
     display: block;
@@ -471,57 +624,69 @@ span i{
 
 @keyframes spin-top-right {
     0% {
-        width: 100%; height: 0;
+        width: 100%;
+        height: 0;
     }
     25% {
-        width: 100%; height: 0;
+        width: 100%;
+        height: 0;
     }
     50% {
-        width: 100%; height: 100%;
+        width: 100%;
+        height: 100%;
     }
     100% {
-        width: 100%; height: 100%;
+        width: 100%;
+        height: 100%;
     }
 }
 
 @keyframes spin-bottom-left {
     0% {
-        width: 0; height: 0;
+        width: 0;
+        height: 0;
     }
     50% {
-        width: 0; height: 0;
+        width: 0;
+        height: 0;
     }
     75% {
-        width: 100%; height: 0;
+        width: 100%;
+        height: 0;
     }
     100% {
-        width: 100%; height: 100%;
+        width: 100%;
+        height: 100%;
     }
 }
 
-.membership-info>p{
+.membership-info > p {
     font-size: 12px;
     font-weight: 300;
     color: grey;
     letter-spacing: 1px;
 }
-.shares-on-sale-label{
+
+.shares-on-sale-label {
     font-size: 15px;
     font-weight: 600;
     color: green;
 }
-.input-buy{
+
+.input-buy {
     border: none;
     color: green;
     font-weight: 600;
     padding: 10px 0;
 }
-.input-buy:focus{
+
+.input-buy:focus {
     outline: none;
 }
-.buy-button{
-    background: linear-gradient(to right, rgb(214, 178, 214), rgb(100, 72, 100));
-    color: black;
+
+a.buy-button {
+    background: var(--background-color);
+    color: white;
     border: none;
     cursor: pointer;
     padding: 10px 30px;
@@ -534,11 +699,16 @@ span i{
     border-radius: .3em;
 }
 
-.share-description-container{
+a.buy-button:hover {
+    background: var(--primary-color);
+}
+
+.share-description-container {
     display: flex;
     justify-content: space-between;
 }
-.share-description-container-img img{
+
+.share-description-container-img img {
     width: 8rem;
     height: 8rem;
     border-radius: 50%;
@@ -547,126 +717,148 @@ span i{
     object-fit: cover;
     transition: 300ms ease-out;
 }
-.share-description-share-details .sacco-name{
+
+.share-description-share-details .sacco-name {
     text-align: center;
     text-transform: uppercase;
     font-size: 1.3em;
     font-weight: 500;
-    border-bottom: 2px solid rgb(214, 178, 214);
+    border-bottom: 2px solid var(--background-color);
     padding-bottom: 10px;
 }
 
-.share-description-priceValue{
+.share-description-priceValue {
     display: flex;
 
     align-items: center;
 }
-.share-description-share-details p{
+
+.share-description-share-details p {
     font-size: 1.2em;
     padding-top: 10px;
 }
-.share-description-priceValue p{
+
+.share-description-priceValue p {
     font-size: 1em;
     font-weight: 600;
 }
 
-.share-description-container:hover img{
+.share-description-container:hover img {
     transform: scale(1.1);
     box-shadow: 0 0 2px 1px var(--primary-color) !important;
 }
 
-.accordion-button{
+.accordion-button {
     font-size: 14px;
     height: 40px;
 }
-#accordionExample{
+
+#accordionExample {
     --bs-accordion-btn-focus-box-shadow: none;
 }
-.accordion-button:not(.collapsed){
+
+.accordion-button:not(.collapsed) {
     color: grey;
     background-color: rgb(207, 199, 199);
 }
-.accordion-button::after{
+
+.accordion-button::after {
     width: 0;
     height: 0;
 }
-.price-comparison-two{
+
+.price-comparison-two {
     padding: 0 0 0 10px;
 }
-.price-comparison>p{
+
+.price-comparison > p {
     font-size: 14px;
     font-weight: 300;
     color: grey;
 }
-.price-comparison-two>p{
+
+.price-comparison-two > p {
     font-size: 14px;
     font-weight: 300;
     color: grey;
 }
-.price-comparison>span{
+
+.price-comparison > span {
     font-weight: 300;
     font-size: 14px;
     color: green;
 }
-.price-comparison-two>span{
+
+.price-comparison-two > span {
     font-weight: 300;
     font-size: 14px;
     color: burlywood;
 }
-#safety-tips-para{
+
+#safety-tips-para {
     font-weight: 600;
     color: grey;
     font-size: 12px;
 }
-.tips{
+
+.tips {
     padding: 0 10px;
 }
-.tips>li{
+
+.tips > li {
     font-weight: 300;
     font-size: 12px;
     color: grey;
 }
+
 /* start of payment css */
-.borders{
+.borders {
     background-color: white;
     border-radius: 4px;
     padding: 8px;
     margin-top: 20px;
 }
-.payment-icon{
+
+.payment-icon {
     display: flex;
     align-items: baseline;
     height: 20px;
 }
-.payment-heading{
+
+.payment-heading {
     margin-left: 10px;
     font-weight: 600;
     font-size: 1.3em;
     color: #1bcfb4;
 }
-.cad{
+
+.cad {
     width: 100%;
 }
-.card-header{
+
+.card-header {
     padding: 8px 15px;
     font-weight: 600;
     color: grey;
 }
-#card-content{
-  display: flex; 
-  height: 40px; 
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 8px 15px;
-  font-weight: 300;
-  color: gray;
-}
-.select-payment{
+
+#card-content {
+    display: flex;
+    height: 40px;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 8px 15px;
     font-weight: 300;
-    color: gray; 
+    color: gray;
+}
+
+.select-payment {
+    font-weight: 300;
+    color: gray;
     padding: 15px 0;
 }
-.payment-buttons{
+
+.payment-buttons {
     border: 1px solid rgb(225, 225, 225);
     border-radius: 4px;
     display: flex;
@@ -674,27 +866,33 @@ span i{
     align-items: center;
     cursor: pointer;
 }
-.payment-buttons:hover{
+
+.payment-buttons:hover {
     border: 1px solid #1bcfb4;
     color: #1bcfb4;
 }
-.fa-mobile{
+
+.fa-mobile {
     font-size: 30px;
     margin: 8px 8px;
 }
-.payment-desc{
+
+.payment-desc {
     font-size: 12px;
 }
-.user-input-details{
+
+.user-input-details {
     border: 1px solid rgb(225, 225, 225);
     border-radius: 4px;
 }
-select>option{
+
+select > option {
     font-weight: 300;
     color: grey;
     font-size: 12px;
 }
-.user-select{
+
+.user-select {
     width: 100px;
     height: 28px;
     padding: 5px;
@@ -702,12 +900,14 @@ select>option{
     font-family: Arial, sans-serif;
     border: 1px solid rgb(225, 225, 225);
     border-radius: 5px;
-  }
-  .user-select:focus{
+}
+
+.user-select:focus {
     border: 1px solid #1bcfb4;
-      outline: none;
-  }
-  #phone{
+    outline: none;
+}
+
+#phone {
     width: 80%;
     height: 28px;
     padding: 5px;
@@ -715,56 +915,66 @@ select>option{
     font-family: Arial, sans-serif;
     border: 1px solid rgb(225, 225, 225);
     border-radius: 5px;
-  }
-  #phone:focus{
+}
+
+#phone:focus {
     outline: none;
-      border: 1px solid #1bcfb4;
-  }
-.user-input-details{
+    border: 1px solid #1bcfb4;
+}
+
+.user-input-details {
     margin: 15px 0;
 }
-.phone-details{
+
+.phone-details {
     padding: 8px 15px;
 }
-.select-service-provider{
+
+.select-service-provider {
     font-weight: 300;
-    color: gray; 
+    color: gray;
     padding: 5px;
 }
-.services{
+
+.services {
     font-weight: 300;
-    color: gray; 
+    color: gray;
     padding: 10px 15px;
 }
-.paycheck{
+
+.paycheck {
     background-color: #1bcfb4 !important;
 }
-.checkbox-container{
+
+.checkbox-container {
     padding: 10px 15px;
     display: flex;
     align-items: center;
     cursor: pointer;
-    box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
-    -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
     transition: box-shadow 0.5s;
     border-radius: 2px;
     margin: 15px;
 }
-.checkbox-container:hover {
-    box-shadow: 0 3px 10px 0 rgba(0,0,0,0.75);
-  }
 
-.saf-img{
+.checkbox-container:hover {
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.75);
+}
+
+.saf-img {
     height: 50px;
     border-radius: 4px;
-    margin-left: 10px; 
+    margin-left: 10px;
 }
-.footer-button{
+
+.footer-button {
     display: flex;
     justify-content: flex-end;
 }
-.footer-link{
+
+.footer-link {
     text-decoration: none;
     padding: 8px 40px;
     border: 1px solid #1bcfb4;
@@ -774,7 +984,8 @@ select>option{
     font-size: 13px;
     margin-right: 8px;
 }
-.footer-pay-button{
+
+.footer-pay-button {
     border: none;
     padding: 8px 40px;
     border-radius: 4px;
@@ -784,33 +995,39 @@ select>option{
     color: white;
 }
 
-.enabled{
+.enabled {
     background: #1bcfb4;
 }
-.fa-lock{
+
+.fa-lock {
     padding-right: 5px;
     font-size: 10px;
     color: white;
 }
+
 /* end of payment css */
 /* the start of the messages css */
-#messages-container{
-    width: 60rem; 
+#messages-container {
+    width: 60rem;
     height: 28rem;
     background-color: white;
 }
-#column-md-4{
+
+#column-md-4 {
     height: 28rem;
 }
-#column-md-8{
+
+#column-md-8 {
     background-color: rgb(235, 234, 234);
-    height: 28rem; 
+    height: 28rem;
 }
-#fa-messages-icon{
+
+#fa-messages-icon {
     font-size: 40px;
     color: rgb(205, 89, 205);
 }
-.fa-messages-bg{
+
+.fa-messages-bg {
     width: 70px;
     height: 70px;
     background-color: rgb(153, 99, 153);
@@ -818,40 +1035,48 @@ select>option{
     display: grid;
     place-items: center;
 }
-.messages-section{
+
+.messages-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
 }
-.messages-section>h6{
+
+.messages-section > h6 {
     color: purple;
     font-size: 14px;
     font-weight: 300;
     padding-top: 8px;
 }
-.messages-header{
+
+.messages-header {
     padding-top: 6px;
     background-color: white;
 }
-.messages-header>h6{
+
+.messages-header > h6 {
     font-weight: 600;
     font-size: 14px;
     color: purple;
 }
-.message-info-link{
+
+.message-info-link {
     text-decoration: none;
 }
-hr{
+
+hr {
     color: rgb(225, 225, 225);
 }
-.message-user-info{
+
+.message-user-info {
     display: flex;
     padding-top: 0;
     cursor: pointer;
 }
-.avatar{
+
+.avatar {
     border-radius: 50%;
     background-color: rgb(228, 228, 228);
     height: 25px;
@@ -859,30 +1084,35 @@ hr{
     display: grid;
     place-items: center;
 }
-#avatar-icon{
+
+#avatar-icon {
     font-size: 15px;
 }
-.user-avar-info{
+
+.user-avar-info {
     display: flex;
     justify-content: space-between;
 }
-.user-heading-container{
+
+.user-heading-container {
     display: flex;
     flex-direction: column;
     padding: 0 10px;
 }
-.user-heading-container>h6{
+
+.user-heading-container > h6 {
     font-weight: 600;
     font-size: 14px;
     color: grey;
 }
-.user-heading-container>p{
+
+.user-heading-container > p {
     font-weight: 300;
     font-size: 10px;
     color: grey;
 }
 
-.btn-close-icon{
+.btn-close-icon {
     border-radius: 50%;
     background-color: rgb(228, 228, 228);
     height: 25px;
@@ -892,21 +1122,24 @@ hr{
     place-items: center;
     margin-left: 30px;
 }
-.fa-x{
+
+.fa-x {
     font-size: 10px;
     color: grey;
     text-align: center;
 }
+
 /* end of the messages css */
 /* start of the single messages */
-.messages-input-fields{
+.messages-input-fields {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
     height: 27rem;
 }
-.text-area-input{
+
+.text-area-input {
     width: 100%;
     height: 40px;
     padding: 10px;
@@ -917,59 +1150,78 @@ hr{
     box-sizing: border-box;
     overflow-y: hidden;
 }
-.text-area-input:focus{
+
+.text-area-input:focus {
     outline: none;
 }
-.s{
+
+.s {
     display: flex;
     width: 100%;
     align-items: center;
 }
-.messages-input-field-icon{
+
+.messages-input-field-icon {
     transform: rotate(40deg);
     margin-left: 2px;
-    color:rgb(87, 5, 87);
+    color: rgb(87, 5, 87);
 }
-.single-message-submit-button{
+
+.single-message-submit-button {
     border: none;
     background-color: rgb(191, 188, 188);
     padding: 8px;
 }
+
 /* end of single messages */
-.share-description-container-heading{
+.share-description-container-heading {
     display: flex;
     justify-content: space-between;
 }
-.share-description-container-new{
+
+.share-description-container-new {
     display: flex;
     justify-content: space-between;
 }
-.share-description-container-new-info{
+
+.share-description-container-new-info {
     display: flex;
     flex-direction: column;
     width: 80%;
 }
-.share-description-container-new-date{
+
+.share-description-container-new-date {
     width: 20%;
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
     padding-bottom: 10px;
 }
-.new-budge{
-    background-color: rgb(124, 148, 104);
+
+.new-budge {
+    background-color: var(--background-color);
     color: white;
     padding: 2px 5px;
     border-radius: 4px;
     font-size: 10px;
     margin-right: 20px;
 }
-.verified-budge{
+
+.search-heading {
+    text-align: center;
+    padding-bottom: 15px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--background-color);
+}
+
+.verified-budge {
     color: rgb(106, 196, 34);
     font-size: 14px;
     margin-right: 20px;
 }
-.share-badge{
+
+.share-badge {
     color: white;
     font-size: 12px;
     width: 20px;
@@ -982,51 +1234,60 @@ hr{
 }
 
 /*sacco all shares css*/
-.sacco-shares-image-container{
+.sacco-shares-image-container {
     background: url('https://www.datavisor.com/wp-content/uploads/2020/04/homepage_bg__3.jpg') no-repeat center/cover;
     display: flex;
     height: 15rem;
     width: 100%;
 }
-.sacco-logo-image{
+
+.sacco-logo-image {
     margin-top: 8rem;
     margin-left: 15rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.sacco-logo-image img{
+
+.sacco-logo-image img {
     width: 100px;
     height: 100px;
     border-radius: 5px;
     border: 2px solid black;
 
 }
-.sacco-logo-image h5{
+
+.sacco-logo-image h5 {
     font-size: 14px;
     font-weight: 600;
     margin-left: 10px;
 }
-.sacco-logo-image span i{
+
+.sacco-logo-image span i {
     font-size: 14px;
     color: rgb(106, 196, 34);
     margin-left: 10px;
 }
-.sacco-shares-accordion{
+
+.sacco-shares-accordion {
     padding-top: 20px;
 }
-.sacco-information-accordion{
+
+.sacco-information-accordion {
     display: flex;
     justify-content: space-between;
 }
-.accordion-sacco-website p{
+
+.accordion-sacco-website p {
 
     font-weight: 600;
 }
-.accordion-sacco-head-quartor p{
+
+.accordion-sacco-head-quartor p {
     font-weight: 600;
 }
-.sacco-shares-hr{
+
+.sacco-shares-hr {
     border: 1px solid #b6b6b6;
 }
 
@@ -1034,99 +1295,180 @@ hr{
     transition: width 0.3s ease-in-out;
 }
 
-.sacco-shares-skeleton{
+.sacco-shares-skeleton {
     padding-right: 20px;
 }
 
-p{
+p {
     margin-bottom: 0 !important;
 }
-.alert{
+
+.alert {
     --mdb-alert-margin-bottom: 0 !important;
 }
 
+/*notifications css*/
+.notifications-container{
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgb(234, 234, 234);
+    padding: 12px;
+}
+.manage-notifications{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+.notification-message-container{
+    display: flex;
+    align-items: center;
+}
+.notification-message-container p{
+    font-size: 12px;
+    font-weight: 500;
+    padding-left: 5px;
+}
+.notification-action-container{
+    display: flex;
+    flex-direction: column;
+}
+.notifications-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.unread-notification-icon{
+    color: #1bcfb4;
+}
+/*end of notifications css*/
 /*end of the sacco all shares css*/
 /*responsive design for share.php file*/
 @media (max-width: 768px) {
-    .responsive-margin{
+    .responsive-margin {
         margin-top: 1.3em;
         margin-bottom: 1.3em;
     }
-    .responsive-margin-top{
+
+    .responsive-margin-top {
         margin-top: 1.3em;
     }
-    .responsive-margin-shares-information-container{
+
+    .responsive-margin-shares-information-container {
         margin-top: 1.3em;
     }
-    .sacco-logo-image{
+
+    .sacco-logo-image {
         margin-left: 0.8rem;
     }
-    .sacco-shares-accordion{
+
+    .sacco-shares-accordion {
         padding-top: 30px;
     }
-    .search-main-container{
+
+    .search-main-container {
         display: none;
     }
-    .sacco-shares-skeleton{
+
+    .sacco-shares-skeleton {
         padding-right: 10px;
     }
-/*    hiding data-tables element on small screen*/
-    div.dataTables_wrapper div.dataTables_length, div.dataTables_wrapper div.dataTables_filter, div.dataTables_wrapper div.dataTables_info, div.dataTables_wrapper div.dataTables_paginate{
+
+    /*    hiding data-tables element on small screen*/
+    div.dataTables_wrapper div.dataTables_length, div.dataTables_wrapper div.dataTables_filter, div.dataTables_wrapper div.dataTables_info, div.dataTables_wrapper div.dataTables_paginate {
         display: none;
     }
-    .sm-scree-disable{
+
+    .sm-scree-disable {
         display: none;
     }
-    .payment-desc{
+
+    .payment-desc {
         font-size: 10px;
     }
-    .phone-details-sm{
+
+    .phone-details-sm {
         display: flex;
     }
+
     #phone {
         width: 70%;
         margin-left: 5px;
         height: 24px;
         font-size: 12px;
     }
-    .footer-pay-button{
+
+    .footer-pay-button {
         padding: 8px 30px;
         font-size: 12px;
     }
-    .fa-mobile{
+
+    .fa-mobile {
         font-size: 18px;
         margin: 5px 5px;
     }
-    #card-content{
+
+    #card-content {
         height: 24px;
         padding: 6px 15px;
     }
-    .select-payment{
+
+    .select-payment {
         display: none;
     }
-    .user-select{
+
+    .user-select {
         height: 24px;
         font-size: 12px;
     }
-    .services{
+
+    .services {
         padding: 2px 15px;
     }
-    .checkbox-container{
+
+    .checkbox-container {
         padding: 4px 15px;
         margin: 15px;
     }
-    .payment-buttons{
+
+    .payment-buttons {
         display: none;
     }
-    .footer-link{
+
+    .footer-link {
         width: 100%;
         font-size: 12px;
     }
-    .footer-pay-button{
+
+    .footer-pay-button {
         width: 100%;
         font-size: 12px;
     }
-    .bid-delete-icon{
+
+    .bid-delete-icon {
+        font-size: 10px;
+    }
+    .custom-alert {
+        width: 80%;
+    }
+    .custom-alert2{
+        width: 80%;
+        right: 5px;
+    }
+    .custom-alert2-error{
+        width: 80%;
+        right: 5px;
+    }
+    .sm-gap{
+        row-gap: 8px;
+    }
+    .manage-notifications{
+        font-weight: 500;
+        font-size: 12px;
+    }
+    .notification-message-container p{
         font-size: 10px;
     }
 }

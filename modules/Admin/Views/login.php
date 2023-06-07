@@ -2,16 +2,20 @@
 <?php $this->section('content');?>
 
     <div class="registration-container">
+        <div class="logo-container">
+            <!--            <img src="--><?php //= base_url('assets/images/logo-hisa.png') ?><!--" alt="sacco hisa logo">-->
+            <span>Sign In To Your Account</span>
+        </div>
         <div class="registration-container-2">
             <div class="registration-title">
-                <span>Admin Login</span>
+                <span>Enter Your Email and Password</span>
             </div>
             <form method="post" action="">
                 <?= csrf_field()?>
                 <div class="user-details">
                     <div class="registration-input">
                         <span class="registration-details">Email Address*</span>
-                        <input type="text" placeholder="enter your email" name="email">
+                        <input type="text" name="email">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('email')) : ?>
                                 <span class="text-danger text-sm"><?= $validation->getError('email') ?></span>
@@ -20,7 +24,7 @@
                     </div>
                     <div class="registration-input">
                         <span class="registration-details">Password*</span>
-                        <input type="password" placeholder="enter your password" name="password">
+                        <input type="password" name="password">
                         <?php if(isset($validation)) : ?>
                             <?php if($validation->hasError('password')) : ?>
                                 <span class="text-danger text-sm"><?= $validation->getError('password') ?></span>
@@ -29,6 +33,9 @@
                     </div>
                     <div class="register-button">
                         <input type="submit" value="Login">
+                    </div>
+                    <div class="terms-and-conditions">
+                        <span><a href="<?= base_url('admin/forgot-password') ?>">Forgot Password?</a></span>
                     </div>
                 </div>
             </form>

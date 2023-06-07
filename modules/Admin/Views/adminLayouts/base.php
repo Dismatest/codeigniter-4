@@ -23,8 +23,12 @@
         endif;
         ?>
     </title>
+    <link rel="icon" type="image/png" href="<?= base_url('favicon.PNG') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendors/mdi/css/materialdesignicons.min.css')?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendors/css/vendor.bundle.base.css')?>">
+    <!-- dataTables link -->
+    <link href="<?= base_url('assets/css/dataTables.min.css'); ?>" rel="stylesheet">
+    <!-- end of dataTables link -->
     <link rel="stylesheet" href="<?= base_url('assets/css/select2.min.css')?>">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
@@ -44,6 +48,11 @@
 <script src="<?=base_url('assets/js/jq.validation.js')?>"></script>
 <script src="<?=base_url('assets/js/select2.min.js')?>"></script>
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+<script src="<?= base_url('assets/js/dataTables.min.js'); ?>"></script>
+<script src="<?= base_url('assets/js/pdfmake.min.js'); ?>"></script>
+<script src="<?= base_url('assets/js/vfs_fonts.js'); ?>"></script>
+
 <script src="<?=base_url('assets/js/misc.js')?>"></script>
 <script src="<?= base_url('assets/js/todolist.js')?>"></script>
 <script src="<?= base_url('assets/js/sacco-admin.js')?>"></script>
@@ -64,5 +73,9 @@
 </script>
 <?= $this->renderSection('admin-post-shares-script') ?>
 <?= $this->renderSection('admin-update-profile-script') ?>
+<?= $this->renderSection('manage-transaction-script') ?>
+<?= $this->renderSection('completed-transactions-script') ?>
+<?= $this->renderSection('view-pending-transaction-script') ?>
+<?= $this->renderSection('bids-report-script') ?>
 </body>
 </html>

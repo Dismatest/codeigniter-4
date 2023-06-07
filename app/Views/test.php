@@ -410,3 +410,307 @@
         <?php endforeach; ?>
     <?php endif; ?>
     </tbody>
+
+
+<!--    custom select field-->
+
+    <div class="verify-input">
+        <label for="verify">Select sacco*</label>
+        <div class="custom-select">
+            <input type="text" class="select-input" placeholder="Select sacco" name="sacco_id" id="sell-shares-input">
+            <ul class="select-options">
+                <?php if(!empty($saccos)): ?>
+                    <?php foreach ($saccos as $sacco): ?>
+                        <li data-value="<?= $sacco['sacco_id'] ?>"><?= $sacco['name'] ?></li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="col-md-12">
+        <?php if(session()->getTempdata('success')): ?>
+            <div class="alert alert-success" id="hideTempMessage">
+                <?= session()->getTempdata('success') ?>
+            </div>
+        <?php else: ?>
+            <?php if(session()->getTempdata('fail')): ?>
+                <div class="alert alert-danger" id="hideTempMessage">
+                    <?= session()->getTempdata('fail') ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <div class="pt-5">
+
+            <?php if(!empty($share_id)) : ?>
+                <div class="membership-title text-center pb-3">
+                    <a href="<?= base_url('share/'.$share_id)?>" data-mdb-toggle="tooltip" data-mdb-placement="left" title="Go back to shares"><i class="fas fa-arrow-left back-icon"></i></a>
+                    <h6>Membership Registration Form</h6>
+                </div>
+            <?php endif; ?>
+            <main>
+                <div class="stepper">
+                    <div class="step--1 step-active">Step 1</div>
+                    <div class="step--2">Step 2</div>
+                    <div class="step--3">Step 3</div>
+                    <div class="step--4">Finish</div>
+                </div>
+                <?php if (!empty($userData)): ?>
+                    <form class="form form-active" method="post" action="">
+                        <div class="form--header-container">
+                            <h1 class="form--header-title">
+                                Personal Information
+                            </h1>
+                        </div>
+
+                        <div class="d-flex justify-content-center align-items-center information-main-wrapper">
+                            <labe for="fname" class="d-flex justify-content-start" style="margin-right: 10px; font-weight: 500;">First Name</labe>
+                            <input type="text" class="stepper-input-fields" value="<?= $userData->fname ?>">
+                        </div>
+
+                        <div class="d-flex justify-content-center align-items-center information-main-wrapper">
+                            <labe for="lname" class="d-flex justify-content-start" style="margin-right: 10px; font-weight: 500;">Last Name</labe>
+                            <input type="text" class="stepper-input-fields" value="<?= $userData->lname ?>">
+                        </div>
+
+                        <button class="form__btn" id="btn-1">Next</button>
+
+                    </form>
+                    <form class="form" method="post" action="">
+                        <div class="form--header-container">
+                            <h1 class="form--header-title">
+                                Personal Information
+                            </h1>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center information-main-wrapper">
+                            <labe for="phone" class="d-flex justify-content-start" style="margin-right: 10px; font-weight: 500;">Phone Number</labe>
+                            <input type="text"class="stepper-input-fields" value="<?= $userData->phone ?>">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center information-main-wrapper">
+                            <labe for="email" class="d-flex justify-content-start" style="margin-right: 10px; font-weight: 500;">Email Address</labe>
+                            <input type="text" class="stepper-input-fields" value="<?= $userData->email ?>">
+                        </div>
+                        <button class="form__btn" id="btn-2-prev">Previous</button>
+                        <button class="form__btn" id="btn-2-next">Next</button>
+                    </form>
+                    <form class="form" method="post" action="">
+                        <div class="form--header-container">
+                            <h1 class="form--header-title">
+                                Personal Information
+                            </h1>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center information-main-wrapper">
+                            <labe for="sacco-name" class="d-flex justify-content-start" style="margin-right: 10px; font-weight: 500;">Sacco Name</labe>
+                            <div class="custom-select-input">
+                                <input type="text" class="select-input-field" name="sacco_id" placeholder="Select sacco*">
+                                <ul class="select-options-fields">
+                                    <?php if(!empty($sacco)): ?>
+                                        <?php foreach ($sacco as $sac): ?>
+                                            <li data-value="<?= $sac['sacco_id'] ?>"><?= $sac['name'] ?></li>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center information-main-wrapper">
+                            <labe for="identification" class="d-flex justify-content-start" style="margin-right: 10px; font-weight: 500;">ID Number</labe>
+                            <input type="text" class="stepper-input-fields" name="identification" id="id_number" placeholder="ID">
+                        </div>
+                        <button class="form__btn" id="btn-3">Submit</button>
+                    </form>
+                <?php endif; ?>
+                <div class="alert alert-warning" role="alert" id="warning-registration" style="display:none;">
+                    <p id="warning-message-registration"></p>
+                </div>
+            </main>
+
+        </div>
+
+    </div>
+
+
+<!--    welcome page-->
+
+    <?= $this->extend("client_base/base.php"); ?>
+    <?= $this->section('content'); ?>
+
+    <?= $this->include('includes/navbar.php'); ?>
+
+    <div class="load"></div>
+    <div class="main-container">
+        <div class="description-section">
+            <div class="content-section">
+                <h5>Welcome to the Sacco Hisa Shares Portal</h5>
+                <p>The platform that allow you sell and buy shares from different sacco within kenya.
+                </p>
+                <div class="top-button">
+                    <a href="<?= 'index' ?>">Buy Shares <i class="fa-solid fa-arrow-right arrow-icon2"></i></a>
+
+                    <a href="<?= 'index' ?>">Sell Shares <i class="fa-solid fa-arrow-right arrow-icon2"></i></a>
+                </div>
+
+            </div>
+        </div>
+        <div class="container scroll-btn-main-container">
+            <a href="#scroll-btn">
+                <button type="button" class="welcome-scroll-btn">Scroll <i
+                        class="fa-solid fa-arrow-down arrow-icon-down"></i></button>
+            </a>
+        </div>
+    </div>
+    <div class="moving-text-container">
+        <div class="moving-text">
+
+            <?php if (!empty($activeShares)) : ?>
+                <?php foreach ($activeShares as $activeShare) : ?>
+                    <span class="moving-text-name"><?= $activeShare['name'] ?> <i class="fa-solid fa-arrow-up moving-text-icon"></i></span>
+                    <span class="moving-text-shares"><?= $activeShare['shares_on_sale'] ?></span>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+
+        </div>
+    </div>
+    <div class="container">
+        <div class="onboarded-sacco-container">
+            <h5>Saccos actively selling share capital</h5>
+        </div>
+
+        <div class="slider-main-container pb-5">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper" id="swiper-wrapper">
+
+
+                    <div class="swiper-wrapper sacco-shares-skeleton">
+
+                        <div class="swiper-slide">
+                            <div class="card" style="padding: 15px;">
+                                <span class="placeholder col-12 btn " style="border-radius: 5px;"></span>
+                                <div class="card-body">
+                                    <span class="placeholder col-12 placeholder-lg" style="border-radius: 5px;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="swiper-wrapper sacco-shares-skeleton">
+
+                        <div class="swiper-slide">
+                            <div class="card" style="padding: 15px;">
+                                <span class="placeholder col-12 btn " style="border-radius: 5px;"></span>
+                                <div class="card-body">
+                                    <span class="placeholder col-12 placeholder-lg" style="border-radius: 5px;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="swiper-wrapper">
+
+                        <div class="swiper-slide">
+                            <div class="card" style="padding: 15px;">
+                                <span class="placeholder col-12 btn " style="border-radius: 5px;"></span>
+                                <div class="card-body">
+                                    <span class="placeholder col-12 placeholder-lg" style="border-radius: 5px;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+
+    </div>
+
+    <?= $this->include('includes/footer.php'); ?>
+    <?= $this->include('includes/small-footer.php'); ?>
+
+<?= $this->endSection(); ?>
+
+    <div class="form-outline flex-wrap m-2">
+        <i class="fas fa-magnifying-glass trailing"></i>
+        <input type="text" id="search-by-sacco" name="searchOne" class="form-control form-control form-icon-trailing"/>
+        <label class="form-label" for="form1" >Search by sacco name</label>
+    </div>
+
+    <div class="form-outline flex-wrap m-2">
+        <i class="fas fa-magnifying-glass trailing"></i>
+        <input type="text" id="search-by-value" name="searchTwo" class="form-control form-control form-icon-trailing"/>
+        <label class="form-label" for="form1" >Search by share value</label>
+    </div>
+
+    <div class="flex-wrap m-2">
+        <div class="input-group">
+            <button type="submit" class="btn btn-secondary p-3 search-shares">Search</button>
+        </div>
+    </div>
+
+
+<!--    search with input box -->
+
+
+<!--    end of search-->
+    <div class="custom-select-search">
+        <input type="search" class="select-input" placeholder="Search by sacco name" name="sacco_id" id="sell-shares-input">
+        <ul class="select-options">
+            <?php if(!empty($saccos)): ?>
+                <?php foreach ($saccos as $sacco): ?>
+                    <li data-value="<?= $sacco['sacco_id'] ?>"><?= $sacco['name'] ?></li>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </ul>
+    </div>
+
+<!--    css-->
+
+
+
+    <?php
+    if(!empty(session()->getFlashData('success'))){
+        ?>
+        <div class="alert alert-success"><?= session()->getFlashData('success') ?></div>
+        <?php
+    }else if(!empty(session()->getFlashData('fail'))){
+        ?>
+        <div class="alert alert-danger"><?= session()->getFlashData('fail') ?></div>
+        <?php
+    }
+    ?>
+    <h4>Set members commission
+    </h4>
+    <form class="pt-3" method="post" action="">
+        <?= csrf_field()?>
+        <div class="form-group">
+            <label for="selectInput" class="form-label">Set commission
+
+                <?php if(!empty($commissions)): ?>
+                    <?php foreach($commissions as $commission): ?>
+                        <span class="text-warning"> (<?= $commission['commission'] ?> %)</span>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+                </Your></label>
+            <input type="text" class="form-control form-control-lg" name="commission" value="">
+            <?php if(isset($validation)) : ?>
+                <?php if($validation->hasError('commission')) :?>
+                    <span class="text-danger text-sm"><?= $validation->getError('commission') ?></span>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
+        <div class="mt-3">
+            <button class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SUBMIT</button>
+        </div>
+    </form>

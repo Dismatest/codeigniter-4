@@ -17,13 +17,13 @@ class Sacco extends Migration
             'email'             => ['type' => 'varchar', 'constraint' => 255],
             'location'             => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
             'contact_phone'             => ['type' => 'int', 'constraint' => 12, 'null' => true],
-            'contact_email'          => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
             'till' => ['type' => 'int', 'constraint' => 10, 'null' => true],
-            'commission'        => ['type' => 'int', 'constraint' => 10, 'null' => true],
+            'commission'        => ['type' => 'int', 'default' => 0, 'null' => true],
             'website'    => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
             'logo'    => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
             'password'          => ['type' => 'varchar', 'constraint' => 255],
             'created_at'        => ['type' => 'datetime', 'default' => date('Y-m-d H:i:s'), 'null' => true],
+            'updated_at'        => ['type' => 'datetime', 'null' => true],
         ]);
 
         $this->forge->addPrimaryKey('sacco_id');

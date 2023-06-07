@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filters;
+namespace Modules\SupperAdmin\Filters;
 
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
@@ -10,12 +10,14 @@ class AdminLoginFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-
-        if (session()->has('currentLoggedInSacco')) {
-            return redirect()->to(base_url('admin/dashboard'));
-        }else{
-            return redirect()->to(base_url('admin/login'));
+        $uri = service('uri');
+        $segment = $uri->getSegment(1);
+        if (strpos($segment, 'supperAdmin') !== false) {
+            if (!session()->has('currentLoggedInUser')) {
+                return redirect()->to(base_url('supperAdmin/login'));
+            }
         }
+
     }
 
 

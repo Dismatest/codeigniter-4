@@ -65,16 +65,32 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 grid-margin stretch-card">
+        <div class="col-md-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="clearfix">
-                        <h4 class="card-title float-left">Saccos Transaction Statistics</h4>
+                        <h4 class="transaction-icons-main"><i class="mdi mdi-grid transaction-icon"></i>Saccos Monthly Transactions Line Graph</h4>
                         <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-right"></div>
                     </div>
 
                     <div>
-                        <canvas height="400" id="myChart" class="mt-4"></canvas>
+                        <canvas height="200" id="myChart" class="mt-4"></canvas>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="clearfix">
+                        <h4 class="transaction-icons-main"><i class="mdi mdi-grid transaction-icon"></i>Saccos Monthly Transactions Bar Graph</h4>
+                        <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-right"></div>
+                    </div>
+
+                    <div>
+                        <canvas height="200" id="myChartTwo" class="mt-4"></canvas>
                     </div>
 
                 </div>

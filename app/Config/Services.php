@@ -5,6 +5,7 @@ namespace Config;
 use CodeIgniter\Config\BaseService;
 use App\Services\UserDataService;
 use App\Services\UserSaccoMembership;
+use App\Services\SendTextMessageService;
 use App\Services\UserShares;
 use App\Services\IsApproved;
 
@@ -59,6 +60,15 @@ class Services extends BaseService
         }
 
         return new IsApproved();
+    }
+
+    public static function sendSMS($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('sendSMS');
+        }
+
+        return new SendTextMessageService();
     }
 }
 

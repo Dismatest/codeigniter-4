@@ -422,16 +422,49 @@ class Admin extends BaseController
         }
     }
 
-    public function reports()
+    public function manageTransactions()
     {
         $sacco_id = session()->get('sacco_id');
         $transactions = $this->adminModel->getTransactions($sacco_id);
+
 
         $data = [
             'reportsTitle' => 'Reports',
             'transactions' => $transactions,
         ];
-        return view('Modules\Admin\Views\reports', $data);
+        return view('Modules\Admin\Views\manage-transactions', $data);
+    }
+
+    public function viewCompletedTransactions(){
+        $sacco_id = session()->get('sacco_id');
+        $transactions = $this->adminModel->viewCompletedTransactions($sacco_id);
+
+        $data = [
+            'reportsTitle' => 'Completed Transactions',
+            'transactions' => $transactions,
+        ];
+        return view ('Modules\Admin\Views\view-completed-transactions', $data);
+    }
+
+    public function viewPendingTransactions(){
+        $sacco_id = session()->get('sacco_id');
+        $transactions = $this->adminModel->getAttemptedTransactions($sacco_id);
+        $data = [
+            'reportsTitle' => 'Attempted Transactions',
+            'transactions' => $transactions,
+        ];
+        return view ('Modules\Admin\Views\view-pending-transactions', $data);
+    }
+
+    public function viewRejectedTransactions($transaction_id){
+        $delete_transaction = $this->adminModel->deleteTransaction($transaction_id);
+        if($delete_transaction){
+            session()->setFlashdata('success', 'Transaction deleted successfully');
+            return redirect()->to('admin/pending-transaction');
+        }else{
+            session()->setFlashdata('fail', 'Transaction was not deleted, please try again');
+            return redirect()->to('admin/pending-transaction');
+        }
     }
 
     public function viewReports()
@@ -922,5 +955,112 @@ class Admin extends BaseController
             'data' => $data
         ];
         return $this->response->setJSON($response);
+    }
+
+    public function bidsReport(){
+        $data['title'] = 'Bids Report';
+        $sacco_id = session()->get('sacco_id');
+        $data['bids'] = $this->adminModel->getBidsReport($sacco_id);
+        return view('Modules\Admin\Views\bids-report', $data);
+    }
+
+    public function forgotPassword(){
+        $data['title'] = 'Forgot Password';
+        if($this->request->getMethod()  == 'post'){
+            $rules = [
+                'email' => [
+                    'rules' => 'required|valid_email',
+                    'errors' => [
+                        'required' => 'Your email is required',
+                        'valid_email' => 'A valid email address is required',
+                    ]
+                ],
+            ];
+
+            if(!$this->validate($rules)){
+                $data['validation'] = $this->validator;
+            }else {
+                $email = $this->request->getPost('email');
+                $validateEmail = $this->adminModel->checkAdminEmail($email);
+                if(!empty($validateEmail)){
+                    $updateResetTime = $this->adminModel->updateResetTime($validateEmail['uuid']);
+                    if($updateResetTime){
+                        $message = "Your your password reset link has been sent successfully, click the link now to change your password, the link expires within 30min" . anchor(base_url('admin/password-reset-link/' . $validateEmail['uuid']), ' reset password link', '');
+                        if($this->sendEmail($validateEmail['name'], $validateEmail['email'], $message)) {
+                            session()->setFlashdata('success', 'Password reset link has been sent to your email');
+                            return redirect()->to(base_url('admin/forgot-password'));
+                        }else{
+                            session()->setFlashdata('error', 'Failed to send password reset link');
+                            return redirect()->to(base_url('admin/forgot-password'));
+                        }
+                    }else{
+                        session()->setFlashdata('error', 'We could not update your reset time, please try again');
+                        return redirect()->to(base_url('admin/forgot-password'));
+                    }
+                }else{
+                    session()->setFlashdata('error', 'Email does not exist');
+                    return redirect()->to(base_url('admin/forgot-password'));
+                }
+            }
+        }
+        return view('Modules\Admin\Views\forgot-password', $data);
+    }
+
+    public function resetPassword($uuid = null){
+        $data = [];
+        if(!empty($uuid)){
+            $verifyUuid = $this->adminModel->verifyUuid($uuid);
+            if($verifyUuid){
+                if($this->expiryTime($verifyUuid['updated_at'])){
+                    if($this->request->getMethod() == 'post'){
+                        $rules = [
+                            'password' => [
+                                'rules' => 'required|min_length[5]|max_length[20]',
+                                'errors' => [
+                                    'required' => 'Your password is required',
+                                    'min_length' => 'The length of password must be more than five',
+                                    'max_length' => 'The maximum password length must be less than twenty',
+                                ]
+                            ],
+                            'conf-password' => [
+                                'rules' => 'required|min_length[5]|max_length[20]|matches[password]',
+                                'errors' => [
+                                    'required' => 'Password is required',
+                                    'min_length' => 'The length of password must be more than five',
+                                    'max_length' => 'The maximum password length must be less than twenty',
+                                    'matches' => 'The two password must match',
+                                ]
+                            ]
+                        ];
+                        if(!$this->validate($rules)){
+                            $data['validation'] = $this->validator;
+                        }else{
+                            $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+                            $updatePassword = $this->adminModel->updateAdminPassword($uuid, $password);
+                            if($updatePassword){
+                                session()->setFlashdata('success', 'Password reset successfully');
+                                return redirect()->to(base_url('admin/login'));
+                            }else{
+                                session()->setFlashdata('error', 'Failed to reset password');
+                                return redirect()->to(base_url('admin/reset-password/' . $uuid));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return view('Modules\Admin\Views\reset-password', $data);
+    }
+
+    public function expiryTime($date)
+    {
+        $updated_time = strtotime($date);
+        $currentTime = time();
+        $difference_time = ($currentTime - $updated_time) / 60;
+        if ($difference_time < 1800) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

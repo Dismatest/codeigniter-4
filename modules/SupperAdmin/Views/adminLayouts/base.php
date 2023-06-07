@@ -33,11 +33,13 @@
         endif;
         ?>
     </title>
+    <link rel="icon" type="image/png" href="<?= base_url('favicon.PNG') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendors/mdi/css/materialdesignicons.min.css')?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendors/css/vendor.bundle.base.css')?>">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
     <link href="<?= base_url('assets/css/dataTables.min.css'); ?>" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
+    <link href="<?= base_url('assets/css/select2.min.css'); ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/supperAdmin.css') ?>">
 </head>
@@ -48,19 +50,21 @@
 <script src="<?= base_url('assets/vendors/js/vendor.bundle.base.js')?>"></script>
 <script src="<?= base_url('assets/vendors/chart.js/Chart.min.js')?>"></script>
 <script src="<?= base_url('assets/js/jquery.cookie.js')?>" type="text/javascript"></script>
+<script src="<?=base_url('assets/js/jq.validation.js')?>"></script>
 <script src="<?= base_url('assets/js/off-canvas.js')?>"></script>
 <script src="<?=base_url('assets/js/hoverable-collapse.js')?>"></script>
 <script src="<?=base_url('assets/js/misc.js')?>"></script>
-<script src="<?= base_url('assets/js/dashboard.js')?>"></script>
 <script src="<?= base_url('assets/js/todolist.js')?>"></script>
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script src="<?= base_url('assets/js/dataTables.min.js'); ?>"></script>
 <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
 <script src="<?= base_url('assets/js/pdfmake.min.js'); ?>"></script>
 <script src="<?= base_url('assets/js/vfs_fonts.js'); ?>"></script>
+<script src="<?=base_url('assets/js/select2.min.js')?>"></script>
 <script src="<?= base_url('assets/js/admin.js')?>"></script>
 <script src="<?= base_url('assets/js/supperAdminStepper.js')?>"></script>
-</body>
+<?php $this->renderSection("set-buyer-commission") ?>
+<?php $this->renderSection("set-sacco-commission") ?>
 <script>
     <?php if(session()->getFlashdata('success')) : ?>
     $(document).ready(function () {
@@ -74,4 +78,5 @@
     });
     <?php endif; ?>
 </script>
+</body>
 </html>

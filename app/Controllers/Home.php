@@ -14,6 +14,7 @@ use App\Models\SaccoShares;
 use App\Models\BidShares;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\I18n\Time;
+use Ramsey\Uuid\Uuid;
 use mysql_xdevapi\Exception;
 
 class Home extends BaseController
@@ -21,6 +22,7 @@ class Home extends BaseController
 
 {
     use ResponseTrait;
+
     public $displayDashboard;
     public $email;
     public $shares;
@@ -34,7 +36,7 @@ class Home extends BaseController
 
     public function __construct()
     {
-
+        helper(['form', 'url', 'text', 'date']);
         $this->displayDashboard = new DisplayDashboardModel();
         $this->email = \Config\Services::email();
         $this->shares = new Shares();
@@ -67,7 +69,86 @@ class Home extends BaseController
 
     public function indexPage()
     {
-        return view('index');
+        $allSacco = $this->displayDashboard->getAllSaccos();
+        $data = [
+            'allSacco' => $allSacco,
+        ];
+        return view('index', $data);
+    }
+
+    public function explorePage()
+    {
+        $user_id = session()->get('user_id');
+        $getAllSacco = $this->displayDashboard->getAllSaccos();
+        $getSearch = $this->displayDashboard->getSearch($user_id);
+        $data = [
+            'allSacco' => $getAllSacco,
+            'search' => $getSearch,
+        ];
+        return view('explore', $data);
+    }
+
+    public function exploreSearch()
+    {
+        $user_id = session()->get('user_id');
+        $searchOne = trim($this->request->getGet('selectedSacco'));
+        $searchTwo = trim($this->request->getGet('sharePrice'));
+
+
+        $data = [
+            'user_id' => $user_id,
+            'sacco_name' => $searchOne,
+            'total' => $searchTwo,
+        ];
+
+        $checkSearch = $this->displayDashboard->checkSearch($user_id, $searchOne, $searchTwo);
+        if (!$checkSearch) {
+            try {
+                $this->displayDashboard->saveSearch($data);
+            } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
+                $data = [
+                    'error' => $e,
+                ];
+                $this->displayDashboard->insertError($data);
+            }
+        }
+
+        // Prepare query to get all records
+        $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name, sacco.logo')
+            ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
+            ->where('shares_on_sale.is_verified', '1')
+            ->orderBy('shares_on_sale.created_at', 'DESC');
+
+        // Apply search filters
+        if (!empty($searchOne)) {
+            $shares = $shares->groupStart()
+                ->orLike('sacco.name', '%' . $searchOne . '%')
+                ->groupEnd();
+        }
+
+        if (!empty($searchTwo)) {
+            $shares = $shares->groupStart()
+                ->orLike('shares_on_sale.total', '%' . $searchTwo . '%')
+                ->orLike('shares_on_sale.shares_on_sale', '%' . $searchTwo . '%')
+                ->groupEnd();
+        }
+
+        if (!empty($sort)) {
+            $shares = $shares->orLike('sacco.created_at', $sort);
+        }
+
+        // Retrieve all data without pagination
+        $sacco = $shares->get()->getResult();
+
+        return $this->response->setJSON($sacco);
+    }
+
+
+    public function getRecommendedShares()
+    {
+        $getRecommendedShares = $this->displayDashboard->getRecommendedShares();
+        return $this->respond($getRecommendedShares);
     }
 
     public function search()
@@ -79,11 +160,11 @@ class Home extends BaseController
         $sort = $this->request->getPost('sort');
 
         // Prepare query to get all records
-        $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name, sacco.sacco_id')
+        $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name, sacco.logo, sacco.sacco_id')
             ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
             ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
             ->where('shares_on_sale.is_verified', '1')
-            ->orderBy('shares_on_sale.created_at', 'ASC');
+            ->orderBy('shares_on_sale.created_at', 'DESC');
 
         // Apply search filters
         if (!empty($searchOne)) {
@@ -144,7 +225,7 @@ class Home extends BaseController
                         $name = $userData['fname'];
                         $emailSubject = "Password reset link";
                         $setFrom = 'billclintonogot88@gmail.com';
-                        $messageTitle = "Sacco Product Application";
+                        $messageTitle = "Sacco Hisa Password Reset Link";
                         $message = "Your your password reset link has been sent successfully, click the link now to change your password, the link expires within 39min" . anchor(base_url('password-reset/' . $userData['uniid']), ' reset password link', '');
 
                         if ($this->sendEmail($name, $email, $setFrom, $messageTitle, $emailSubject, $message)) {
@@ -260,7 +341,6 @@ class Home extends BaseController
 
     public function share($id = null)
     {
-        $data = [];
         $uuid = session()->get('currentLoggedInUser');
         $user = $this->users->where('uniid', $uuid)->first();
         $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name')
@@ -269,9 +349,6 @@ class Home extends BaseController
             ->where('shares_on_sale.uuid', $id)
             ->where('shares_on_sale.is_verified', '1')
             ->first();
-
-        $search_shares = $this->request->getPost('shares');
-        $search_total = $this->request->getPost('total');
 
         $related_shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name')
             ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
@@ -282,7 +359,6 @@ class Home extends BaseController
             ->orWhere('shares_on_sale.shares_on_sale', '>', $shares['shares_on_sale'])
             ->orWhere('shares_on_sale.total', '>', $shares['total'])
             ->findAll();
-
 
         $data = [
             'user' => $user,
@@ -302,9 +378,8 @@ class Home extends BaseController
 
         $businessShortCOde = 174379;
         //generate password
-        $mpesaPassword = base64_encode($businessShortCOde . $passKey . $timestamp);
+        return base64_encode($businessShortCOde . $passKey . $timestamp);
 
-        return $mpesaPassword;
     }
 
 
@@ -340,19 +415,22 @@ class Home extends BaseController
         $share_id = $this->request->getPost('shareId');
         $buyerId = $this->request->getPost('buyerId');
 
+        $encodedData = json_encode(gettype($price));
+        log_message('info', $encodedData);
+
         $url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
         $curl_post_data = [
             'BusinessShortCode' => getenv('MPESA_SHORTCODE'),
-            'Password' => "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjMwMzAyMTMxOTA3",
-            'Timestamp' => "20230302131907",
+            'Password' => $this->lipaNaMpesaPassword(),
+            'Timestamp' => date('YmdHms'),
             'TransactionType' => "CustomerPayBillOnline",
-            'Amount' => $price, // $price
+            'Amount' => (float)$price, // $price
             'PartyA' => $myPhone,
             'PartyB' => getenv('MPESA_PARTYB'),
             'PhoneNumber' => $myPhone,
-            'CallBackURL' => "http://20.38.38.48/payment_callback",
+            'CallBackURL' => "https://saccohisa.mzawadi.com/payment_callback",
             'AccountReference' => "saccoHisa",
-            'TransactionDesc' => "buy shares",
+            'TransactionDesc' => "buy share capital",
         ];
 
         $data_string = json_encode($curl_post_data);
@@ -366,7 +444,6 @@ class Home extends BaseController
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         $curl_response = curl_exec($curl);
         $data = json_encode($curl_response);
-        log_message('error', $data);
         if ($curl_response === false) {
             $info = curl_getinfo($curl);
             curl_close($curl);
@@ -497,10 +574,8 @@ class Home extends BaseController
 
     public function bid($id = null)
     {
+
         $uuid = session()->get('currentLoggedInUser');
-        $user = $this->users
-            ->select('users.fname, users.lname, users.uniid')
-            ->where('uniid', $uuid)->first();
         $shares = $this->sharesOnSale->select('shares_on_sale.*, users.fname, users.lname, sacco.name')
             ->join('users', 'users.user_id = shares_on_sale.user_id', 'left')
             ->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left')
@@ -510,11 +585,13 @@ class Home extends BaseController
 
         if ($this->request->getMethod() == 'post') {
             $bid = $this->request->getVar('bid');
+            $buyerMembershipNumber = $this->request->getVar('memberNumber');
 
             $bidData = [
-                'buyer_id' => $user['uniid'],
+                'buyer_id' => $uuid,
                 'share_on_sale_id' => $id,
                 'bid_amount' => $bid,
+                'buyer_membership_number' => $buyerMembershipNumber,
                 'seller_id' => $shares['user_id'],
                 'sacco_id' => $shares['sacco_id'],
                 'action' => '0',
@@ -562,6 +639,7 @@ class Home extends BaseController
 
     public function hasActiveBid($id = null)
     {
+
         $uuid = session()->get('currentLoggedInUser');
         $user = $this->users->where('uniid', $uuid)->first();
 
@@ -569,13 +647,13 @@ class Home extends BaseController
                 ->select('bid_share.*')
                 ->where('buyer_id', $user['uniid'])
                 ->where('share_on_sale_id', $id)
-                ->where('action', '0')
+                ->whereIn('action', [0, 1])
                 ->countAllResults() == 1;
 
         if ($has_bid) {
             $response = [
                 'status' => '200',
-                'message' => 'You have already placed a bid for this share',
+                'message' => 'You already have an active bid for this share capital',
             ];
 
             return $this->response->setJSON($response);
@@ -592,28 +670,28 @@ class Home extends BaseController
 
 //        the seller sees the bids that have been placed on his shares
 
-        $bid_share = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as seller_fname, users.lname as seller_lname, sacco.name')
+        $bid_share = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.created_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as buyer_fname, users.lname as buyer_lname, sacco.name')
             ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'right')
-            ->join('users', 'users.user_id = bid_share.seller_id', 'right')
-            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'right')
+            ->join('users', 'users.uniid = bid_share.buyer_id', 'left')
+            ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
             ->where('bid_share.seller_id', $userData->user_id)
             ->where('bid_share.action', '0')
             ->findAll();
 
 //        the seller accepts the bid goes to the buyer
 
-        $accepted_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as buyer_fname, users.lname as buyer_lname, sacco.name, sacco.sacco_id')
+        $accepted_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as seller_fname, users.lname as seller_lname, sacco.name, sacco.sacco_id')
             ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'right')
-            ->join('users', 'users.uniid = bid_share.buyer_id', 'right')
+            ->join('users', 'users.user_id = bid_share.seller_id', 'right')
             ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'right')
             ->where('bid_share.buyer_id', $userData->uniid)
             ->where('bid_share.action', '1')
             ->findAll();
 
 //        the seller rejects the bid, goes to the buyer
-        $rejected_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.uuid, shares_on_sale.total, shares_on_sale.share_on_sale_id, users.fname as buyer_fname, users.lname as buyer_lname, sacco.name')
+        $rejected_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.uuid, shares_on_sale.total, shares_on_sale.share_on_sale_id, users.fname as seller_fname, users.lname as seller_lname, sacco.name')
             ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'left')
-            ->join('users', 'users.uniid = bid_share.buyer_id', 'left')
+            ->join('users', 'users.user_id = bid_share.seller_id', 'left')
             ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
             ->where('bid_share.buyer_id', $userData->uniid)
             ->where('bid_share.action', '2')
@@ -663,12 +741,17 @@ class Home extends BaseController
     public function acceptBid($id = null)
     {
         $bids = $this->bidShares->find($id);
+        $sacco = $this->sacco->select('name')->where('sacco_id', $bids['sacco_id'])->first();
+        $bidAmount = $bids['bid_amount'];
+        $buyer_phone = $this->users->select('phone')->where('uniid', $bids['buyer_id'])->first();
+        $message = 'Your bid of Ksh ' . $bidAmount . ' on ' . $sacco['name'] . ' shares capital has been accepted, you can now purchase the shares';
         $bidData = [
             'updated_at' => date('Y-m-d h:i:s'),
             'action' => '1',
         ];
         if ($this->bidShares->update($bids['bid_id'], $bidData)) {
-            session()->setFlashdata('success', 'Share capital bid has been successfully approved, the buyer can now purchase shares', 3);
+            service('sendSMS')->text_msg($buyer_phone['phone'], $message);
+            session()->setFlashdata('success', 'Share capital bid has been approved successfully', 3);
             return redirect()->back()->to(base_url() . '/saved/your_active_shares');
         } else {
 
@@ -680,12 +763,17 @@ class Home extends BaseController
     public function rejectBid($id = null)
     {
         $bids = $this->bidShares->find($id);
+        $sacco = $this->sacco->select('name')->where('sacco_id', $bids['sacco_id'])->first();
+        $bidAmount = $bids['bid_amount'];
+        $buyer_phone = $this->users->select('phone')->where('uniid', $bids['buyer_id'])->first();
+        $message = 'Your bid of Ksh ' . $bidAmount . ' on ' . $sacco['name'] . ' share capital has been rejected by the owner, you can bid again';
         $bidData = [
             'updated_at' => date('Y-m-d h:i:s'),
             'action' => '2',
         ];
         if ($this->bidShares->update($bids['bid_id'], $bidData)) {
-            session()->setFlashdata('success', 'You have successfully rejected a bid that was sent by the buyer', 3);
+            service('sendSMS')->text_msg($buyer_phone['phone'], $message);
+            session()->setFlashdata('success', 'You have rejected the bid successfully', 3);
             return redirect()->back()->to(base_url() . '/saved/your_active_shares');
         } else {
             session()->setFlashdata('fail', 'We could not complete your request at the moment, please try again latter');
@@ -703,6 +791,26 @@ class Home extends BaseController
             'userData' => $userServices->getUserData(),
         ];
         return view('saved', $data);
+    }
+
+    public function deleteSavedShareAjax()
+    {
+        $share_id = $this->request->getPost('saved_id');
+        $user_id = session()->get('currentLoggedInUser');
+        $delete = $this->displayDashboard->deleteSavedShare($share_id, $user_id);
+        if ($delete) {
+            $response = [
+                'status' => 200,
+                'message' => 'Saved share capital deleted successfully',
+            ];
+            return $this->response->setJSON($response);
+        } else {
+            $response = [
+                'status' => 500,
+                'message' => 'An error has occurred, again later',
+            ];
+            return $this->response->setJSON($response);
+        }
     }
 
     public function profile()
@@ -807,18 +915,34 @@ class Home extends BaseController
             $membership_number = $this->request->getPost('member_number');
             $total = $this->request->getPost('total');
 
+            $user_id = service('userData')->getUserData()->user_id;
+
             $shareData = [
 
-                'uuid' => md5(str_shuffle('abcdefghijklmnopqrstuvwxyz1234567890' . time())),
-                'user_id' => service('userData')->getUserData()->user_id,
+                'uuid' => Uuid::uuid4()->toString(),
+                'user_id' => $user_id,
                 'sacco_id' => $sacco_id,
                 'membership_number' => $membership_number,
                 'shares_on_sale' => $shares,
                 'total' => $total,
 
             ];
+
+
             $postShare = $this->displayDashboard->saveShareData($shareData);
-            return $this->response->setJSON($postShare);
+            if ($postShare) {
+                $response = [
+                    'status' => 200,
+                    'message' => 'Share capital successfully posted, you will be notified once approved by the sacco',
+                ];
+                return $this->response->setJSON($response);
+            } else {
+                $response = [
+                    'status' => 500,
+                    'message' => 'We could not complete your request at the moment, please try again latter',
+                ];
+                return $this->response->setJSON($response);
+            }
         }
     }
 
@@ -845,30 +969,54 @@ class Home extends BaseController
         }
     }
 
-    public function saveShare($share_id)
+    public function saveShare()
     {
 
-        $ajax_share_id = $this->request->getVar('ajax-share-id');
-        $user_id = session()->get('user_id');
-        if ($share_id == $ajax_share_id) {
+        $ajax_share_id = $this->request->getPost('share_id');
+        $user_id = session()->get('currentLoggedInUser');
 
-            $shareData = [
-                'user_id' => $user_id,
-                'share_id' => $share_id,
-            ];
-            if ($this->displayDashboard->saved($shareData)) {
+        $shareData = [
+            'user_id' => $user_id,
+            'share_id' => $ajax_share_id,
+        ];
+
+        $checkIfSaved = $this->displayDashboard->checkIfSaved($ajax_share_id, $user_id);
+        if ($checkIfSaved) {
+            $deleted = $this->displayDashboard->deleteShare($ajax_share_id);
+            if ($deleted) {
                 $response = [
                     'status' => 200,
-                    'message' => 'Share saved successfully',
-                ];
-                return $this->response->setJSON($response);
-            } else {
-                $response = [
-                    'status' => 400,
-                    'message' => 'Share not saved',
+                    'message' => 'Share capital removed successfully',
                 ];
                 return $this->response->setJSON($response);
             }
+        } else {
+            $saved = $this->displayDashboard->saved($shareData);
+            if ($saved) {
+                $response = [
+                    'status' => 200,
+                    'message' => 'Share capital saved successfully',
+                ];
+                return $this->response->setJSON($response);
+            }
+        }
+    }
+
+    public function getAllSavedSharesAjax()
+    {
+
+        $getAllSavedShares = $this->displayDashboard->getAllSavedShares();
+        if ($getAllSavedShares) {
+            $response = [
+                'status' => 200,
+                'shares' => $getAllSavedShares,
+            ];
+            return $this->response->setJSON($response);
+        } else {
+            $response = [
+                'status' => 500,
+            ];
+            return $this->response->setJSON($response);
         }
     }
 
@@ -904,14 +1052,10 @@ class Home extends BaseController
 
     public function requestMembership($share_id)
     {
-
-
         $userServices = service('userData');
-        $sacco = $this->sacco->findAll();
 
         $data = [
             'userData' => $userServices->getUserData(),
-            'sacco' => $sacco,
             'share_id' => $share_id,
         ];
         return view('request-membership', $data);
@@ -922,10 +1066,9 @@ class Home extends BaseController
         $userServices = service('userData');
         if ($this->request->getMethod() == 'post') {
 
-            $identification_number = $this->request->getPost('id_number');
+            $identification_number = $this->request->getPost('idNumber');
             $sacco_id = $this->request->getPost('sacco_id');
 
-            session()->set('request_joining_sacco_id', $sacco_id);
 
             $membership = [
                 'user_id' => $userServices->getUserData()->user_id,
@@ -937,10 +1080,12 @@ class Home extends BaseController
             $is_requested = $this->saccoMembershp->where('user_id', $userServices->getUserData()->user_id)
                     ->where('sacco_id', $sacco_id)
                     ->countAllResults() == 1;
+
+
             if ($is_requested) {
                 $response = [
-                    'status' => 400,
-                    'message' => 'You have already submitted your request, please go back to shares and place your bid.',
+                    'status' => 200,
+                    'message' => 'You have already submitted your request, please go back to share capital listing and place your bid.',
                 ];
                 return $this->response->setJSON($response);
             } else {
@@ -948,7 +1093,7 @@ class Home extends BaseController
                 if ($this->saccoMembershp->save($membership)) {
                     $response = [
                         'status' => 200,
-                        'message' => 'Your request has been submitted successfully',
+                        'message' => 'Your request has been submitted successfully, you can make your share capital bid now.',
                     ];
                     return $this->response->setJSON($response);
                 }
@@ -958,11 +1103,12 @@ class Home extends BaseController
         }
     }
 
-    public function delete_accepted_bid_sharesAjax($share_id)
+    public function delete_accepted_bid_sharesAjax($bid_id)
     {
 
         $userServices = service('userData');
-        $delete = $this->displayDashboard->delete_bid_shares($share_id, $userServices->getUserData()->user_id);
+        $user_id = $userServices->getUserData()->uniid;
+        $delete = $this->displayDashboard->delete_bid_shares($bid_id, $user_id);
         if ($delete) {
             $response = [
                 'status' => 200,
@@ -978,11 +1124,16 @@ class Home extends BaseController
         }
     }
 
-    public function delete_rejected_bid_sharesAjax($share_id)
+    public function delete_rejected_bid_sharesAjax($bid_id)
     {
 
-        $user_bid_id = session()->get('user_id');
-        $delete = $this->displayDashboard->delete_bid_shares($share_id, $user_bid_id);
+        $userServices = service('userData');
+        $user_id = $userServices->getUserData()->uniid;
+        $encode = json_encode($user_id);
+        $encode2 = json_encode($bid_id);
+        log_message('info', 'user id is ' . $encode);
+        log_message('info', 'bid id is ' . $encode2);
+        $delete = $this->displayDashboard->delete_bid_shares($bid_id, $user_id);
         if ($delete) {
             $response = [
                 'status' => 200,
@@ -1006,6 +1157,7 @@ class Home extends BaseController
         try {
             $getSaccoShares = $this->displayDashboard->getAllSaccoShares($id);
             $getSaccoName = $this->displayDashboard->getSaccoName($id);
+
             $ShareData = [
                 'shares' => $getSaccoShares,
                 'sacco_name' => $getSaccoName,
@@ -1042,6 +1194,25 @@ class Home extends BaseController
             $response = [
                 'status' => 500,
                 'message' => $e->getMessage(),
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function getSacco()
+    {
+        $search = $this->request->getVar('search');
+        $sacco = $this->displayDashboard->getSacco($search);
+        if ($sacco) {
+            $response = [
+                'status' => 200,
+                'sacco' => $sacco,
+            ];
+            return $this->response->setJSON($response);
+        } else {
+            $response = [
+                'status' => 500,
+                'message' => 'No sacco found',
             ];
             return $this->response->setJSON($response);
         }

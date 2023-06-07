@@ -2,8 +2,17 @@
 <?= $this->section('content');?>
 <?= $this->include('includes/navbar.php'); ?>
 
+<div class="load"></div>
+<div class="container alert-main-container pt-5 pb-5">
 
-<div class="container pt-5 pb-5">
+    <div class="custom-alert">
+        <div class="d-flex justify-content-around">
+            <span><i class="fas fa-circle-check verified-budge check-icon-saved"></i></span>
+            <span class="saved-message"></span>
+            <span><i class="fa-solid fa-xmark close-icon-saved"></i></span>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive-sm">
@@ -24,8 +33,16 @@
                     <?php if(!empty($bids)) : ?>
                         <?php foreach ($bids as $bid): ?>
                             <tr>
-                                <td><?= ucfirst($bid['seller_fname']). ' ' .ucfirst($bid['seller_lname']) ?></td>
-                                <td><?= $bid['updated_at'] ?></td>
+                                <td><?= ucfirst($bid['buyer_fname']). ' ' .ucfirst($bid['buyer_lname']) ?></td>
+                                <td>
+
+                                <?php
+                                    $date = $bid['created_at'];
+                                    $date = date_create($date);
+                                    echo date_format($date, 'd-m-Y');
+                                ?>
+
+                                </td>
                                 <td><?= $bid['name'] ?></td>
                                 <td>ksh. <?= $bid['total'] ?></td>
                                 <td>ksh. <?= $bid['bid_amount'] ?></td>
@@ -39,24 +56,35 @@
                     <?php elseif(!empty($accepted_bids) || !empty($rejected_bids)): ?>
                         <?php foreach ($accepted_bids as $accepted_bid): ?>
                             <tr>
-                                <td><?= ucfirst($accepted_bid['buyer_fname']). ' ' .ucfirst($accepted_bid['buyer_lname']) ?></td>
-                                <td><?= $accepted_bid['updated_at'] ?></td>
+                                <td><?= ucfirst($accepted_bid['seller_fname']). ' ' .ucfirst($accepted_bid['seller_lname']) ?></td>
+                                <td>
+                                    <?php
+                                    $date = $accepted_bid['updated_at'];
+                                    $date = date_create($date);
+                                    echo date_format($date, 'd-m-Y');
+                                    ?>
+                                </td>
                                 <td><?= ucfirst($accepted_bid['name']) ?></td>
                                 <td>ksh. <?= $accepted_bid['total'] ?></td>
                                 <td>ksh. <?= $accepted_bid['bid_amount'] ?></td>
                                 <?php if($accepted_bid['action'] == '1'): ?>
                                     <td style="display: flex; justify-content: center; align-items: center">
-                                        <button type="button" data-id="<?= $accepted_bid['bid_id'] ?>" data-share="<?= $accepted_bid['uuid']?>" data-total=<?= $accepted_bid['bid_amount'] ?> class="accept-link displayPaymentModal">Buy Now</button>
-                                        <a class="reject-accept-delete" data-id="<?= $accepted_bid['bid_id'] ?>"><i class="fas fa-trash bid-delete-icon"></i></a>
-                                        <span id="error-message"></span>
+                                        <button type="button" data-id="<?= $accepted_bid['bid_id'] ?>" data-share="<?= $accepted_bid['uuid']?>" data-total=<?= $accepted_bid['bid_amount'] ?> class="accept-link" id="displayPaymentModal">Buy Now</button>
+                                        <a class="reject-accept-delete" id="accepted-accept-delete" data-id="<?= $accepted_bid['bid_id'] ?>"><i class="fas fa-trash bid-delete-icon"></i></a>
                                     </td>
                                 <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                         <?php foreach ($rejected_bids as $rejected_bid): ?>
                             <tr>
-                                <td><?= ucfirst($rejected_bid['buyer_fname']). ' ' .ucfirst($rejected_bid['buyer_fname']) ?></td>
-                                <td><?= $rejected_bid['updated_at'] ?></td>
+                                <td><?= ucfirst($rejected_bid['seller_fname']). ' ' .ucfirst($rejected_bid['seller_lname']) ?></td>
+                                <td>
+                                    <?php
+                                    $date = $rejected_bid['updated_at'];
+                                    $date = date_create($date);
+                                    echo date_format($date, 'd-m-Y');
+                                    ?>
+                                </td>
                                 <td><?= $rejected_bid['name'] ?></td>
                                 <td>ksh. <?= $rejected_bid['total'] ?></td>
                                 <td>ksh. <?= $rejected_bid['bid_amount'] ?></td>
@@ -64,7 +92,7 @@
                                     <td style="display: flex; justify-content: center; align-items: center;">
                                         <button class="reject-link">Rejected</button>
                                         <a class="accept-link" href="<?= 'share/'.$rejected_bid['uuid'] ?>">Bid</a>
-                                        <a class="reject-accept-delete" id="rejected-bid-delete" data-id="<?= $rejected_bid['uuid'] ?>"><i class="fas fa-trash bid-delete-icon"></i></a>
+                                        <a class="reject-accept-delete" id="rejected-bid-delete" data-id="<?= $rejected_bid['bid_id'] ?>"><i class="fas fa-trash bid-delete-icon"></i></a>
                                     </td>
                                 <?php endif; ?>
                             </tr>
@@ -92,7 +120,7 @@
                     </div>
 
                     <div class="alert alert-warning" role="alert" id="warning" style="display:none;">
-                        <p id="warning-message">some text here</p>
+                        <p id="warning-message"></p>
                     </div>
                     <div class="payment-icon">
                         <h6 class="payment-heading">Secure Checkout Payment</h6>
@@ -180,13 +208,14 @@
                                            <span id="display-error">Terms and conditions</span>
                                            <input type="checkbox" id="terms-checkbox">
                                        </div>
-
-
                                    </div>
                                </div>
                            </div>
                        </div>
                    </div>
+           </div>
+           <div class="ok-button">
+               <button id="ok-agreement-button" class="agreement-button-close" disabled>ok</button>
            </div>
        </div>
     </div>
@@ -205,6 +234,7 @@ $(document).ready(function (){
     let terms_modal = $('#terms-and-conditions-modal');
     let checkBox = $('#terms-checkbox');
     let closeBtn = $('#terms-close-modal');
+    let okBtn = $('#ok-agreement-button');
 
     function closeModal(){
         terms_modal.css('display', 'none');
@@ -223,13 +253,33 @@ $(document).ready(function (){
         }
     });
 
+    okBtn.on('click', function (){
+        if(checkBox.is(':checked')){
+            closeModal();
+        }else{
+
+        }
+    })
+
+    checkBox.on('change', function(){
+        if($(this).is(':checked')){
+            $(this).addClass('ok-enabled');
+            $('#ok-agreement-button').prop('disabled', false);
+            $('#ok-agreement-button').addClass('enabled');
+        }else{
+            $(this).removeClass('agreement-button-close');
+            $('#ok-agreement-button').prop('disabled', true);
+            $('#ok-agreement-button').removeClass('enabled');
+        }
+    });
+
     $(window).on('load', function (){
         displayModal();
     });
 
 //     initiate payment model
     let checkBox2 = $('#checkbox-1');
-    $('.displayPaymentModal').on('click', function(){
+    $('#displayPaymentModal').on('click', function(){
         $('#id04').css('display', 'block');
     })
     $('#modal04-close').on('click', function(){
@@ -248,7 +298,7 @@ $(document).ready(function (){
         }
     });
 
-    $('.displayPaymentModal').on('click', function (){
+    $('#displayPaymentModal').on('click', function (){
         let bidId = $(this).data('id');
         let shareId = $(this).data('share');
         let bidAmount = $(this).data('total');

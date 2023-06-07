@@ -1,9 +1,19 @@
+
 <?= $this->extend("client_base/base.php"); ?>
 <?= $this->section('content'); ?>
 <?= $this->include('includes/navbar.php'); ?>
 <div class="load"></div>
-<div class="container">
-    <div class="row" style="margin-bottom: 1.3em; margin-top: 2.0em;">
+<div class="container alert-main-container pt-5 pb-5">
+
+    <div class="custom-alert">
+        <div class="d-flex justify-content-around">
+            <span><i class="fas fa-circle-check verified-budge check-icon-saved"></i></span>
+            <span class="saved-message"></span>
+            <span><i class="fa-solid fa-xmark close-icon-saved"></i></span>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-8">
             <div id="ajax-alert" class="alert alert-success d-flex align-items-center alert-dismissible fade show show-success-message" role="alert">
                 <i class="fas fa-check me-2"></i>
@@ -12,6 +22,8 @@
                 </div>
                 <button type="button" id="close-success-alert" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+
+
             <div class="border-col responsive-margin-top">
                 <div class="shares-desc-div">
 
@@ -40,11 +52,13 @@
                                 </a>
 
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" href="#"><i class="fa-regular fa-bookmark"
+                                    <?php if (!empty($share)) : ?>
+                                    <li><a class="dropdown-item" id="save-share" data-id="<?= $share['uuid'] ?>"><i class="fa-regular fa-bookmark"
                                                                              style="padding: 4px;"></i>Save</a></li>
                                     <li><a class="dropdown-item" href="#"><i class="fa-regular fa-share-from-square"
                                                                              style="padding: 4px;"></i>Share</a>
                                     </li>
+                                    <?php endif; ?>
                                 </ul>
                             </div>
 
@@ -53,9 +67,11 @@
 
                     <div class="share-description-container-new">
                         <div class="share-description-container-new-info">
+                            <?php if (!empty($share)) : ?>
                             <p>Sellers Membership Number: <?= $share['membership_number'] ?></p>
                             <p>Number of Share capital: <?= $share['shares_on_sale'] ?></p>
                             <p>Price Value: ksh: <?= $share['total'] ?></p>
+                            <?php endif; ?>
                         </div>
                         <div class="share-description-container-new-date">
                             2 days ago
@@ -63,23 +79,26 @@
                     </div>
 
                     <div class="d-flex">
-                        <a class="buy-button" id="display-sell-now-btn">BUY SHARES</a>
+                        <a class="buy-button" id="display-sell-now-btn">Buy Share Capital</a>
                     </div>
                 </div>
 
             </div>
 
             <div style="padding-top: 1.3rem; padding-bottom: 1.3rem">
-                <h6 class="related-shares-title">You may also like the following shares</h6>
+                <h6 class="related-shares-title">You may also like the following share capital</h6>
             </div>
             <?= $this->include('includes/related_shares.php'); ?>
 
         </div>
 
         <div class="col-md-4 sm-scree-disable" id="search-main-container">
+
             <div class="border-coll">
 
-                <h6 style="text-align: center; padding-bottom: 15px;">Search Shares here</h6>
+
+
+                <h6 class="search-heading">Search share capital</h6>
 
                 <form action="" method="post">
                     <div class="verify-input-2">
@@ -92,7 +111,7 @@
 
 
                     <div class="d-flex justify-content-center">
-                        <input type="submit" value="Search shares" class="verify-input-button">
+                        <input type="submit" value="Search shares" class="verify-input-button1">
                     </div>
                 </form>
             </div>
@@ -107,7 +126,7 @@
                 <span class="x-close-button" id="modal01-close" title="Close Modal"><i
                         class="fa-solid fa-x close-font-icon"></i></span>
             </div>
-
+            <?php if (!empty($share)) : ?>
             <div class="container1">
                 <div class="confirm-bidding">
                     <span class="icon-bottom"><i class="fa-solid fa-circle-check bid-confirm-icon"></i></span>
@@ -123,9 +142,8 @@
                        class="confirm-sell-shares-btn">NO, Not a member</a>
 
                 </div>
-
-
             </div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -133,6 +151,7 @@
     <!--        modal two-->
 
     <div id="id02" class="user-share-model">
+        <?php if (!empty($share)) : ?>
         <form class="modal-content-user animate" action="<?= $share['uuid'] . '/bid' ?>" method="post"
               id="bid-shares-form">
             <div class="imgContainer">
@@ -144,22 +163,27 @@
                 <div class="confirm-bidding">
                     <span class="icon-bottom"><i id="ajax-icon" class="fa-solid fa-circle-check bid-confirm-icon"></i></span>
                     <label for="shares" id="shares-label" class="text-warning"><b class="shares-sell-heading">Place
-                            your bid for the shares capital which the owner will either approve or reject
+                            your bid for the shares capital you want to purchase
                             (Ksh).</b></label>
                 </div>
                 <div class="d-flex align-items-center justify-content-around offer-buttons">
-                    <span class="suggestedPrice">500</span>
-                    <span class="suggestedPrice">550</span>
-                    <span class="suggestedPrice">600</span>
-                    <span class="suggestedPrice">650</span>
+                    <span class="suggestedPrice"></span>
+                    <span class="suggestedPrice"></span>
+                    <span class="suggestedPrice"></span>
+                    <span class="suggestedPrice"></span>
                 </div>
                 <div style="width: 100%;">
-                    <input type="number" class="customer-selling-button" id="sharePrice" name="bid"
-                           value="<?= $share['total'] ?>">
+                    <label for="sharePrice"><b class="shares-sell-heading">Enter your bid amount*</b></label>
+                    <input type="number" class="customer-selling-button" id="sharePrice" name="bid" value="<?= $share['total'] ?>">
+                </div>
+                <div style="width: 100%;">
+                    <label for="MemberNumber"><b class="shares-sell-heading">Enter your membership number*</b></label>
+                    <input type="text" class="customer-selling-button" id="MemberNumber" name="memberNumber">
                 </div>
                 <button type="submit" class="confirm-sell-shares-btn3" id="placeBidNow">Send Your Bid Amount</button>
             </div>
         </form>
+        <?php endif; ?>
     </div>
 
 
@@ -200,7 +224,13 @@
 
         var sharePrice = parseInt($("#sharePrice").val());
 
-        if (sharePrice >= 0 && sharePrice < 500) {
+        if(sharePrice < 100){
+            $(".suggestedPrice").each(function (index) {
+                $(this).text(sharePrice);
+            });
+        }
+
+        else if (sharePrice >= 100 && sharePrice < 500) {
             $(".suggestedPrice").each(function (index) {
                 var reduction = (index + 1) * 20;
                 var suggestedPrice = sharePrice - reduction;
@@ -263,13 +293,23 @@
                     bid: {
                         required: true,
                         number: true
+                    },
+                    memberNumber: {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 10,
                     }
                 },
 
                 messages: {
                     bid: {
                         required: 'Please enter your bid amount',
-                        number: 'Please enter a valid number'
+                        number: 'Please enter a valid number',
+                    },
+                    memberNumber: {
+                        required: 'Please enter your membership number',
+                        minlength: 'Please enter a valid membership number',
+                        maxlength: 'Please enter a valid membership number',
                     }
                 },
                 highlight: function (element) {
@@ -298,13 +338,15 @@
                         success: function (response){
                             if(response){
                                 $('#id02').css('display', 'none');
-                                $("#ajax-alert-text").text(response.message);
-                                $("#ajax-alert").removeClass('show-success-message');
-
+                                $('.custom-alert').css('display', 'block');
+                                $('.saved-message').text(response.message);
+                                $('#save-share').css('background-color', '#789f99');
                             }
                         },
                         error: function (error) {
-                            console.log(error);
+                            $('.custom-alert').css('display', 'block');
+                            $('.saved-message').text('An error occurred, please try again later');
+                            $('#save-share').css('background-color', '#e5e5e5');
                         },
 
                         complete: function (xhr, status){
@@ -361,7 +403,40 @@
 
         $('#close-success-alert').on('click', function(){
             $('#ajax-alert').addClass('show-success-message');
-        })
+        });
+
+        $('#save-share').on('click', function (){
+
+            let share_id = $(this).data('id');
+            $.ajax({
+                url: "<?= base_url() ?>/saved/saved_share/",
+                type: "POST",
+                data: {share_id: share_id},
+                success: function (response){
+                   if(response.status === 200){
+                       $('.custom-alert').css('display', 'block');
+                       $('.saved-message').text(response.message);
+                       $('#save-share').css('background-color', '#789f99');
+                   }else{
+                       $('.custom-alert').css('display', 'block');
+                       $('.saved-message').text(response.message);
+                       $('#save-share').css('background-color', '#e5e5e5');
+                   }
+                },
+                error: function (error) {
+                    $('.custom-alert').css('display', 'block');
+                    $('.saved-message').text(response.message);
+                    $('#save-share').css('background-color', '#e5e5e5');
+                },
+
+            });
+        });
+
+        $('.close-icon-saved').on('click', function (){
+            $('.custom-alert').css('display', 'none');
+
+        });
+
     })
 
 

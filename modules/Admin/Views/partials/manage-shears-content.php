@@ -20,7 +20,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
 
-                        <table id="example" class="table table-striped" style="width:100%">
+                        <table id="manage-shares" class="table table-striped" style="width:100%">
                             <thead>
                             <tr>
                                 <th> Name </th>
@@ -59,10 +59,6 @@
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-                            <?php else : ?>
-                                <tr>
-                                    <td colspan="9" class="text-center">No shares found</td>
-                                </tr>
                             <?php endif; ?>
                             </tbody>
                         </table>

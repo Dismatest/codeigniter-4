@@ -13,13 +13,12 @@
             </ul>
         </nav>
     </div>
-<h5 class="text-center pb-2">Shares on sale</h5>
+<h5 class="text-center pb-2">Approve New Share Capital on sale</h5>
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-
                         <table id="notificationTable" class="table table-striped" style="width:100%">
                             <thead>
                             <tr>
@@ -30,7 +29,7 @@
                                 <th> Action </th>
                             </tr>
                             </thead>
-                            <tbody id="displayShareNotifications">
+                            <tbody>
 
 
                             </tbody>

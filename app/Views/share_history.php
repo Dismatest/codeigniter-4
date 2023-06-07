@@ -12,8 +12,7 @@
             <div class="main-saved-container">
                 <div style="padding-bottom: 10px;">
                 <div class="profile-container-content">
-                    <h6 class="selling-history">Shares History</h6>
-                    <span id="example"></span>
+                    <h6 class="selling-history">Share Capital History</h6>
                 </div>
                 <div class="dashboardDataTable table-responsive-sm">
 
@@ -22,7 +21,6 @@
                         <tr>
                             <th>Buyer Name</th>
                             <th>Shares sold</th>
-                            <th>Cost per share</th>
                             <th>Total share value</th>
                             <th>Sacco</th>
                         </tr>
@@ -34,7 +32,6 @@
                         <tr>
                             <td><?= $share['buyer_fname'] .' '. $share['buyer_lname'] ?></td>
                             <td><?= $share['shares_on_sale'] ?></td>
-                            <td><?= $share['cost_per_share'] ?></td>
                             <td><?= $share['total'] ?></td>
                             <td><?= $share['name'] ?></td>
                         </tr>

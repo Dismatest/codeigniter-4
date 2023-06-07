@@ -6,9 +6,12 @@
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class='footer-about'>
                         <div class="footer-logo">
-                            <a href=""><img src="<?= base_url().'/assets/images/shares-logo.png'?>" alt="img"></a>
+                            <a href=""><img src="<?= base_url().'/assets/images/logo-hisa.png'?>" alt="img"></a>
                         </div>
+                        <div class="info-message">
                         <p>We value our customers as we serve you to the best of your satisfaction.</p>
+                        <p>We bring together, both seller and buyer for your share capital for all saccos in Kenya in one place</p>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-3 offset-lg-1 col-md-3 col-sm-6">
@@ -43,7 +46,7 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <div class="footer-copyright-text">
-                        <p>Copyright &copy; 2023 All rights reserved | M-Zawadi.com</p>
+                        <p>Copyright &copy; 2023 All rights reserved | Saccohisa.mzawadi.com</p>
                     </div>
                 </div>
             </div>

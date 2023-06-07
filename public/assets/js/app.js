@@ -31,16 +31,23 @@ $(document).ready(function(){
 
 
                     $.each(response.shares, function(index, share) {
+                        let dateCreated = new Date(share.created_at);
+                        let dateNow = new Date();
+
+                        let timeDiff = dateNow - dateCreated;
+                        let differentDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+                        let imageUrl = share.logo ? '/uploads/sacco-logo/'+share.logo : '/assets/images/image.PNG';
                         var html = '<div class="col-md-3 col-6 list-shares-shares">' +
                             '<div class="card customize-card">' +
-                            '<div class="ribbon"><span>New</span></div>' +
+                            (differentDays < 3 ? '<div class="ribbon"><span>New</span></div>' : '') +
                             '<div class="card-body">' +
-                           '<div class="sacco-image">' +
-                            '<img src="/assets/images/image.PNG" alt="" class="image-tag shadow-2-strong">' +
+                            '<div class="sacco-image">' +
+                            '<img src="'+imageUrl+'" alt="" class="image-tag shadow-2-strong">' +
                             '<div class="shares-container-wrapper pl-2">' +
                             '<h5>' + share.name + '</h5>' +
                             '<span>' + share.shares_on_sale + ' shares @ ksh ' + share.total + '</span>' +
-                            '<a href="/share/' + share.uuid + '" type="button" class="btn btn-secondary list-share-sell-button">Buy Shares</a>' +
+                            '<a href="/share/' + share.uuid + '" class="list-share-sell-button">Buy Shares</a>' +
                         '</div>' +
                         '</div>' +
                         '</div>';
@@ -64,60 +71,66 @@ $(document).ready(function(){
 
     // Function to perform search
     function performSearch() {
-        let searchOne = $('#search-by-sacco').val();
         let searchTwo = $('#search-by-value').val();
         let sort = $('#sort').val();
 
-        $.ajax({
-            url: '/index/search',
-            method: 'POST',
-            data: {
-                searchOne: searchOne,
-                searchTwo: searchTwo,
-                sort: sort
-            },
-            success: function(response){
-                //update the dom
+        $('#search-by-sacco').on('change', function() {
+            var selectedOption = $(this).find('option:selected');
 
-                if(response.shares.length > 0) {
+            var selectedText = selectedOption.text();
 
-                    var sharesContainer = $('#shares-container .row');
-                    sharesContainer.empty();
+            $.ajax({
+                url: '/index/search',
+                method: 'POST',
+                data: {
+                    searchOne: selectedText,
+                    searchTwo: searchTwo,
+                    sort: sort
+                },
+                success: function(response){
+                    //update the dom
 
-                    $.each(response.shares, function(index, share) {
-                        var html = '<div class="col-md-3 pb-4">' +
-                            '<div class="card customize-card">' +
-                            '<div class="ribbon"><span>NEW</span></div>' +
-                            '<div class="card-body">' +
-                            '<div class="sacco-image">' +
-                            '<img src="/assets/images/image.PNG" alt="" class="image-tag img-thumbnail shadow-2-strong" style="object-fit: cover;">' +
-                            '<div class="shares-container-wrapper pl-2">' +
-                            '<h5>' + share.name + '</h5>' +
-                            '<span>' + share.shares_on_sale + ' shares @ ksh ' + share.total + '</span>' +
-                            '<a href="/share/' + share.uuid + '" type="button" class="btn btn-secondary list-share-sell-button">Buy Shares</a>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
-                        sharesContainer.append(html);
-                    });
+                    if(response.shares.length > 0) {
 
-                    // Update the pagination links using the provided pager object
+                        var sharesContainer = $('#shares-container .row');
+                        sharesContainer.empty();
 
-                } else {
-                    // If no records are returned in the AJAX response
-                    $('#shares-container .row').html('<h6 class="text-center">No shares found</h6>');
-                    $('#pagination-links').empty();
+                        $.each(response.shares, function(index, share) {
+                            var html = '<div class="col-md-3 pb-4">' +
+                                '<div class="card customize-card">' +
+                                '<div class="ribbon"><span>NEW</span></div>' +
+                                '<div class="card-body">' +
+                                '<div class="sacco-image">' +
+                                '<img src="/assets/images/image.PNG" alt="" class="image-tag img-thumbnail shadow-2-strong" style="object-fit: cover;">' +
+                                '<div class="shares-container-wrapper pl-2">' +
+                                '<h5>' + share.name + '</h5>' +
+                                '<span>' + share.shares_on_sale + ' shares @ ksh ' + share.total + '</span>' +
+                                '<a href="/share/' + share.uuid + '" type="button" class="btn btn-secondary list-share-sell-button">Buy Shares</a>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+                            sharesContainer.append(html);
+                        });
+
+                        // Update the pagination links using the provided pager object
+
+                    } else {
+                        // If no records are returned in the AJAX response
+                        $('#shares-container .row').html('<h6 class="text-center">No shares found</h6>');
+                        $('#pagination-links').empty();
+                    }
+
+
+                    $('#search-by-sacco').val('');
+                    $('#search-by-value').val('');
+
+                },
+                error: function(xhr, err, status){
+                    console.log(err);
                 }
-
-
-                $('#search-by-sacco').val('');
-                $('#search-by-value').val('');
-
-            },
-            error: function(xhr, err, status){
-                console.log(err);
-            }
+            });
         });
+
     }
 
     // Call function to load and render all records when page is ready
@@ -172,7 +185,6 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#logout').on('click', function(event) {
         event.preventDefault();
-        console.log('logout');
         $.ajax({
             url: '/logout',
             method: 'GET',
@@ -359,7 +371,6 @@ $(document).ready(function() {
                 terms: user_id,
             },
             success: function(response){
-             console.log(response);
             },
             error: function(xhr, err, status){
                 console.log(err);
@@ -407,17 +418,21 @@ $(document).ready(function() {
 // delete bids ajax
 
 $(document).ready(function() {
-    $('.reject-accept-delete').on('click',function(){
+    $('#accepted-accept-delete').on('click',function(){
         let share_id = $(this).attr('data-id');
-        console.log(share_id);
         $.ajax({
             url: '/share/delete_bid/'+share_id,
             method: 'GET',
             success: function(response){
                 if(response.status === 200) {
-                    location.reload();
-                    $('#success-message1').text(response.message);
-                    $('#success1').show();
+                    $('.custom-alert').css('display', 'block');
+                    $('.saved-message').text(response.message);
+                    $('#save-share').css('background-color', '#789f99');
+                    setTimeout(function(){
+                        location.reload();
+                    }, 3000);
+                }else{
+                    $('#save-share').css('background-color', '#e5e5e5');
                 }
             },
             error: function(xhr, err, status){
@@ -432,11 +447,18 @@ $(document).ready(function() {
     $('#rejected-bid-delete').on('click',function(){
         let share_id = $(this).attr('data-id');
         $.ajax({
-            url: '/share/delete_bid/'+share_id,
+            url: '/share/delete_bid_rejected/'+share_id,
             method: 'GET',
             success: function(response){
                 if(response.status === 200) {
-                    location.reload();
+                    $('.custom-alert').css('display', 'block');
+                    $('.saved-message').text(response.message);
+                    $('#save-share').css('background-color', '#789f99');
+                    setTimeout(function(){
+                        location.reload();
+                    }, 3000);
+                }else{
+                    $('#save-share').css('background-color', '#e5e5e5');
                 }
             },
             error: function(xhr, err, status){
@@ -457,9 +479,10 @@ $(document).ready(function() {
 
             var html = '';
             $.each(response.shares, function(index, share) {
+                let imageUrl = share.logo ? '/uploads/sacco-logo/'+share.logo : '/assets/images/image.PNG';
                 html += '<div class="swiper-slide">' +
                     '<div class="card card-hover-container">' +
-                    '<img src="/assets/images/image.PNG" class="card-img-top" alt="...">' +
+                    '<img src="'+ imageUrl + '" class="card-img-top" alt="...">' +
                     '<div class="card-body">' +
                     '<a href="/sacco-all-shares/' + share.uuid + '" class="sacco-read-more" id="get-single-sacco-share" data-id="'+share.uuid+'">View More <i class="fa-solid fa-arrow-right arrow-icon2"></i></a>' +
                     '</div>' +

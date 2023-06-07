@@ -3,12 +3,12 @@
         <h3 class="page-title">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
                   <i class="mdi mdi-home"></i>
-                </span> Approved Shares
+                </span> SupperAdmin Dashboard
         </h3>
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                    <span></span>Dashboard/Approved Shares <i class="mdi mdi-marker-check icon-sm text-primary align-middle"></i>
                 </li>
             </ul>
         </nav>
@@ -16,10 +16,11 @@
 
     <div class="row">
         <div class="col-12 grid-margin">
+            <h5 class="buyer-commission-container"><span><i class="mdi mdi-pocket buyer-commission"></i></span>Approved Shares</h5>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table" id="example">
                             <thead>
                             <tr>
                                 <th> Posted By </th>
@@ -45,6 +46,7 @@
                                                 <label class="badge badge-gradient-success">YES</label>
                                             <?php endif; ?>
                                         </td>
+                                        <?php $time = date('d M Y', strtotime($user['created_at'])) ?>
                                         <td> <?= $time ?> </td>
 
                                     </tr>

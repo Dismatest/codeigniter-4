@@ -27,14 +27,17 @@ h5::first-letter{
     justify-content: space-between;
 }
 
-.list-share-sell-button{
-    background: rgb(214, 178, 214);
+.shares-container-wrapper a{
+    background: var(--background-color);
+    border-radius: 3px;
+    padding: 5px 8px;
+    cursor: pointer;
     color: white;
+    text-align: center;
 }
-.list-share-sell-button:hover{
-    background: rgb(224, 191, 224) !important;
-    color: #eee9e9 !important;
-    transition: 300ms ease-out;
+
+.input-group .btn{
+    z-index: 0;
 }
 
 .shares-container-wrapper{

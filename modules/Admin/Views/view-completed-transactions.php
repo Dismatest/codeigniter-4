@@ -7,9 +7,16 @@
     <div class="container-fluid page-body-wrapper">
         <?= $this->include('Modules\Admin\Views\includes\sidebar');?>
         <div class="main-panel">
-            <?= $this->include('Modules\Admin\Views\partials\reports-content');?>
+            <?= $this->include('Modules\Admin\Views\partials\view-completed-transaction-content');?>
         </div>
     </div>
 </div>
+<?php $this->endSection();?>
+<?php $this->section('completed-transactions-script');?>
+<script>
+    $(document).ready(function(){
+        $('#manage-transaction').DataTable();
+    });
+</script>
 <?php $this->endSection();?>
 

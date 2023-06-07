@@ -6,7 +6,15 @@
     <div class="load"></div>
     <div class="sacco-shares-image-container">
         <div class="sacco-logo-image">
-            <img src="<?= base_url() . '/assets/images/logo.PNG' ?>" class="img-thumbnail" alt="">
+            <?php if(isset($sacco_name) && !empty($sacco_name)): ?>
+                <?php foreach($sacco_name as $name): ?>
+                <?php if($name['logo'] != null): ?>
+                    <img src="<?= base_url() . '/uploads/sacco-logo/' . $name['logo'] ?>" class="img-thumbnail" alt="">
+                <?php else: ?>
+                    <img src="<?= base_url() . '/assets/images/image.PNG' ?>" class="img-thumbnail" alt="">
+                <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
             <span><i class="fas fa-circle-check"></i></span>
             <?php if (isset($sacco_name)): ?>
                 <?php foreach ($sacco_name as $name): ?>
@@ -92,8 +100,13 @@
                                 <div class="card customize-card">
                                     <div class="card-body">
                                         <div class="sacco-image">
-                                            <img src="<?php echo base_url() . '/assets/images/image.PNG' ?>"
+                                            <?php if (!empty($share['logo'])) : ?>
+                                            <img src="<?= base_url() . '/uploads/sacco-logo/' . $share['logo'] ?>"
                                                  alt="sacco image" class="image-tag shadow-2-strong">
+                                            <?php else: ?>
+                                                <img src="<?= base_url() . '/assets/images/logo.PNG' ?>"
+                                                     alt="sacco image" class="image-tag shadow-2-strong">
+                                            <?php endif; ?>
                                             <div class="shares-container-wrapper pl-2">
                                                 <h5><?= $share['name'] ?></h5>
                                                 <span><?= $share['shares_on_sale'] . ' ' . 'shares @ ksh' . ' ' . $share['total'] ?></span>

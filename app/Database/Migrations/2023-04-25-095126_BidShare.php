@@ -16,6 +16,7 @@ class BidShare extends Migration
             'seller_id'   => ['type' => 'int', 'constraint' => 11],
             'share_on_sale_id'   => ['type' => 'varchar', 'constraint' => 32],
             'bid_amount'        => ['type' => 'decimal', 'constraint' => '10,2'],
+            'buyer_membership_number'        => ['type' => 'varchar', 'constraint' => 100],
             'action'        => ['type' => 'int', 'constraint' => 10, 'default' => 0],
             'updated_at'        => ['type' => 'datetime', 'null' => true],
             'created_at'        => ['type' => 'datetime', 'default' => date('Y-m-d H:i:s'), 'null' => true],

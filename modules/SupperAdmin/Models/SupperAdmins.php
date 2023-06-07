@@ -14,7 +14,7 @@ class SupperAdmins extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['fname', 'lname', 'email', 'password', 'remember_token','created_at'];
+    protected $allowedFields    = ['uuid','fname', 'lname', 'email', 'password', 'remember_token','created_at', 'updated_at'];
 
     // Dates
     protected $useTimestamps = false;

@@ -21,8 +21,9 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'isAdminLoggedInFilter' => \Modules\SupperAdmin\Filters\AdminLoginFilter::class,
+        'isSaccoAdminLoggedInFilter' => \Modules\Admin\Filters\SaccoAdminLoginFilter::class,
         'isLoggedInFilter' => \App\Filters\LoginFilter::class,
-        'isAdminLoggedInFilter' => \App\Filters\AdminLoginFilter::class,
         'ipBlocker' => \App\Filters\IpBlocker::class,
     ];
 
@@ -40,6 +41,10 @@ class Filters extends BaseConfig
 //                'except' => [
 //                    '',
 //                    '/*',
+//            'isAdminLoggedInFilter' => [
+//                'before' => ['Modules\SupperAdmin\Controllers\SupperAdmin/*'],
+//            ],
+
             ],
 //        ],
 //        ],

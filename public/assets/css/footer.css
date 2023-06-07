@@ -1,8 +1,10 @@
 .footer{
-    background-color: rgb(110, 109, 109);
+    background: linear-gradient(to right, #80bdaf, #0a1031);
     padding-top: 3.0em;
-
+    border-top-left-radius: 125px;
+    color: white;
 }
+
 .footer-about{
     margin-bottom: 30px;
 }
@@ -17,28 +19,35 @@ a:hover, input:focus{
     outline: none;
     color: black;
 }
-.footer-about .footer-logo{
-    margin-bottom: 30px;
-}
 .footer-logo img{
-    height: 7em;
+    height: 5em;
     object-fit: cover;
+}
+.footer-about{
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+}
+.info-message{
+    display: flex;
+    flex-direction: column;
 }
 .footer-about p{
     color: white;
-    margin-bottom: 0.8rem;
+    margin-left: 10px;
     font-size: 1.3rem;
+    padding-bottom: 5px;
 }
 .footer-widget{
-    margin-bottom:30px;
+    margin-bottom: 15px;
 }
 .footer-widget h6{
-    color: black;
+    color: white;
     font-size: 1rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 .footer-widget ul li{
     line-height: 36px;
@@ -57,20 +66,20 @@ a:hover, input:focus{
 }
 .footer-widget .footer-newsletter input{
     width: 100%;
-    font-size: 14px;
+    font-size: 13px;
     color: white;
     background: transparent;
     border: none;
-    padding: 15px 0;
-    border-bottom: 2px solid rgb(214, 178, 214);
+    padding: 8px 0;
+    border-bottom: 2px solid white;
 }
 
 .footer-widget .footer-newsletter input::placeholder{
-    color: black;
+    color: white;
 }
 .footer-widget .footer-newsletter form button{
     color: black;
-    font-size: 16px;
+    font-size: 13px;
     position: absolute;
     right: 5px;
     top: 0;
@@ -83,12 +92,11 @@ a:hover, input:focus{
     font-size: 1rem;
 }
 .footer-copyright-text{
-    border-top: 1px solid rgb(214, 178, 214);
+    border-top: 1px solid white;
     padding: 20px 0;
     margin-top: 40px;
 }
 .footer-copyright-tex p{
-    color: black;
     margin-bottom: 0;
     font-size: 1rem;
 }
@@ -107,7 +115,8 @@ a:hover, input:focus{
 .social-icon-style{
     display: grid;
     place-items: center;
-    background: rgb(214, 178, 214);
+    background: white;
+    color: black;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -142,7 +151,7 @@ a:hover, input:focus{
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #3f3d3d;
+    background: var(--background-color);
     overflow: hidden;
     display: flex;
     align-items: baseline;
@@ -155,7 +164,7 @@ a:hover, input:focus{
     font-size: 12px;
     width: 25px;
     height: 25px;
-    background: rgb(214, 178, 214);
+    background: var(--primary-color);
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -189,6 +198,16 @@ a:hover, input:focus{
     .bottom-nav-wrapper{
         display: block;
     }
+    .footer{
+        border-top-left-radius: 80px;
+    }
+    .footer-about{
+        display:flex;
+        flex-direction: column;
+    }
+    .footer-logo{
+        padding-bottom: 5px;
+    }
 }
 @media (max-width: 302px){
     .bottom-nav-tags span{
@@ -207,6 +226,9 @@ a:hover, input:focus{
         place-items: center;
     }
     .last-hr{
+        display: none;
+    }
+    .footer-logo{
         display: none;
     }
 }

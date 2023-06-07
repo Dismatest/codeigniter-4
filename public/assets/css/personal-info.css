@@ -25,7 +25,6 @@
 
 .personal-info-container{
     background-color: white;
-
     border-radius: 4px;
     box-shadow: 0 0 10px rgb(234, 234, 234);
     padding: 12px;
@@ -41,10 +40,18 @@
     justify-content: flex-end;
 }
 .update-personal-info-edit-button{
-    background-color: rgb(186, 26, 186);
+    background-color: var(--background-color);
     border: none;
     margin: 10px 0;
-    padding: 10px 20px;
+    padding: 10px 40px;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.profile-label{
+    font-weight: 500;
+    color: grey;
+    font-size: 1.5rem;
 }
 .profile-image-upload{
     display: flex;
@@ -56,13 +63,21 @@
     padding: 7px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 14px;
     color: #333;
     width: 100%;
+    margin-top: 8px;
+    margin-bottom: 8px;
   }
 .personal-information-edit:focus{
     outline: none;
+    border: 1px solid var(--background-color);
 }
 .update-personal-info{
     padding: 10px;
+}
+@media (max-width: 767px) {
+    .profile-img-container {
+        border-right: 2px solid white;
+    }
 }

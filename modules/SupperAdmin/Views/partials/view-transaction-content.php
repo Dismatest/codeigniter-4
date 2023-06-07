@@ -1,5 +1,19 @@
 
 <div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                  <i class="mdi mdi-home"></i>
+                </span> SupperAdmin Dashboard
+        </h3>
+        <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span></span>SupperAdmin/Transaction Report <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                </li>
+            </ul>
+        </nav>
+    </div>
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">
@@ -26,11 +40,7 @@
                                         <td><?= $transaction['shares_on_sale'] ?></td>
                                         <td><?= $transaction['total'] ?></td>
                                         <td><?= $transaction['amount'] ?></td>
-                                        <?php if ($transaction['status'] == 0): ?>
-                                            <td><label class="badge badge-gradient-warning">pending</label></td>
-                                        <?php else: ?>
-                                            <td><label class="badge badge-gradient-success">complete</label></td>
-                                        <?php endif; ?>
+                                        <td><label class="badge badge-gradient-success">complete</label></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>

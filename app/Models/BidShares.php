@@ -14,7 +14,7 @@ class BidShares extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['buyer_id', 'share_on_sale_id', 'seller_id', 'sacco_id', 'bid_amount', 'action'];
+    protected $allowedFields    = ['buyer_id', 'share_on_sale_id', 'seller_id', 'sacco_id', 'bid_amount', 'buyer_membership_number', 'action'];
 
     // Dates
     protected $useTimestamps = false;

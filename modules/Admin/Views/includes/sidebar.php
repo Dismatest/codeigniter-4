@@ -16,18 +16,45 @@
 
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="<?= 'create_share' ?>">Sell Shares</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="<?= 'manage-shares' ?>">Shares on Sale</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/notifications') ?>">Pending Approval</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/create_share') ?>">Sell Shares</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/manage-shares') ?>">Shares on Sale</a></li>
                 </ul>
             </div>
 
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<?= 'reports' ?>">
-                <span class="menu-title">Reports</span>
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basics" aria-expanded="false" aria-controls="ui-basics">
+                <span class="menu-title">Transactions</span>
+                <i class="menu-arrow"></i>
                 <i class="mdi mdi-table-large menu-icon"></i>
             </a>
+
+            <div class="collapse" id="ui-basics">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/manage-transactions') ?>">Manage Transactions</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/completed-transaction') ?>">Completed Transactions</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/pending-transaction') ?>">Incomplete Transactions</a></li>
+                </ul>
+            </div>
+
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basics1" aria-expanded="false" aria-controls="ui-basics1">
+                <span class="menu-title">Bids Report</span>
+                <i class="menu-arrow"></i>
+                <i class="mdi mdi-account-convert menu-icon"></i>
+            </a>
+
+            <div class="collapse" id="ui-basics1">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/bids-report')?>">Seller's Bids</a></li>
+                </ul>
+            </div>
+
+        </li>
+
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
                 <span class="menu-title">Members</span>
@@ -41,15 +68,15 @@
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<?= 'upload_files'?>">
-                <span class="menu-title">Terms & conditions</span>
-                <i class="mdi mdi-arrange-bring-forward menu-icon"></i>
-            </a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" href="<?= 'new_user' ?>">
                 <span class="menu-title">Register member</span>
                 <i class="mdi mdi-account-circle menu-icon"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= 'upload_files'?>">
+                <span class="menu-title">Terms & conditions</span>
+                <i class="mdi mdi-arrange-bring-forward menu-icon"></i>
             </a>
         </li>
     </ul>

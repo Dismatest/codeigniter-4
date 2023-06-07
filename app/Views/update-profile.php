@@ -6,7 +6,7 @@
 <div class="container personal-info-container" id="personal-info-main-section">
 
     <div class="row main-row-info">
-            <h6 class="profile-image-heading text-center">Personal Information</h6>
+            <h6 class="profile-image-heading text-center">Personal Your Personal Information</h6>
         <?php if(session()->getTempdata('success')) :?>
             <div class="alert alert-success" role="alert">
                 <?= session()->getTempdata('success') ?>
@@ -20,7 +20,7 @@
             <div class="profile-img-container">
                 <?php if(isset($userData->profile)) :?>
                     <div class="profile-image-upload">
-                        <img class="img-upload" src="<?= base_url().'/uploads/'.$userData->profile?>" alt="">
+                        <img class="img-upload" src="<?= base_url().'/uploads/'.$userData->profile ?>" alt="">
                     </div>
                 <?php else :?>
                     <div class="profile-image-upload">
@@ -37,7 +37,7 @@
 
                 <form action="" method="post" enctype="multipart/form-data">
                     <?php csrf_token() ?>
-                    <div>
+                    <div class="profile-label">
                     <label for="First Name">First Name</label>
                     </div>
                     <input type="text" class="personal-information-edit" value="<?= $userData->fname ; ?>" name="fname">
@@ -48,7 +48,7 @@
                         <?php endif;?>
                     <?php endif ?>
 
-                    <div>
+                    <div class="profile-label">
                     <label for="First Name">Last Name</label>
 
                     <input type="text" class="personal-information-edit" value="<?= $userData->lname ; ?>" name="lname">
@@ -60,7 +60,7 @@
                         <?php endif ?>
                         
                     </div>
-                    <div>
+                    <div class="profile-label">
                         <label for="">Phone Number</label>
                     </div>
                         <input type="tel" class="personal-information-edit" value="<?= $userData->phone ; ?>" name="phone">
@@ -71,7 +71,7 @@
                         <?php endif;?>
                     <?php endif ?>
 
-                    <div>
+                    <div class="profile-label">
                         <label for="">Profile</label>
                     </div>
                         <input type="file" class="personal-information-edit" value="<?= $userData->profile ; ?>" name="avatar" required

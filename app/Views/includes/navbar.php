@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand-lg pb-5 pt-5">
     <header>
-        <a href="<?= base_url('/') ?>" class='logo'>Shares</a>
+        <a href="<?= base_url('/') ?>" class='logo'>
+            <img src="<?= base_url('assets/images/logo-hisa.png') ?>" alt="Hisa Logo" style="height: 50px;">
+        </a>
         <nav class="navbar2">
             <div class="btn1">
                 <i class="fas fa-circle-xmark close-btn-x"></i>

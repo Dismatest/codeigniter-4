@@ -22,26 +22,9 @@ div.dataTables_wrapper div.dataTables_filter input:focus{
     padding: 10px 0;
     font-size: 14px;
 }
-
-.error {
-    border-color: red;
-    color: red;
-}
-
 .show-success-message {
     display: none !important;
 }
-
-.valid {
-    border-color: green;
-}
-
-.help-block {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
 #col-content-section {
     background-color: white;
     border-radius: 4px;
@@ -115,7 +98,7 @@ div.dataTables_wrapper div.dataTables_filter input:focus{
 
 #selling-history-icon {
     font-size: 18px;
-    color: rgb(155, 4, 155);
+    color: var(--background-color);
 
 }
 
@@ -132,11 +115,11 @@ div.dataTables_wrapper div.dataTables_filter input:focus{
 #example .btn {
     margin: 10px 3px 10px 0;
     border-radius: 0;
-    background-color: rgb(214, 178, 214);
-    color: black;
+    background: var(--background-color);
     font-size: 12px;
     border: none;
     color: white;
+    border-radius: 4px;
 }
 
 .dashboardDataTable .btn:hover {
@@ -529,7 +512,7 @@ span.psw {
 .user-payment-model {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 200; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -869,9 +852,11 @@ tr:nth-child(even):hover {
 /*start of the related shares css */
 .related-shares-title {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     text-align: center;
+    color: var(--background-color);
 }
+
 
 /*end of the related shares csaa*/
 
