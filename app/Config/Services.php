@@ -8,20 +8,8 @@ use App\Services\UserSaccoMembership;
 use App\Services\SendTextMessageService;
 use App\Services\UserShares;
 use App\Services\IsApproved;
-
-/**
- * Services Configuration file.
- *
- * Services are simply other classes/libraries that the system uses
- * to do its job. This is used by CodeIgniter to allow the core of the
- * framework to be swapped out easily without affecting the usage within
- * the rest of your application.
- *
- * This file holds any application-specific services, or service overrides
- * that you might need. An example has been included with the general
- * method format you should use for your service methods. For more examples,
- * see the core Services file at system/Config/Services.php.
- */
+use App\Services\SendEmailService;
+use App\Services\PaymentService;
 
 class Services extends BaseService
 {
@@ -69,6 +57,24 @@ class Services extends BaseService
         }
 
         return new SendTextMessageService();
+    }
+
+    public static function sendEmail($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('sendEmail');
+        }
+
+        return new SendEmailService();
+    }
+
+    public static function paymentService($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('paymentService');
+        }
+
+        return new PaymentService();
     }
 }
 

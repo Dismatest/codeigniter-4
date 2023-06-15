@@ -8,6 +8,7 @@ use App\Models\Users;
 use App\Models\Shares;
 use App\Models\Sacco;
 use App\Models\SaccoMembership;
+use App\Models\LoginActivityModel;
 use App\Models\Notification;
 use App\Models\SharesOnSale;
 use App\Models\SaccoShares;
@@ -15,7 +16,6 @@ use App\Models\BidShares;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\I18n\Time;
 use Ramsey\Uuid\Uuid;
-use mysql_xdevapi\Exception;
 
 class Home extends BaseController
 
@@ -33,6 +33,7 @@ class Home extends BaseController
     public $saccoMembershp;
     public $notification;
     public $bidShares;
+    public $loginActivityModel;
 
     public function __construct()
     {
@@ -47,6 +48,7 @@ class Home extends BaseController
         $this->sharesOnSale = new SharesOnSale();
         $this->saccoShares = new SaccoShares();
         $this->bidShares = new BidShares();
+        $this->loginActivityModel = new LoginActivityModel();
     }
 
     public function welcomePage()
@@ -222,16 +224,34 @@ class Home extends BaseController
                 if (!empty($userData)) {
 
                     if ($this->displayDashboard->updateResetTime($userData['uniid'])) {
-                        $name = $userData['fname'];
-                        $emailSubject = "Password reset link";
-                        $setFrom = 'billclintonogot88@gmail.com';
-                        $messageTitle = "Sacco Hisa Password Reset Link";
-                        $message = "Your your password reset link has been sent successfully, click the link now to change your password, the link expires within 39min" . anchor(base_url('password-reset/' . $userData['uniid']), ' reset password link', '');
+                        $subject = "Password reset link";
 
-                        if ($this->sendEmail($name, $email, $setFrom, $messageTitle, $emailSubject, $message)) {
+                        $message = "<br/><br/> " . $userData['fname'] . ", this email contains your password reset link. click the link now to change your password, the link expires within 39min " . anchor(base_url('password-reset/' . $userData['uniid']), ' password reset link', '');
+
+                        if (service('sendEmail')->send_email($userData['email'], $userData['fname'], $subject, $message)) {
+                            $email_logs = [
+                                'uuid' => Uuid::uuid4()->toString(),
+                                'fname' => $userData['fname'] . ' ' . $userData['lname'],
+                                'email' => $userData['email'],
+                                'message_title' => $subject,
+                                'role' => 'user',
+                                'status' => '1',
+                            ];
+
+                            $this->loginActivityModel->insertEmailLogs($email_logs);
                             session()->setTempdata('success', 'An email with the password reset link has been sent to your email, change your password within 39 min', 3);
                             return redirect()->to(base_url('forgot-password'));
                         } else {
+                            $email_logs = [
+                                'uuid' => Uuid::uuid4()->toString(),
+                                'fname' => $userData['fname'] . ' ' . $userData['lname'],
+                                'email' => $userData['email'],
+                                'message_title' => $subject,
+                                'role' => 'saccoAdmin',
+                                'status' => '0',
+                            ];
+
+                            $this->loginActivityModel->insertEmailLogs($email_logs);
                             return redirect()->to(base_url('forgot-password'))->with('fail', 'we can not send an activation email now');
                         }
 
@@ -247,27 +267,6 @@ class Home extends BaseController
             }
         }
         return view('forgot-password', $data);
-    }
-
-    public function sendEmail($fname, $email, $setFrom, $messageTitle, $emailSubject, $message)
-    {
-        $this->email->setFrom($setFrom, $messageTitle);
-        $this->email->setTo("$email");
-
-        $this->email->setSubject("$emailSubject");
-
-        $email_template = view('email_template_account_creation', [
-            'name' => $fname,
-            'message' => $message
-        ]);
-
-        // Set email message
-        $this->email->setMessage($email_template);
-        if ($this->email->send()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public function passwordReset($uniid = null)
@@ -369,120 +368,6 @@ class Home extends BaseController
         return view('share', $data);
     }
 
-    function lipaNaMpesaPassword()
-    {
-        //timestamp
-        $timestamp = date('YmdHms');
-        //passkey
-        $passKey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
-
-        $businessShortCOde = 174379;
-        //generate password
-        return base64_encode($businessShortCOde . $passKey . $timestamp);
-
-    }
-
-
-    function newAccessToken()
-    {
-        $consumer_key = "3AYA63kiam57dzjJSGnGVnmS3z6fSEAR";
-        $consumer_secret = "OIvi32V0JF3GuHIP";
-        $credentials = base64_encode($consumer_key . ":" . $consumer_secret);
-        $url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
-
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Basic " . $credentials, "Content-Type:application/json"));
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $curl_response = curl_exec($curl);
-        $access_token = json_decode($curl_response);
-        curl_close($curl);
-
-        if ($access_token) {
-            return $access_token->access_token;
-        } else {
-            return false;
-        }
-    }
-
-    public function confirmPayment()
-    {
-        $myPhone = $this->request->getPost('phoneNumber');
-        $price = $this->request->getPost('bidAmount');
-        $share_id = $this->request->getPost('shareId');
-        $buyerId = $this->request->getPost('buyerId');
-
-        $encodedData = json_encode(gettype($price));
-        log_message('info', $encodedData);
-
-        $url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
-        $curl_post_data = [
-            'BusinessShortCode' => getenv('MPESA_SHORTCODE'),
-            'Password' => $this->lipaNaMpesaPassword(),
-            'Timestamp' => date('YmdHms'),
-            'TransactionType' => "CustomerPayBillOnline",
-            'Amount' => (float)$price, // $price
-            'PartyA' => $myPhone,
-            'PartyB' => getenv('MPESA_PARTYB'),
-            'PhoneNumber' => $myPhone,
-            'CallBackURL' => "https://saccohisa.mzawadi.com/payment_callback",
-            'AccountReference' => "saccoHisa",
-            'TransactionDesc' => "buy share capital",
-        ];
-
-        $data_string = json_encode($curl_post_data);
-
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Authorization:Bearer ' . $this->newAccessToken()));
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
-        $curl_response = curl_exec($curl);
-        $data = json_encode($curl_response);
-        if ($curl_response === false) {
-            $info = curl_getinfo($curl);
-            curl_close($curl);
-            $response = [
-                'status' => 500,
-                'message' => 'We could not process your payment, try again later',
-            ];
-            return $this->response->setJSON($response);
-        } else {
-            $response = json_decode($curl_response, true);
-            if ($response['ResponseCode'] == 0) {
-
-                $data = [
-                    'share_id' => $share_id,
-                    'user_id' => $buyerId,
-                    'merchantRequestID' => $response['MerchantRequestID'],
-                    'checkoutRequestID' => $response['CheckoutRequestID'],
-                ];
-
-                $saveResponse = $this->displayDashboard->savePaymentsData($data);
-                if ($saveResponse) {
-                    $response = [
-                        'status' => 200,
-                        'message' => 'Payment Pending, please check your phone to complete the payment',
-                    ];
-                    return $this->respond($response);
-                } else {
-                    $response = [
-                        'status' => 500,
-                        'message' => 'We could not process your payment, please, try again later',
-                    ];
-                    return $this->respond($response);
-                }
-                curl_close($curl);
-            }
-
-        }
-    }
-
     public function getBid()
     {
         $bid_id = $this->request->getPost('bidId');
@@ -506,9 +391,19 @@ class Home extends BaseController
 
     }
 
-    public function processPhoneNumber($phone)
+    public function confirmPayment()
     {
-        return substr($phone, 1);
+        $myPhone = $this->request->getPost('phoneNumber');
+        $price = $this->request->getPost('bidAmount');
+        $bid_id = $this->request->getPost('bidId');
+
+        $response = service('paymentService')->payment($myPhone, $price, $bid_id);
+
+        if($response['status'] == 200){
+            return $this->response->setJSON($response, 200);
+        }else if ($response['status'] == 500) {
+            return $this->response->setJSON($response, 500);
+        }
 
     }
 
@@ -528,6 +423,7 @@ class Home extends BaseController
             $mpesaReceiptNumber = '';
             $phone = '';
             $date = '';
+            $callback_uuid = Uuid::uuid4()->toString();
 
             foreach ($json['Body']['stkCallback']['CallbackMetadata']['Item'] as $params) {
                 switch ($params['Name']) {
@@ -546,7 +442,16 @@ class Home extends BaseController
                 }
             }
             try {
-                $this->displayDashboard->updatePaymentData($amount, $mpesaReceiptNumber, $phone, $date, $merchantRequestID, $checkoutRequestID);
+                $callbackData = [
+                    'callback_uuid' => $callback_uuid,
+                    'merchantRequestID' => $merchantRequestID,
+                    'checkoutRequestID' => $checkoutRequestID,
+                    'amount' => $amount,
+                    'mpesaReceiptNumber' => $mpesaReceiptNumber,
+                    'phoneNumber' => $phone,
+                    'transactionDate' => $date,
+                ];
+                $this->displayDashboard->updatePaymentData($callbackData);
 
             } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
                 $data = [
@@ -556,6 +461,40 @@ class Home extends BaseController
             }
         }
         return 'ok';
+    }
+    function checkPayment(){
+        $merchantRequestID= $this->request->getPost('merchantRequestID');
+        $responseData = $this->displayDashboard->checkPaymentModel($merchantRequestID);
+       if(!empty($responseData['mpesaReceiptNumber'])){
+           $transactionMessage = 'We acknowledge payment of Ksh. '.$responseData['amount'].' to sacco Hisa, at '.$responseData['transactionDate'].'. Thank you for using our services.';
+           if(service('sendSMS')->text_msg($responseData['phoneNumber'], $transactionMessage)){
+               $email_logs = [
+                   'uuid' => Uuid::uuid4()->toString(),
+                   'fname' => session()->get('fname').' ' .session()->get('lname'),
+                   'phone' => session()->get('phone'),
+                   'message_title' => 'Bid accepted',
+                   'role' => 'user',
+                   'status' => '1',
+               ];
+               $this->displayDashboard->insertSMSLogs($email_logs);
+           }else{
+               $email_logs = [
+                   'uuid' => Uuid::uuid4()->toString(),
+                   'fname' => session()->get('fname').' ' .session()->get('lname'),
+                   'phone' => session()->get('phone'),
+                   'message_title' => 'Bid accepted',
+                   'role' => 'user',
+                   'status' => '0',
+               ];
+               $this->displayDashboard->insertSMSLogs($email_logs);
+           }
+           $response = [
+               'status' => 200,
+               'mpesaReceiptNumber' => $responseData['mpesaReceiptNumber'],
+               'message' => 'Payment successful, mpesaReceiptNumber'.$responseData['mpesaReceiptNumber'].' .Thank you',
+           ];
+              return $this->response->setJSON($response);
+       }
     }
 
     public function saccoMembership()
@@ -589,6 +528,7 @@ class Home extends BaseController
 
             $bidData = [
                 'buyer_id' => $uuid,
+                'uuid' => Uuid::uuid4()->toString(),
                 'share_on_sale_id' => $id,
                 'bid_amount' => $bid,
                 'buyer_membership_number' => $buyerMembershipNumber,
@@ -670,7 +610,7 @@ class Home extends BaseController
 
 //        the seller sees the bids that have been placed on his shares
 
-        $bid_share = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.created_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as buyer_fname, users.lname as buyer_lname, sacco.name')
+        $bid_share = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.uuid as bid_uuid, bid_share.action, bid_share.created_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as buyer_fname, users.lname as buyer_lname, sacco.name')
             ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'right')
             ->join('users', 'users.uniid = bid_share.buyer_id', 'left')
             ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
@@ -680,7 +620,7 @@ class Home extends BaseController
 
 //        the seller accepts the bid goes to the buyer
 
-        $accepted_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.total, shares_on_sale.uuid, shares_on_sale.share_on_sale_id, users.fname as seller_fname, users.lname as seller_lname, sacco.name, sacco.sacco_id')
+        $accepted_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.uuid as bid_uuid, bid_share.updated_at, shares_on_sale.total, shares_on_sale.uuid, users.fname as seller_fname, users.lname as seller_lname, sacco.name, sacco.sacco_id')
             ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'right')
             ->join('users', 'users.user_id = bid_share.seller_id', 'right')
             ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'right')
@@ -688,8 +628,9 @@ class Home extends BaseController
             ->where('bid_share.action', '1')
             ->findAll();
 
+
 //        the seller rejects the bid, goes to the buyer
-        $rejected_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.action, bid_share.updated_at, shares_on_sale.uuid, shares_on_sale.total, shares_on_sale.share_on_sale_id, users.fname as seller_fname, users.lname as seller_lname, sacco.name')
+        $rejected_bids = $this->bidShares->select('bid_share.bid_amount, bid_share.bid_id, bid_share.uuid as bid_uuid, bid_share.action, bid_share.updated_at, shares_on_sale.uuid, shares_on_sale.total, shares_on_sale.share_on_sale_id, users.fname as seller_fname, users.lname as seller_lname, sacco.name')
             ->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'left')
             ->join('users', 'users.user_id = bid_share.seller_id', 'left')
             ->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left')
@@ -735,22 +676,44 @@ class Home extends BaseController
             'pdf_view' => $pdf_view,
         ];
 
+
         return view('bids', $data);
     }
 
     public function acceptBid($id = null)
     {
-        $bids = $this->bidShares->find($id);
+        $bids = $this->bidShares->where('uuid', $id)->first();
         $sacco = $this->sacco->select('name')->where('sacco_id', $bids['sacco_id'])->first();
         $bidAmount = $bids['bid_amount'];
-        $buyer_phone = $this->users->select('phone')->where('uniid', $bids['buyer_id'])->first();
-        $message = 'Your bid of Ksh ' . $bidAmount . ' on ' . $sacco['name'] . ' shares capital has been accepted, you can now purchase the shares';
+        $buyer_phone = $this->users->select('phone, fname')->where('uniid', $bids['buyer_id'])->first();
+        $base_url = base_url('my_bids');
+        $message = 'Dear, '. $buyer_phone['fname'] .' your bid of Ksh ' . $bidAmount . ' for ' . $sacco['name'] . ' shares capital was accepted by the seller, you can now purchase the share capital. Go to ' . $base_url;
         $bidData = [
             'updated_at' => date('Y-m-d h:i:s'),
             'action' => '1',
         ];
         if ($this->bidShares->update($bids['bid_id'], $bidData)) {
-            service('sendSMS')->text_msg($buyer_phone['phone'], $message);
+            if(service('sendSMS')->text_msg($buyer_phone['phone'], $message)){
+                $email_logs = [
+                    'uuid' => Uuid::uuid4()->toString(),
+                    'fname' => session()->get('fname').' ' .session()->get('lname'),
+                    'phone' => session()->get('phone'),
+                    'message_title' => 'Bid accepted',
+                    'role' => 'user',
+                    'status' => '1',
+                ];
+                $this->displayDashboard->insertSMSLogs($email_logs);
+            }else{
+                $email_logs = [
+                    'uuid' => Uuid::uuid4()->toString(),
+                    'fname' => session()->get('fname').' ' .session()->get('lname'),
+                    'phone' => session()->get('phone'),
+                    'message_title' => 'Bid accepted',
+                    'role' => 'user',
+                    'status' => '0',
+                ];
+                $this->displayDashboard->insertSMSLogs($email_logs);
+            }
             session()->setFlashdata('success', 'Share capital bid has been approved successfully', 3);
             return redirect()->back()->to(base_url() . '/saved/your_active_shares');
         } else {
@@ -765,14 +728,34 @@ class Home extends BaseController
         $bids = $this->bidShares->find($id);
         $sacco = $this->sacco->select('name')->where('sacco_id', $bids['sacco_id'])->first();
         $bidAmount = $bids['bid_amount'];
-        $buyer_phone = $this->users->select('phone')->where('uniid', $bids['buyer_id'])->first();
-        $message = 'Your bid of Ksh ' . $bidAmount . ' on ' . $sacco['name'] . ' share capital has been rejected by the owner, you can bid again';
+        $buyer_phone = $this->users->select('phone, fname')->where('uniid', $bids['buyer_id'])->first();
+        $message = 'Dear, '.$buyer_phone['fname'].' your bid of Ksh ' . $bidAmount . ' on ' . $sacco['name'] . ' share capital was rejected by the seller. Please try again with a higher bid amount.';
         $bidData = [
             'updated_at' => date('Y-m-d h:i:s'),
             'action' => '2',
         ];
         if ($this->bidShares->update($bids['bid_id'], $bidData)) {
-            service('sendSMS')->text_msg($buyer_phone['phone'], $message);
+            if(service('sendSMS')->text_msg($buyer_phone['phone'], $message)){
+                $email_logs = [
+                    'uuid' => Uuid::uuid4()->toString(),
+                    'fname' => session()->get('fname').' ' .session()->get('lname'),
+                    'phone' => session()->get('phone'),
+                    'message_title' => 'Bid rejected',
+                    'role' => 'user',
+                    'status' => '1',
+                ];
+                $this->displayDashboard->insertSMSLogs($email_logs);
+            }else{
+                $email_logs = [
+                    'uuid' => Uuid::uuid4()->toString(),
+                    'fname' => session()->get('fname').' ' .session()->get('lname'),
+                    'phone' => session()->get('phone'),
+                    'message_title' => 'Bid rejected',
+                    'role' => 'user',
+                    'status' => '0',
+                ];
+                $this->displayDashboard->insertSMSLogs($email_logs);
+            }
             session()->setFlashdata('success', 'You have rejected the bid successfully', 3);
             return redirect()->back()->to(base_url() . '/saved/your_active_shares');
         } else {
@@ -819,8 +802,17 @@ class Home extends BaseController
         $data = [
             'userData' => $userServices->getUserData(),
         ];
-        return view('settings', $data);
+        return view('account', $data);
 
+    }
+
+    public function settings()
+    {
+        $userServices = service('userData');
+        $data = [
+            'userData' => $userServices->getUserData(),
+        ];
+        return view('settings', $data);
     }
 
     public function needHelp()

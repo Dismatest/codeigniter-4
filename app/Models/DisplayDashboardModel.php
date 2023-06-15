@@ -97,7 +97,7 @@ public function membershipStatus(){
     public function validateEmail($email)
     {
         $builder = $this->db->table('users');
-        $builder->select("uniid, fname, lname, password");
+        $builder->select("user_id, uniid, fname, lname email");
         $builder->where('email', $email);
         $result = $builder->get();
         if (count($result->getResultArray()) == 1) { //getReultArray() returns more than one row
@@ -192,19 +192,27 @@ public function membershipStatus(){
 
     }
 
-    public function updatePaymentData($amount, $mpesaReceiptNumber, $phone, $date, $merchantRequestID, $checkoutRequestID)
+    public function updatePaymentData($callbackData)
     {
-        $builder = $this->db->table('transactions');
-        $builder->where('merchantRequestID', $merchantRequestID);
-        $builder->where('checkoutRequestID', $checkoutRequestID);
-        $builder->update(['amount' => $amount, 'mpesaReceiptNumber' => $mpesaReceiptNumber, 'phoneNumber' => $phone, 'transactionDate' => $date]);
-        log($builder->getCompiledUpdate());
+        $builder = $this->db->table('callbacks');
+        $builder->insert($callbackData);
         if ($this->db->affectedRows() > 0) {
             return true;
         } else {
             return false;
         }
+    }
 
+    public function checkPaymentModel($merchantRequestID){
+        $builder = $this->db->table('callbacks');
+        $builder->select('mpesaReceiptNumber, phoneNumber, amount, transactionDate');
+        $builder->where('merchantRequestID', $merchantRequestID);
+        $result = $builder->get();
+        if (count($result->getResultArray()) > 0) {
+            return $result->getResultArray();
+        } else {
+            return array();
+        }
     }
 
     public function insertError($data)
@@ -460,6 +468,15 @@ public function membershipStatus(){
         $builder->where('search.total', $searchTwo);
         $result = $builder->get();
         if (count($result->getResultArray()) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function insertSMSLogs($data){
+        $builder = $this->db->table('sms_logs');
+        $builder->insert($data);
+        if ($this->db->affectedRows() > 0) {
             return true;
         } else {
             return false;

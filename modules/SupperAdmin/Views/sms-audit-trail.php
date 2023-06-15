@@ -7,7 +7,7 @@
         <div class="container-fluid page-body-wrapper">
             <?= $this->include('Modules\SupperAdmin\Views\includes\sidebar.php');?>
             <div class="main-panel">
-                <?= $this->include('Modules\SupperAdmin\Views\partials\not-approved-shares-content.php');?>
+                <?= $this->include('Modules\SupperAdmin\Views\sacco\sms-audit-trail-content.php');?>
             </div>
         </div>
     </div>

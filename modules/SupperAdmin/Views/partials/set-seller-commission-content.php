@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
 
-                        <table id="buyer-commission-table" class="table table-striped" style="width:100%">
+                        <table id="seller-commission-table" class="table table-striped" style="width:100%">
                             <thead>
                             <tr>
                                 <th> commission </th>
@@ -58,14 +58,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="selectInputBuyerCommission" class="form-label">Set commission *</label>
-                        <input type="number" id="selectInputBuyerCommission" class="form-control form-control-lg" name="buyerCommission" value="">
+                        <input type="number" id="selectInputSellerCommission" class="form-control form-control-lg" name="sellerCommission" value="">
                         <span class="buyer-commission-error"></span>
                         <span class="buyer-commission-success"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success" id="save-buyers-commission">Save</button>
+                    <button type="button" class="btn btn-success" id="save-seller-commission">Save</button>
                 </div>
             </form>
         </div>
@@ -73,3 +73,29 @@
 </div>
 
 <!--update buyer commission modal-->
+<div class="modal fade" id="updateExampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Update Seller's Commission</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="pt-3" id="set-buyer-commission">
+                <?= csrf_field() ?>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="updateBuyerCommission" class="form-label">Update commission</label>
+                        <input type="number" id="updateSellerCommission" class="form-control form-control-lg" value="">
+                        <span class="update-commission-error"></span>
+                        <span class="update-commission-success"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="update-seller-commission">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--end of the modal --->

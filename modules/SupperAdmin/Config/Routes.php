@@ -21,13 +21,14 @@ $routes->group('supperAdmin', ['namespace' => 'Modules\SupperAdmin\Controllers',
     $routes->get('user-log-in-activities/(:num)', 'SupperAdmin::userLogInActivitiesDelete/$1');
 
     $routes->match(['post', 'get'], 'manage-users', 'SupperAdmin::manageUsers');
-    $routes->match(['post', 'get'], 'manage-users/edit/(:alphanum)', 'SupperAdmin::manageUsersEdit/$1');
-    $routes->match(['post', 'get'], 'manage-users/delete/(:alphanum)', 'SupperAdmin::manageUsersDelete/$1');
+    $routes->match(['post', 'get'], 'manage-users/edit/(:segment)', 'SupperAdmin::manageUsersEdit/$1');
+    $routes->match(['post', 'get'], 'manage-users/delete/(:segment)', 'SupperAdmin::manageUsersDelete/$1');
 
 
     //shares routes
 
-    $routes->get('approved-shares', 'SupperAdmin::approvedShares');
+    $routes->get('shares-report', 'SupperAdmin::sharesReport');
+    $routes->get('view-sold-shares', 'SupperAdmin::soldShares');
 
     $routes->get('set_buyer_commission', 'SupperAdmin::setBuyerCommission');
     $routes->post('set_commission/buyer_commission', 'SupperAdmin::setCommissionAjax');
@@ -38,6 +39,11 @@ $routes->group('supperAdmin', ['namespace' => 'Modules\SupperAdmin\Controllers',
 
 //    set seller commission
     $routes->get('set_seller_commission', 'SupperAdmin::setSellerCommission');
+    $routes->post('set_commission/seller_commission', 'SupperAdmin::setSellerCommissionAjax');
+    $routes->get('set_commission/get_seller_commission', 'SupperAdmin::getSellerCommissionAjax');
+    $routes->get('set_commission/get_seller_commission_by_id', 'SupperAdmin::getSellerCommissionByIdAjax');
+    $routes->post('set_commission/update_seller_commission_by_id', 'SupperAdmin::updateSellerCommissionByIdAjax');
+    $routes->post('set_commission/delete_seller_commission_by_id', 'SupperAdmin::deleteSellerCommissionByIdAjax');
 
 //    set commission for sacco
     $routes->get('set_sacco_commission', 'SupperAdmin::setSaccoCommission');
@@ -48,16 +54,19 @@ $routes->group('supperAdmin', ['namespace' => 'Modules\SupperAdmin\Controllers',
     $routes->post('set_sacco_commission/delete_sacco_commission_by_id', 'SupperAdmin::deleteSaccoCommissionByIdAjax');
 
 
-    $routes->get('not-approved-shares', 'SupperAdmin::notApprovedShares');
-    $routes->get('rejected-shares', 'SupperAdmin::rejectedShares');
-    $routes->match(['post', 'get'], 'approve-share/(:alphanum)', 'SupperAdmin::approveShare/$1');
-    $routes->get('manage-shares', 'SupperAdmin::manageShares');
-    $routes->match(['post', 'get'], 'manage-shares/delete/(:alphanum)', 'SupperAdmin::manageSharesDelete/$1');
-    $routes->match(['post', 'get'], 'manage-shares/edit/(:alphanum)', 'SupperAdmin::manageSharesEdit/$1');
+    $routes->get('transactions-report', 'SupperAdmin::transactionsReport');
+    $routes->match(['post', 'get'], 'shares-report/mark-sold/(:segment)', 'SupperAdmin::markSold/$1');
+    $routes->match(['post', 'get'], 'shares-history/statistics', 'SupperAdmin::sharesStatistics');
+    $routes->get('bids-report', 'SupperAdmin::bidsReport');
+    $routes->match(['post', 'get'], 'approve-share/(:segment)', 'SupperAdmin::approveShare/$1');
+    $routes->get('view-shares', 'SupperAdmin::viewShares');
+    $routes->match(['post', 'get'], 'manage-shares/delete/(:segment)', 'SupperAdmin::manageSharesDelete/$1');
+    $routes->match(['post', 'get'], 'manage-shares/edit/(:segment)', 'SupperAdmin::manageSharesEdit/$1');
 
     //audit trail routes
 
-    $routes->get('audit_trail', 'SupperAdmin::auditTrail');
+    $routes->get('email-audit', 'SupperAdmin::emailAuditTrail');
+    $routes->get('sms-audit', 'SupperAdmin::smsAuditTrail');
     $routes->get('delete-audit-trail/(:num)', 'SupperAdmin::auditTrailDelete/$1');
 
     $routes->get('view-transactions', 'SupperAdmin::viewTransactions');

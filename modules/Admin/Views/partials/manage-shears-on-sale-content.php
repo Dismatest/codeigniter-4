@@ -23,11 +23,12 @@
                         <table id="manage-shares" class="table table-striped" style="width:100%">
                             <thead>
                             <tr>
-                                <th> Name </th>
+                                <th> Owner </th>
                                 <th> Phone Number </th>
-                                <th> Membership Number </th>
+                                <th> Member Number </th>
+                                <th> Sacco </th>
                                 <td> Shares Amount </td>
-                                <td> Total </td>
+                                <td> Value </td>
                                 <td> Date </td>
                                 <td> Status </td>
                                 <td> Action </td>
@@ -40,6 +41,7 @@
                                     <td><?= $share['fname'] .' '. $share['lname'] ?></td>
                                     <td><?= $share['phone'] ?></td>
                                     <td><?= $share['membership_number'] ?></td>
+                                    <td><?= $share['name'] ?></td>
                                     <td><?= $share['shares_on_sale'] ?></td>
                                     <td>Ksh: <?= $share['total'] ?></td>
                                     <?php if(isset($time) && !empty($time)): ?>
@@ -47,12 +49,14 @@
                                     <?php endif; ?>
                                     <?php if ($share['is_verified'] == 0): ?>
                                         <td><label class="badge badge-gradient-warning">Pending</label></td>
-                                    <?php else: ?>
+                                    <?php elseif($share['is_verified'] == 1): ?>
                                         <td><label class="badge badge-gradient-success">Approved</label></td>
+                                    <?php else: ?>
+                                        <td><label class="badge badge-gradient-danger">Rejected</label></td>
                                     <?php endif; ?>
                                     <td>
 
-                                        <a href="<?= 'delete-share/'.$share['uuid'] ?>" class="btn btn-gradient-danger btn-rounded btn-icon" style="display: grid; place-items: center; width: 20px; height: 20px; margin: 0 3px;">
+                                        <a href="<?= 'delete-share/'.$share['uuid'] ?>" class="btn btn-gradient-danger btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#confirmDelete" style="display: grid; place-items: center; width: 20px; height: 20px; margin: 0 3px;">
                                             <i class="mdi mdi-delete"></i>
                                         </a>
 
@@ -63,21 +67,22 @@
                             </tbody>
                         </table>
 
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal fade" id="confirmDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="staticBackdropLabel">Approve Share</h5>
+                                        <h5 class="modal-title" id="staticBackdropLabel">Delete Share Capital</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
 
-                                        <p>Are you sure you want to approve this share?</p>
+                                        <p>Are you sure you want to delete this share capital?</p>
 
-                                        <?php if(isset($share) && !empty($share)): ?>
-                                        <form method="post" action="<?= 'verify-share/'.$share['uuid'] ?>">
+                                        <?php if(!empty($share)): ?>
+                                        <form method="post" action="<?= 'delete-share/'.$share['uuid'] ?>">
                                             <?= csrf_field() ?>
-                                            <button type="submit" class="btn btn-primary approve-btn">Verify</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-warning">Delete</button>
                                         </form>
                                         <?php endif; ?>
 

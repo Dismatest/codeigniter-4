@@ -77,5 +77,6 @@
 <?= $this->renderSection('completed-transactions-script') ?>
 <?= $this->renderSection('view-pending-transaction-script') ?>
 <?= $this->renderSection('bids-report-script') ?>
+<?= $this->renderSection('view-admin-shares-sold-statistics-script') ?>
 </body>
 </html>

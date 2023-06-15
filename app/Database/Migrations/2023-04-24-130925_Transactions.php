@@ -12,21 +12,15 @@ class Transactions extends Migration
         $this->db->disableForeignKeyChecks();
         $this->forge->addField([
             'transaction_id'           => ['type' => 'int', 'constraint' => 11, 'auto_increment' => true],
-            'user_id'   => ['type' => 'varchar', 'constraint' =>255],
-            'share_id'             => ['type' => 'varchar', 'constraint' => 32],
-            'amount'             => ['type' => 'decimal', 'constraint' => '10,2', 'null' => true],
-            'mpesaReceiptNumber'             => ['type' => 'varchar', 'constraint' => 255],
-            'transactionDate'             => ['type' => 'datetime', 'default' => null],
-            'phoneNumber'          => ['type' => 'int', 'constraint' => 12, 'null' => true],
+            'bid_id'   => ['type' => 'int', 'constraint' =>11],
+            'transaction_uuid'   => ['type' => 'varchar', 'constraint' =>255],
             'merchantRequestID' => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
             'checkoutRequestID'        => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
-            'status'    => ['type' => 'int', 'default' => 0, 'null' => true],
             'created_at'        => ['type' => 'datetime', 'default' => date('Y-m-d H:i:s'), 'null' => true],
         ]);
 
         $this->forge->addPrimaryKey('transaction_id');
-        $this->forge->addForeignKey('user_id', 'users', 'uniid', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('share_id', 'shares_on_sale', 'uuid', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('bid_id', 'bid_share', 'bid_id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('transactions', true);
         $this->db->enableForeignKeyChecks();
     }

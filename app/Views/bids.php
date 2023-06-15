@@ -47,8 +47,8 @@
                                 <td>ksh. <?= $bid['total'] ?></td>
                                 <td>ksh. <?= $bid['bid_amount'] ?></td>
                                 <td class="action-links">
-                                    <a class="reject-link" href="<?= 'my_bids/reject/'.$bid['bid_id'] ?>">Reject</a>
-                                    <a class="accept-link" href="<?= 'my_bids/accept/'.$bid['bid_id'] ?>">Accept</a>
+                                    <a class="reject-link" href="<?= 'my_bids/reject/'.$bid['bid_uuid'] ?>">Reject</a>
+                                    <a class="accept-link" href="<?= 'my_bids/accept/'.$bid['bid_uuid'] ?>">Accept</a>
                                 </td>
                             </tr>
 
@@ -313,11 +313,10 @@ $(document).ready(function (){
             success: function (response){
                 $('#bid-total').html('ksh: ' + response.bid_amount)
                 $('#phone').val(response.phone)
-
                 $('#initiatePayment').data('bidId', bidId);
                 $('#initiatePayment').data('shareId', shareId);
                 $('#initiatePayment').data('bidAmount', bidAmount);
-                $('#initiatePayment').data('buyerId', response.uniid);
+
             },
             error: function(error){
                 console.log(error);
@@ -327,9 +326,8 @@ $(document).ready(function (){
 
 
     $('#initiatePayment').on('click', function (){
-        let shareId = $(this).data('shareId');
+        let bidId = $(this).data('bidId');
         let bidAmount = $(this).data('bidAmount');
-        let buyerId = $(this).data('buyerId');
 
         let phoneCode = $('#select-phone-code').val();
         let phoneNumber = $('#phone').val();
@@ -351,18 +349,22 @@ $(document).ready(function (){
             url: '<?= base_url(). '/payment/confirm_payment'?>',
             method: 'POST',
             data: {
+                bidId : bidId,
                 phoneNumber : trimPhoneNumber,
-                shareId: shareId,
                 bidAmount: bidAmount,
-                buyerId: buyerId,
             },
             success: function (response){
                 if(response.status === 200){
+                    let merchantRequestID = response.merchantRequestID;
                     $('#success-message2').html(response.message);
                     $('#success2').css('display', 'block');
                     setTimeout(function (){
                         $('#success2').css('display', 'none');
                     }, 10000);
+
+                    let checkPaymentStatus = setInterval(function(){
+                        checkPayment(merchantRequestID, checkPaymentStatus);
+                    }, 5000);
                 }else{
                     $('#warning-message').html(response.message);
                     $('#warning').css('display', 'block');
@@ -383,6 +385,34 @@ $(document).ready(function (){
             }
         });
     });
+
+
+    // function to check if the user has paid
+
+    function checkPayment(merchantRequestID, checkPaymentStatus){
+        $.ajax({
+            url: "<?= base_url(). '/payment/check_payment'?>",
+            method: 'POST',
+            data: {
+                merchantRequestID: merchantRequestID,
+            },
+            success: function (response){
+                if(response.status === 200){
+                    clearInterval(checkPaymentStatus);
+                    $('#success-message2').html(response.message);
+                    $('#success2').css('display', 'block');
+                    setTimeout(function (){
+                        $('#id04').css('display', 'none');
+                    }, 10000);
+                }
+            },
+            error: function (error){
+                console.log(error);
+            },
+
+
+        })
+    }
 })
 </script>
 <?php $this->endSection();?>

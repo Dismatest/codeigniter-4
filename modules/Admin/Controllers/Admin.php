@@ -5,10 +5,12 @@ namespace Modules\Admin\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\Hash;
 use Modules\Admin\Models\SaccoModels;
+use App\Models\LoginActivityModel;
 use App\Models\Notification;
 use App\Models\Users;
 use App\Models\SaccoMembership;
 use App\Models\SaccoShares;
+use Ramsey\Uuid\Uuid;
 
 class Admin extends BaseController
 {
@@ -19,6 +21,7 @@ class Admin extends BaseController
     public $saccoSharesModel;
 
     protected $email;
+    protected $loginActivityModel;
 
     public function __construct()
     {
@@ -27,6 +30,7 @@ class Admin extends BaseController
         $this->notificationModel = new Notification();
         $this->userModel = new Users();
         $this->saccoMembershipModel = new SaccoMembership();
+        $this->loginActivityModel = new LoginActivityModel();
         $this->saccoSharesModel = new SaccoShares();
         $this->email = \Config\Services::email();
     }
@@ -60,7 +64,7 @@ class Admin extends BaseController
                 'shares' => $shares,
             ];
         }
-        return view('Modules\Admin\Views\manage-shears', $data);
+        return view('Modules\Admin\Views\manage-shears-on-sale', $data);
     }
 
     public function verifyShares($id = null)
@@ -77,13 +81,30 @@ class Admin extends BaseController
     public function deleteShares($id = null)
     {
         try {
-
             $this->adminModel->deleteShares($id);
-            return redirect()->to('admin/manage-shares')->with('success', 'Shares deleted successfully');
+            return redirect()->to('admin/manage-shares-on-sale')->with('success', 'Shares deleted successfully');
         } catch (\CodeIgniter\Database\Exceptions\DataBaseException $e) {
-            return redirect()->to('admin/manage-shares')->with('fail', 'Shares deletion failed');
+            return redirect()->to('admin/manage-shares-on-sale')->with('fail', 'Action failed, please try again');
         }
 
+    }
+
+    public function viewSoldShares(){
+        $data = [];
+        $shares = $this->adminModel->viewSoldShares();
+        foreach ($shares as $key => $value) {
+            $shares[$key]['created_at'] = date('d M Y', strtotime($value['created_at']));
+            $data = [
+                'time' => $shares[$key]['created_at'],
+                'manageShearsTitle' => 'Manage Shares',
+                'shares' => $shares,
+            ];
+        }
+        return view('Modules\Admin\Views\view-sold-shares', $data);
+    }
+
+    public function viewStatistics(){
+        return view('Modules\Admin\Views\view-statistics');
     }
 
     // all the sacco admin users methods
@@ -302,6 +323,7 @@ class Admin extends BaseController
                         'sacco_id' => $sacco_id,
                         'currentLoggedInSacco' => $sacco_uuid,
                         'name' => $sacco['name'],
+                        'email' => $sacco['email'],
                     );
 
                     session()->set($sessionData);
@@ -422,17 +444,16 @@ class Admin extends BaseController
         }
     }
 
-    public function manageTransactions()
+    public function viewTransactions()
     {
         $sacco_id = session()->get('sacco_id');
         $transactions = $this->adminModel->getTransactions($sacco_id);
-
 
         $data = [
             'reportsTitle' => 'Reports',
             'transactions' => $transactions,
         ];
-        return view('Modules\Admin\Views\manage-transactions', $data);
+        return view('Modules\Admin\Views\view-transactions', $data);
     }
 
     public function viewCompletedTransactions(){
@@ -647,16 +668,25 @@ class Admin extends BaseController
                     'phone' => $phone,
                     'password' => password_hash($password, PASSWORD_DEFAULT),
                     'activation_status' => '1',
-                    'uniid' => md5(str_shuffle('abcdefghijkmnopqstuvwxyz' . time())),
+                    'uniid' => Uuid::uuid4()->toString(),
                     'activation_date' => date('Y-m-d H:i:s'),
                 ];
 
-                $message = "Hello " . $fname . ", your account has been created successfully, your password is " . $password . ", please login to your account and change your password";
-
-                $sendEmail = $this->sendEmail($fname, $email, $message);
+                $subject = $fname .' Account Created';
+                $message = "<br/> " . $fname . ", account created successfully. You can now log in to your Sacco Hisa account with the following credentials: " . anchor(base_url('login'), 'login link') . "<br/><br/>" . $password;
 
                 if ($this->adminModel->saveUser($data)) {
-                    if ($sendEmail) {
+                    if (service('sendEmail')->send_email($fname, $email, $subject, $message)) {
+                        $email_logs = [
+                            'uuid' => Uuid::uuid4()->toString(),
+                            'fname' => session()->get('name'),
+                            'email' => session()->get('email'),
+                            'message_title' => $subject,
+                            'role' => 'saccoAdmin',
+                            'status' => '1',
+                        ];
+
+                        $this->loginActivityModel->insertEmailLogs($email_logs);
                         $response = [
                             'error' => false,
                             'status' => 200,
@@ -664,6 +694,16 @@ class Admin extends BaseController
                         ];
                         return $this->response->setJSON($response);
                     } else {
+                        $email_logs = [
+                            'uuid' => Uuid::uuid4()->toString(),
+                            'fname' => session()->get('name'),
+                            'email' => session()->get('email'),
+                            'message_title' => $subject,
+                            'role' => 'saccoAdmin',
+                            'status' => '0',
+                        ];
+
+                        $this->loginActivityModel->insertEmailLogs($email_logs);
                         $response = [
                             'error' => false,
                             'status' => 201,
@@ -739,28 +779,6 @@ class Admin extends BaseController
             }
         }
     }
-
-    public function sendEmail($name, $email, $message)
-    {
-        $this->email->setFrom('billclintonogot88@gmail.com', 'Sacco Hisa Shares Portal');
-        $this->email->setTo("$email");
-
-        $this->email->setSubject('Login Password');
-
-        $email_template = view('Modules\Admin\Views\email-template', [
-            'name' => $name,
-            'message' => $message
-        ]);
-
-        // Set email message
-        $this->email->setMessage($email_template);
-        if ($this->email->send()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     public function viewShareNotification()
     {
@@ -985,11 +1003,32 @@ class Admin extends BaseController
                 if(!empty($validateEmail)){
                     $updateResetTime = $this->adminModel->updateResetTime($validateEmail['uuid']);
                     if($updateResetTime){
-                        $message = "Your your password reset link has been sent successfully, click the link now to change your password, the link expires within 30min" . anchor(base_url('admin/password-reset-link/' . $validateEmail['uuid']), ' reset password link', '');
-                        if($this->sendEmail($validateEmail['name'], $validateEmail['email'], $message)) {
+
+                        $subject = $validateEmail['name'] .' Password Reset Link';
+                        $message = "<br/>This email contains your password reset link. click the link now to change your password, the link expires within 39min " . anchor(base_url('admin/password-reset-link/' . $validateEmail['uuid']), ' reset password link', '');
+                        if(service('sendEmail')->send_email($validateEmail['name'], $validateEmail['email'], $subject, $message)) {
+                            $email_logs = [
+                                'uuid' => Uuid::uuid4()->toString(),
+                                'fname' => $validateEmail['name'],
+                                'email' => $validateEmail['email'],
+                                'message_title' => $subject,
+                                'role' => 'saccoAdmin',
+                                'status' => '1',
+                            ];
+
+                            $this->loginActivityModel->insertEmailLogs($email_logs);
                             session()->setFlashdata('success', 'Password reset link has been sent to your email');
                             return redirect()->to(base_url('admin/forgot-password'));
                         }else{
+                            $email_logs = [
+                                'uuid' => Uuid::uuid4()->toString(),
+                                'fname' => $validateEmail['name'],
+                                'email' => $validateEmail['email'],
+                                'message_title' => $subject,
+                                'role' => 'saccoAdmin',
+                                'status' => '0',
+                            ];
+                            $this->loginActivityModel->insertEmailLogs($email_logs);
                             session()->setFlashdata('error', 'Failed to send password reset link');
                             return redirect()->to(base_url('admin/forgot-password'));
                         }

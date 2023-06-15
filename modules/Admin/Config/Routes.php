@@ -8,11 +8,13 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers', 'filter' =>
     $routes->match(['post','get'],'logout', 'Admin::logout');
     $routes->match(['post','get'],'change-password', 'Admin::changePassword');
     $routes->get('notifications', 'Admin::notifications');
-    $routes->get('manage-shares', 'Admin::manageShares');
+    $routes->get('manage-shares-on-sale', 'Admin::manageShares');
     $routes->post('verify-share/(:segment)', 'Admin::verifyShares/$1');
     $routes->post('manage_shares/approve', 'Admin::approveShare');
-    $routes->get('delete-share/(:segment)', 'Admin::deleteShares/$1');
+    $routes->match(['get', 'post'], 'delete-share/(:segment)', 'Admin::deleteShares/$1');
     $routes->match(['post', 'get'],'create_share', 'Admin::createShare');
+    $routes->match(['post', 'get'],'view-sold-shares', 'Admin::viewSoldShares');
+    $routes->match(['post', 'get'],'view-statistics', 'Admin::viewStatistics');
 
     //user management routes
     $routes->get('list_members', 'Admin::listMembers');
@@ -30,7 +32,7 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers', 'filter' =>
     $routes->post('upload_agreement_files', 'Admin::uploadAgreementFilesDocument');
 
 //  transactions
-    $routes->get('manage-transactions', 'Admin::manageTransactions');
+    $routes->get('view-transactions', 'Admin::viewTransactions');
     $routes->post('reports/view', 'Admin::viewReports');
     $routes->match(['get', 'post'], 'reports/mark_as_complete/(:segment)', 'Admin::markAsComplete/$1');
 

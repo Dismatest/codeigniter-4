@@ -32,13 +32,19 @@
     align-items: center;
     justify-content:  flex-end;
 }
-.setting-link h5{
+.settings-section a{
     color: var(--primary-color);
     font-size: 14px;
 }
-.setting-link span{
-    font-size: 14px;
-    padding: 0 5px;
+.settings-section a:hover{
+    color: #99c0ba;
+}
+
+.settings-section a i:hover{
+    color: #99c0ba;
+}
+.settings-section a i{
+    color: var(--primary-color);
 }
 .profile-main-section{
     display: flex;
@@ -155,12 +161,28 @@
     align-items: center;
     padding: 5px 10px;
 }
+.connect-social-media-icons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+}
+.connect-social-media-icons a{
+    text-decoration: none;
+    font-size: 15px;
+    color: #484545;
+    text-transform: lowercase;
+}
 
 .social-media-icons a{
     text-decoration: none;
-    font-size: 10px;
-    color: #484545;
+    font-size: 15px;
+    color: #1bcfb4;
     text-transform: lowercase;
+}
+
+.social-media-icons a:hover{
+    color: #8fbbb4;
 }
 
 .switch {
@@ -614,6 +636,31 @@ input:checked + .slider:before {
 }
 .active-shares-icon{
     color: #1bcfb4;
+}
+
+/*account settings*/
+.update-email-container{
+    padding: 15px;
+}
+.update-email-button{
+    background: var(--background-color);
+    border: none;
+    padding: 10px 80px;
+    border-radius: 5px;
+    font-weight: 600;
+    color: white;
+    margin-top: 20px;
+    cursor: not-allowed;
+}
+.delete-account{
+    background: orangered;
+    border: none;
+    padding: 10px 80px;
+    border-radius: 5px;
+    font-weight: 600;
+    color: white;
+    margin-top: 20px;
+    cursor: not-allowed;
 }
 @media screen and (max-width: 768px) {
     .sell-main-section1 {

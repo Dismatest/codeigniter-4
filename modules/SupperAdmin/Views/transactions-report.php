@@ -7,7 +7,7 @@
         <div class="container-fluid page-body-wrapper">
             <?= $this->include('Modules\SupperAdmin\Views\includes\sidebar.php');?>
             <div class="main-panel">
-                <?= $this->include('Modules\SupperAdmin\Views\partials\rejected-shares-content.php');?>
+                <?= $this->include('Modules\SupperAdmin\Views\partials\transactions-report-content.php');?>
             </div>
         </div>
     </div>

@@ -9,6 +9,7 @@ use App\Models\LoginActivityModel;
 use App\Models\DisplayDashboardModel;
 use Config\Services;
 use Config\Session;
+use Ramsey\Uuid\Uuid;
 
 class Auth extends BaseController
 
@@ -18,6 +19,7 @@ class Auth extends BaseController
     public $loginActivityModel;
     public $getCurrntLoggedInUser;
     public $email;
+
     public function __construct()
     {
         helper(['form', 'url', 'text', 'date']);
@@ -27,11 +29,12 @@ class Auth extends BaseController
         $this->email = \Config\Services::email();
     }
 
-    public function login(){
+    public function login()
+    {
         $data = [];
         $data['loginTitle'] = 'Login';
         $session = \CodeIgniter\Config\Services::session();
-        if($this->request->getMethod() == 'post'){
+        if ($this->request->getMethod() == 'post') {
             $rules = [
                 'email' => [
                     'rules' => 'required|valid_email',
@@ -49,24 +52,24 @@ class Auth extends BaseController
                     ]
                 ],
             ];
-            if(!$this->validate($rules)){
+            if (!$this->validate($rules)) {
                 $data['validation'] = $this->validator;
 
 
-            }else{
+            } else {
                 $email = $this->request->getPost('email');
                 $password = $this->request->getPost('password');
 
                 $user = $this->userModel->where('email', $email)->first();
-                if($user){
-                    if(Hash::decrypt($password, $user['password'])){
-                        if($user['activation_status'] == 1){
+                if ($user) {
+                    if (Hash::decrypt($password, $user['password'])) {
+                        if ($user['activation_status'] == 1) {
 
                             //getting the user agent
 
                             $loginInfo = [
                                 'uniid' => $user['uniid'],
-                                'ip'    => $this->request->getIPAddress(),
+                                'ip' => $this->request->getIPAddress(),
                                 'agent' => $this->getUserAgentInfo(),
                                 'login_time' => date('Y-m-d h:i:s'),
                             ];
@@ -75,7 +78,7 @@ class Auth extends BaseController
                             //saving the data into the login_activity model and getting the id of the last inserted data
                             $login_activity_id = $this->loginActivityModel->saveLoginActivityInfo($loginInfo);
 
-                            if($login_activity_id){
+                            if ($login_activity_id) {
                                 session()->set('logged_in_info', $login_activity_id);
                             }
                             $sessionData = [
@@ -88,15 +91,15 @@ class Auth extends BaseController
                             ];
                             session()->set($sessionData);
                             return redirect()->to('/explore');
-                        }else{
+                        } else {
                             session()->setFlashdata('fail', 'Please activate your account or contact the admin');
                             return redirect()->to(base_url('login'));
                         }
-                    }else{
+                    } else {
                         session()->setFlashdata('fail', 'Password is incorrect');
                         return redirect()->to(base_url('login'));
                     }
-                }else{
+                } else {
                     session()->setFlashdata('fail', 'Can`t find the user with that email');
                     return redirect()->to(base_url('login'));
                 }
@@ -105,10 +108,12 @@ class Auth extends BaseController
         }
         return view('login', $data);
     }
-    public function register(){
+
+    public function register()
+    {
         $data = [];
         $data['registerTitle'] = 'Register';
-        if($this->request->getMethod() == 'post'){
+        if ($this->request->getMethod() == 'post') {
 
             $rules = [
                 'fname' => [
@@ -157,9 +162,9 @@ class Auth extends BaseController
                     ]
                 ]
             ];
-            if(!$this->validate($rules)){
+            if (!$this->validate($rules)) {
                 $data['validation'] = $this->validator;
-            }else{
+            } else {
                 $fname = strtolower($this->request->getPost('fname'));
                 $sanitizeFname = filter_var($fname, FILTER_SANITIZE_STRING);
                 $lname = strtolower($this->request->getPost('lname'));
@@ -167,35 +172,56 @@ class Auth extends BaseController
                 $phone = $this->request->getPost('phone');
                 $sanitizePhone = filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
                 $email = $this->request->getPost('email');
-                $sanitizeEmail = filter_var($email,FILTER_SANITIZE_STRING);
+                $sanitizeEmail = filter_var($email, FILTER_SANITIZE_STRING);
                 $password = $this->request->getPost('password');
 
-                //generating the unique id for the user
-                $uniid = md5(str_shuffle('abcdefghijkmnopqstuvwxyz'.time()));
                 $usersData = [
                     'fname' => $sanitizeFname,
                     'lname' => $sanitizelname,
                     'phone' => $sanitizePhone,
                     'email' => $sanitizeEmail,
-//                    'activation_link' => random_string('alnum', 20), generating a random string for the activation link
                     'password' => Hash::encrypt($password),
-                    'uniid' => $uniid,
-                    'activation_date' => date('Y-m-d h:i:s') //update the activation_date each time the page is requested
+                    'uniid' => Uuid::uuid4()->toString(),
                 ];
                 $query = $this->userModel->insert($usersData);
-                if($query){
-                    $message = "Hello".$sanitizeFname."\n Your account was created successfully, please activate your account using the following link \n".anchor(base_url('activate/'.$usersData['uniid']),' Activate now','');
-                    $emailSubject = "Account Activation Link";
-                    $setFrom = 'billclintonogot88@gmail.com';
-                    $messageTitle = "Sacco Product Application";
-                    if($this->sendEmail($fname, $email, $setFrom, $messageTitle, $emailSubject, $message)){
-                        session()->setFlashdata('success', 'An activation email has been sent to your email, please activate your account');
+
+                try {
+                    $query_result = $this->userModel->where('uniid', $usersData['uniid'])->find();
+                    $user_id = $query_result[0]['user_id'];
+                }catch (\Exception $e){
+                    die($e->getMessage());
+                }
+
+                $message = "<br/><br/>Dear " . ucfirst($sanitizeFname) . "\n Your account was created successfully, please activate your account using the following link within 39 minutes\n" . anchor(base_url('activate/' . $usersData['uniid']), '<br/></br/> Activate your account', '');
+                $subject = ucfirst($fname) . ', Account activation';
+                if ($query) {
+                    if (service('sendEmail')->send_email($fname, $email, $subject, $message)) {
+                        $email_logs = [
+                            'uuid' => Uuid::uuid4()->toString(),
+                            'fname' => $sanitizeFname .' ' .$sanitizelname,
+                            'email' => $sanitizeEmail,
+                            'message_title' => $subject,
+                            'role' => 'user',
+                            'status' => '1',
+                        ];
+
+                        $this->loginActivityModel->insertEmailLogs($email_logs);
+                        session()->setFlashdata('success', 'An activation email has been sent to your email, please activate your account within 39 minutes');
                         return redirect()->to(base_url('login'));
-                    }else{
+                    } else {
+                        $email_logs = [
+                            'uuid' => Uuid::uuid4()->toString(),
+                            'fname' => $sanitizeFname .' ' .$sanitizelname,
+                            'email' => $sanitizeEmail,
+                            'message_title' => $subject,
+                            'role' => 'user',
+                            'status' => '0',
+                        ];
+                        $this->loginActivityModel->insertEmailLogs($email_logs);
                         session()->setFlashdata('fail', 'There was an error sending activation email');
                         return redirect()->to(base_url('register'));
                     }
-                }else{
+                } else {
                     session()->setFlashdata('fail', 'Registration has failed, please try again latter');
                     return redirect()->back(base_url('register'));
                 }
@@ -205,103 +231,93 @@ class Auth extends BaseController
         return view('register', $data);
     }
 
-    public function sendEmail($name, $email, $setFrom, $messageTitle, $emailSubject, $message)
+    public function activate($uuid = null)
     {
-        $this->email->setFrom($setFrom, $messageTitle);
-        $this->email->setTo("$email");
 
-        $this->email->setSubject("$emailSubject");
+        if (!empty($uuid)) {
 
-        $email_template = view('email_template_account_creation', [
-            'name' => $name,
-            'message' => $message
-        ]);
+            $checkLink = $this->userModel->where('uniid', $uuid)->findAll();
+            if ($checkLink) {
 
-        // Set email message
-        $this->email->setMessage($email_template);
-        if($this->email->send()){
+                if ($this->expiry_date($checkLink[0]['created_at'])) {
+
+                    if ($checkLink[0]['activation_status'] == 0) {
+                        $updatedData = [
+                            'activation_status' => 1,
+                            'updated_at' => date('Y-m-d H:i:s'),
+                        ];
+                        $activated = $this->userModel->update($checkLink[0]['user_id'], $updatedData);
+                        if ($activated) {
+                            session()->setFlashdata('success', 'Account has been activated successfully, you can now log in to your account');
+                            return redirect()->to(base_url('login'));
+                        }
+                    } else {
+                        session()->setFlashdata('fail', 'The account has already been activated go back to login');
+                        return redirect()->to(base_url('login'));
+                    }
+
+                } else {
+                    session()->setFlashdata('fail', 'The activation link has expired');
+                    return redirect()->to(base_url('login'));
+                }
+            } else {
+                session()->setFlashdata('fail', 'We are not able to find records requested');
+                return redirect()->to(base_url('login'));
+            }
+
+        } else {
+            session()->setFlashdata('fail', 'We are not able to process your request now');
+            return redirect()->to(base_url('login'));
+        }
+
+        return view('login');
+    }
+
+    public function expiry_date($expiry_date)
+    {
+
+        $updated_time = strtotime($expiry_date);
+        $currentTime = time();
+        $difference_time = ($currentTime - $updated_time) / 60;
+        if ($difference_time < 3600) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-
-public function activate($uuid = null){
-
-        $data = [];
-        if(!empty($uuid)){
-
-            $checkLink = $this->userModel->where('uniid', $uuid)->findAll();
-            if($checkLink){
-
-                if($this->expiry_date($checkLink[0]['activation_date'])){
-
-                    if($checkLink[0]['activation_status'] == 0){
-                        $data['activation_status'] = 1;
-                        $activated = $this->userModel->update($checkLink[0]['user_id'], $data);
-                        if($activated){
-                            $data['success'] = 'Account has been activated successfully';
-                        }
-                    }else{
-                        $data['error'] = "The account has already been activated go back to login";
-                    }
-
-                }else{
-                    $data['error'] = 'The activation link has expired';
-                }
-            }else{
-                $data['error'] = 'We are not able to find records requested';
-            }
-
-        }else{
-
-            $data['error'] = 'We are not able to process your request now';
-        }
-
-        return view('activate', $data);
-}
-
-public function expiry_date($expiry_date){
-
-    $updated_time = strtotime($expiry_date);
-    $currentTime = time();
-    $difference_time = ($currentTime - $updated_time)/60;
-    if($difference_time < 3600){
-        return true;
-    }else{
-        return false;
-    }
-}
-
 //the second function for expiry date
 
-public function checkExpiry($date){
+    public function checkExpiry($date)
+    {
         $current_time = now();
         $reg_time = strtotime($current_time);
         $difference_in_time = (int)$date - (int)$reg_time;
-        if(3600 < $difference_in_time){
+        if (3600 < $difference_in_time) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
 //the function that is user to get user agent detail
-public function getUserAgentInfo(){
+    public function getUserAgentInfo()
+    {
         $agent = $this->request->getUserAgent();
-        if($agent->isBrowser()){
+        if ($agent->isBrowser()) {
             $currentAgent = $agent->getBrowser();
-        }elseif($agent->isRobot()){
+        } elseif ($agent->isRobot()) {
             $currentAgent = $this->agent->robot();
-        }elseif ($agent->isMobile()){
+        } elseif ($agent->isMobile()) {
             $currentAgent = $agent->getMobile();
-        }else{
+        } else {
             $currentAgent = 'Unidentified User Agent';
         }
         return $currentAgent;
-     }
-public function changePassword(){
+    }
+
+    public function changePassword()
+    {
         $data = [];
         $data['user'] = $this->getCurrntLoggedInUser->getCurrentUserInformation(session()->get('currentLoggedInUser')); //this return an object so we can assess it as $data['user]->password
         $rules = [
@@ -324,39 +340,39 @@ public function changePassword(){
                 ]
             ],
         ];
-        if(!$this->validate($rules)){
+        if (!$this->validate($rules)) {
 
             $data['validation'] = $this->validator;
 
-        }else{
-            if($this->request->getMethod() == 'post'){
+        } else {
+            if ($this->request->getMethod() == 'post') {
 
                 $old_password = $this->request->getPost('oldPassword');
                 $new_password = password_hash($this->request->getPost('newPassword'), PASSWORD_DEFAULT);
-                if(Hash::decrypt($old_password, $data['user']->password)){
-                   if($this->getCurrntLoggedInUser->updatePassword($new_password, session()->get('currentLoggedInUser')))
-                    {
+                if (Hash::decrypt($old_password, $data['user']->password)) {
+                    if ($this->getCurrntLoggedInUser->updatePassword($new_password, session()->get('currentLoggedInUser'))) {
                         session()->setFlashdata('success', 'You have changed your password');
                         return redirect()->to(base_url('/change-password'));
-                    }
-                    else{
+                    } else {
                         session()->setFlashdata('fail', 'We can not update your password now');
                         return redirect()->to(base_url('/change-password'));
                     }
-                }else {
+                } else {
                     session()->setFlashdata('fail', 'Your old password is incorrect, try again');
                     return redirect()->to(base_url('/change-password'));
                 }
             }
         }
         return view('change-password', $data);
-}
-    public function logout(){
-        if(session()->has('currentLoggedInUser')){
+    }
+
+    public function logout()
+    {
+        if (session()->has('currentLoggedInUser')) {
             $loggedIn_info_id = session()->get('currentLoggedInUser'); //getting the id of the loggedIn info set in the session
             $this->loginActivityModel->updateLogoutActivity($loggedIn_info_id);
         }
-        if(session()->has('currentLoggedInUser')){
+        if (session()->has('currentLoggedInUser')) {
             session()->remove('currentLoggedInUser');
 //            return redirect()->to(base_url(' /login'))->with('success', 'You have logged out');
             return $this->response->setJSON([

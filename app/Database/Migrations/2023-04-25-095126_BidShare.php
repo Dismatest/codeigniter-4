@@ -11,10 +11,11 @@ class BidShare extends Migration
         $this->db->disableForeignKeyChecks();
         $this->forge->addField([
             'bid_id'           => ['type' => 'int', 'constraint' => 11, 'auto_increment' => true],
+            'uuid'           => ['type' => 'varchar', 'constraint' => 255],
             'sacco_id'   => ['type' => 'int', 'constraint' => 11],
-            'buyer_id'   => ['type' => 'varchar', 'constraint' => 32],
+            'buyer_id'   => ['type' => 'varchar', 'constraint' => 255],
             'seller_id'   => ['type' => 'int', 'constraint' => 11],
-            'share_on_sale_id'   => ['type' => 'varchar', 'constraint' => 32],
+            'share_on_sale_id'   => ['type' => 'varchar', 'constraint' => 255],
             'bid_amount'        => ['type' => 'decimal', 'constraint' => '10,2'],
             'buyer_membership_number'        => ['type' => 'varchar', 'constraint' => 100],
             'action'        => ['type' => 'int', 'constraint' => 10, 'default' => 0],

@@ -25,7 +25,7 @@
                 <div id="supperAdminExample"></div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table" id="supperAdminDataTable">
+                        <table class="table table-sm" id="supperAdminDataTable">
                             <thead>
                             <tr>
                                 <th></th>

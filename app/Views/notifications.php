@@ -135,7 +135,7 @@
     };
 
     conn.onmessage = function(e) {
-        console.log(e.data);
+        console.log(e);
     };
 </script>
 <?php $this->endSection();?>

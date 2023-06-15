@@ -8,6 +8,7 @@ use App\Models\Users;
 use CodeIgniter\I18n\Time;
 use App\Models\LoginActivityModel;
 use App\Models\DisplayDashboardModel;
+use Config\Services;
 use Ramsey\Uuid\Uuid;
 
 class SupperAdmin extends BaseController
@@ -124,13 +125,35 @@ class SupperAdmin extends BaseController
                     'website' => $website,
                     'password' => $hashedPassword,
                 ];
-                $message = "<br/> The sacco account was created successfully, please find your default password bellow, and please ensure you updated the password through the sacco admin dashboard.<br/><br/>" . $password;
+                $message = "<br/> " . $name . ", account created successfully. You can now log in to your Sacco Hisa account with the following credentials: " . anchor(base_url('admin/login'), 'login link') . "<br/><br/>" . $password;
+
+                $subject = $name ." Login Credentials";
 
                 $insert = $this->loginActivityModel->registerSacco($saveSacco);
                 if ($insert) {
-                    if ($this->sendEmail($name, $email, $message)) {
+                    if (service('sendEmail')->send_email($name, $email, $subject, $message)) {
+                        $email_logs = [
+                            'uuid' => Uuid::uuid4()->toString(),
+                            'fname' => session()->get('fname') . ' ' . session()->get('lname'),
+                            'email' => session()->get('email'),
+                            'message_title' => $subject,
+                            'role' => 'supperAdmin',
+                            'status' => '1',
+                        ];
+
+                        $this->loginActivityModel->insertEmailLogs($email_logs);
                         return redirect()->to('supperAdmin/dashboard')->with('success', 'The login password has been sent to the sacco through email');
                     } else {
+                        $email_logs = [
+                            'uuid' => Uuid::uuid4()->toString(),
+                            'fname' => session()->get('fname') . ' ' . session()->get('lname'),
+                            'email' => session()->get('email'),
+                            'message_title' => $subject,
+                            'role' => 'supperAdmin',
+                            'status' => '0',
+                        ];
+
+                        $this->loginActivityModel->insertEmailLogs($email_logs);
                         return redirect()->to('supperAdmin/dashboard')->with('error', 'There was an error sending the password to the sacco');
                     }
                 } else {
@@ -140,27 +163,6 @@ class SupperAdmin extends BaseController
 
         }
         return view('Modules\SupperAdmin\Views\register-sacco', $data);
-    }
-
-    public function sendEmail($name, $email, $message)
-    {
-        $this->email->setFrom('billclintonogot88@gmail.com', 'Sacco Hisa Admin');
-        $this->email->setTo("$email");
-
-        $this->email->setSubject('Login Password');
-
-        $email_template = view('Modules\SupperAdmin\Views\sacco\email-template', [
-            'name' => $name,
-            'message' => $message
-        ]);
-
-        // Set email message
-        $this->email->setMessage($email_template);
-        if ($this->email->send()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public function manageSacco()
@@ -379,34 +381,57 @@ class SupperAdmin extends BaseController
 
 
     //shares methods
-    public function approvedShares()
+    public function sharesReport()
     {
-
-        $globalTime = [];
-        $users = $this->loginActivityModel->findAllAprovedShares();
-        foreach ($users as $user) {
-            $time = $user['created_at'];
-            $parse = Time::parse($time);
-            $time = $parse->humanize();
-            $globalTime = $time;
-        }
-
+        $shares = $this->loginActivityModel->sharesReport();
         $data = [
             'approvedSharesTitle' => 'Approved Shares',
-            'time' => $globalTime,
-            'users' => $users,
+            'shares' => $shares,
         ];
-        return view('Modules\SupperAdmin\Views\approved-shares', $data);
+        return view('Modules\SupperAdmin\Views\shares-report', $data);
     }
 
-    public function notApprovedShares()
+    public function soldShares(){
+
+        $data = [];
+        $shares = $this->loginActivityModel->viewSoldShares();
+        foreach ($shares as $key => $value) {
+            $shares[$key]['created_at'] = date('d M Y', strtotime($value['created_at']));
+            $data = [
+                'time' => $shares[$key]['created_at'],
+                'manageShearsTitle' => 'Manage Shares',
+                'shares' => $shares,
+            ];
+        }
+
+        return view('Modules\SupperAdmin\Views\sold-shares', $data);
+    }
+
+    public function markSold($uuid)
+    {
+        $sold= $this->loginActivityModel->markSold($uuid);
+        if($sold) {
+            return redirect()->to('supperAdmin/shares-report')->with('success', 'Share marked as sold successfully');
+        }else{
+            return redirect()->to('supperAdmin/shares-report')->with('error', 'An error occurred, try again later');
+        }
+    }
+
+    public function sharesStatistics(){
+        $data = [
+            'sharesStatisticsTitle' => 'Shares Statistics',
+        ];
+        return view('Modules\SupperAdmin\Views\shares-statistics', $data);
+    }
+
+    public function transactionsReport()
     {
         $users = $this->loginActivityModel->findAllNotAprovedShares();
         $data = [
             'notApprovedSharesTitle' => 'Not Approved Shares',
             'users' => $users,
         ];
-        return view('Modules\SupperAdmin\Views\not-approved-shares', $data);
+        return view('Modules\SupperAdmin\Views\transactions-report', $data);
     }
 
     public function approveShare($uuid)
@@ -415,32 +440,25 @@ class SupperAdmin extends BaseController
         return redirect()->to('supperAdmin/approved-shares')->with('success', 'Share approved successfully');
     }
 
-    public function rejectedShares(){
+    public function bidsReport(){
         $rejectedShares = $this->loginActivityModel->findAllRejectedShares();
         $data = [
-            'rejectedSharesTitle' => 'Rejected Shares',
+            'rejectedSharesTitle' => 'bids reports',
             'rejectedShares' => $rejectedShares,
         ];
-        return view('Modules\SupperAdmin\Views\rejected-shares', $data);
+        return view('Modules\SupperAdmin\Views\bids-report', $data);
     }
 
-    public function manageShares()
+    public function viewShares()
     {
-        $globalTime = [];
-        $shares = $this->loginActivityModel->findAllAllShares();
-        foreach ($shares as $share) {
-            $time = $share['created_at'];
-            $parse = Time::parse($time);
-            $time = $parse->humanize();
-            $globalTime = $time;
-        }
 
+        $shares = $this->loginActivityModel->findAllAllShares();
         $data = [
             'manageSharesTitle' => 'Manage Shares',
-            'time' => $globalTime,
             'shares' => $shares,
         ];
-        return view('Modules\SupperAdmin\Views\manage-shares', $data);
+
+        return view('Modules\SupperAdmin\Views\view-shares', $data);
     }
 
     public function manageSharesDelete($uuid)
@@ -582,6 +600,117 @@ class SupperAdmin extends BaseController
         return view('Modules\SupperAdmin\Views\set-buyer-commission', $data);
     }
 
+    // seller commission
+
+    public function setSellerCommissionAjax()
+    {
+
+        $commissionData = [
+            'seller_commission' => $this->request->getPost('sellerCommission'),
+        ];
+        $getAllSellerCommission = $this->loginActivityModel->findAllRecordsSellerCommission();
+        $query = count($getAllSellerCommission);
+
+        if ($query == 1) {
+            $updateCommission = $this->loginActivityModel->updateSellerCommission($query[0]['commission_id'], $commissionData);
+            if ($updateCommission) {
+                $response = [
+                    'status' => 200,
+                    'message' => 'Commission updated successfully',
+                ];
+                return $this->response->setJSON($response);
+            } else {
+                $response = [
+                    'status' => 500,
+                    'message' => 'Commission not updated',
+                ];
+                return $this->response->setJSON($response);
+            }
+
+        } else {
+            $insertCommission = $this->loginActivityModel->insertSellerCommission($commissionData);
+            if ($insertCommission) {
+                $response = [
+                    'status' => 200,
+                    'message' => 'Commission set successfully',
+                ];
+                return $this->response->setJSON($response);
+            } else {
+                $response = [
+                    'status' => 500,
+                    'message' => 'Commission not set, try again',
+                ];
+                return $this->response->setJSON($response);
+            }
+        }
+
+    }
+
+
+    public function getSellerCommissionAjax()
+    {
+        $getAllRecords = $this->loginActivityModel->findAllRecordsSellerCommission();
+        $response = [
+            'status' => 200,
+            'data' => $getAllRecords,
+        ];
+        return $this->response->setJSON($response);
+    }
+
+    public function getSellerCommissionByIdAjax()
+    {
+        $commission_id = $this->request->getVar('commission_id');
+        $getCommission = $this->loginActivityModel->getSellerCommissionById($commission_id);
+        $response = [
+            'status' => 200,
+            'data' => $getCommission,
+        ];
+        return $this->response->setJSON($response);
+    }
+
+
+    public function updateSellerCommissionByIdAjax()
+    {
+
+        $commission_id = $this->request->getPost('commissionId');
+        $commission = $this->request->getPost('sellerCommission');
+        $updateCommission = $this->loginActivityModel->updateSellersCommission($commission_id, $commission);
+        if ($updateCommission) {
+            $response = [
+                'status' => 200,
+                'message' => 'Commission updated successfully',
+            ];
+            return $this->response->setJSON($response);
+        } else {
+            $response = [
+                'status' => 500,
+                'message' => 'An error has occurred, try again',
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+
+    public function deleteSellerCommissionByIdAjax()
+    {
+        $id = $this->request->getPost('commission_id');
+        $deleteSellerCommission = $this->loginActivityModel->deleteSellerCommission($id);
+        if ($deleteSellerCommission) {
+            $response = [
+                'status' => 200,
+                'message' => 'Commission deleted successfully',
+            ];
+            return $this->response->setJSON($response);
+        } else {
+            $response = [
+                'status' => 500,
+                'message' => 'An error has occurred, try again',
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+
     public function setSaccoCommission(){
         $data = [
             'setCommissionTitle' => 'Set Sacco Commission',
@@ -590,14 +719,22 @@ class SupperAdmin extends BaseController
         return view('Modules\SupperAdmin\Views\set-sacco-commission', $data);
     }
 
-    public function auditTrail()
+    public function emailAuditTrail()
     {
         $data = [
             'auditTrailTitle' => 'Audit Trail',
-            'auditTrails' => $this->loginActivityModel->findAllAuditTrail(),
+            'email_logs' => $this->loginActivityModel->findAllAuditTrail(),
         ];
 
-        return view('Modules\SupperAdmin\Views\audit-trail', $data);
+        return view('Modules\SupperAdmin\Views\email-audit-trail', $data);
+    }
+
+    public function smsAuditTrail(){
+        $data = [
+            'auditTrailTitle' => 'Audit Trail',
+            'sms_logs' => $this->loginActivityModel->findAllSMSAuditTrail(),
+        ];
+        return view('Modules\SupperAdmin\Views\sms-audit-trail', $data);
     }
 
     public function auditTrailDelete($error_id)
@@ -617,7 +754,6 @@ class SupperAdmin extends BaseController
             'viewTransactionsTitle' => 'View Transactions',
             'viewTransactions' => $this->loginActivityModel->viewTransactions($supperAdmin_id),
         ];
-
         return view('Modules\SupperAdmin\Views\view-transactions', $data);
     }
 
@@ -733,7 +869,7 @@ class SupperAdmin extends BaseController
             $rules = [
                 'fname' => 'required',
                 'lname' => 'required',
-                'email' => 'required|valid_email|is_unique[users.email]',
+                'email' => 'required|valid_email|is_unique[supperadmins.email]',
             ];
             if (!$this->validate($rules)){
                 $data['validation'] = $this->validator;
@@ -751,12 +887,32 @@ class SupperAdmin extends BaseController
                     'password' => $hashedPassword,
                 ];
 
-                $message = "<br/> The sacco account was created successfully, please find your default password bellow, and please ensure you updated the password through the sacco admin dashboard.<br/><br/>" . $password;
+                $subject = ucfirst($fname) .' ,Sacco Hisa Account created successfully';
+                $message = "<br/> Dear" . ucfirst($fname) . ", your sacco Hisa account was created successfully. You can now log in to your Sacco Hisa account with the following credentials: <br>Login Link<br/>" . anchor(base_url('supperAdmin/login'), 'login link') . "<br/><br/> Password <br/>" . $password;
                 $registerNewAdmin = $this->loginActivityModel->registerNewAdmin($registrationData);
                 if($registerNewAdmin) {
-                    if ($this->sendEmail($fname, $email, $message)) {
+                    if (service('sendEmail')->send_email($fname, $email, $subject, $message)) {
+                        $email_logs = [
+                            'uuid' => Uuid::uuid4()->toString(),
+                            'fname' => session()->get('fname') . ' ' . session()->get('lname'),
+                            'email' => session()->get('email'),
+                            'message_title' => $subject,
+                            'role' => 'supperAdmin',
+                            'status' => '1',
+                        ];
+
+                        $this->loginActivityModel->insertEmailLogs($email_logs);
                         return redirect()->to('supperAdmin/dashboard')->with('success', 'The login password has been sent to the '. $fname .' through email');
                     } else {
+                        $email_logs = [
+                            'uuid' => Uuid::uuid4()->toString(),
+                            'fname' => session()->get('fname') . ' ' . session()->get('lname'),
+                            'email' => session()->get('email'),
+                            'message_title' => $subject,
+                            'role' => 'supperAdmin',
+                            'status' => '0',
+                        ];
+                        $this->loginActivityModel->insertEmailLogs($email_logs);
                         return redirect()->to('supperAdmin/register-new_admin')->with('error', 'There was an error sending the password to the '. $fname .' through email');
                     }
                 }

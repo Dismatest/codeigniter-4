@@ -336,14 +336,20 @@
                         type: "POST",
                         data: $('#bid-shares-form').serialize(),
                         success: function (response){
-                            if(response){
+                            if(response.status === 200){
                                 $('#id02').css('display', 'none');
                                 $('.custom-alert').css('display', 'block');
                                 $('.saved-message').text(response.message);
                                 $('#save-share').css('background-color', '#789f99');
+                            }else{
+                                $('#id02').css('display', 'none');
+                                $('.custom-alert').css('display', 'block');
+                                $('.saved-message').text(response.message);
+                                $('#save-share').css('background-color', '#e5e5e5');
                             }
                         },
                         error: function (error) {
+                            $('#id02').css('display', 'none');
                             $('.custom-alert').css('display', 'block');
                             $('.saved-message').text('An error occurred, please try again later');
                             $('#save-share').css('background-color', '#e5e5e5');

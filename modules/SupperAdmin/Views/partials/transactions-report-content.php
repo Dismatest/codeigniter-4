@@ -8,7 +8,7 @@
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>Dashboard/Pending Approval <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                    <span></span>Dashboard/Transactions Report <i class="mdi mdi-table-large icon-sm text-primary align-middle"></i>
                 </li>
             </ul>
         </nav>
@@ -16,7 +16,7 @@
 
     <div class="row">
         <div class="col-12 grid-margin">
-            <h5 class="buyer-commission-container"><span><i class="mdi mdi-shield-outline buyer-commission"></i></span>Pending Approval</h5>
+            <h5 class="buyer-commission-container"><span><i class="mdi mdi-table-large buyer-commission"></i></span>Transactions Report</h5>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -51,13 +51,6 @@
 
                                     </tr>
                                 <?php endforeach; ?>
-                            <?php else: ?>
-                            <tr>
-                                <td colspan="6">
-                                    <div class="alert alert-danger text-center" role="alert">
-                                        All Shears has Been Approved..
-                                    </div>
-                                </td>
                                 <?php endif; ?>
                             </tbody>
                         </table>

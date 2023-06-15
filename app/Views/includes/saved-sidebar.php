@@ -2,9 +2,9 @@
     <div class="main-saved-container">
         <div class="margin-content-section">
             <div class="settings-section">
-                <a href="<?= base_url('update-profile')?>"><span><i class="fa-solid fa-pen-to-square"></i></a></span>
-                <a href="<?= base_url('saved/saved_settings') ?>" class="setting-link">
-                    <h5>Settings</h5>
+                <a href="<?= base_url('update-profile')?>"><span><i class="fa-solid fa-pen-to-square"></i></span></a>
+                <a href="<?= base_url('saved/settings') ?>">
+                    Account Settings
                     <span><i class="fa-solid fa-gear"></i></span>
                 </a>
             </div>

@@ -118,7 +118,7 @@
             } else {
                 $('.update-commission-error').text("")
             }
-            if (buyerCommission < 0) {
+            if (buyerCommission <= 0) {
                 $('.update-commission-error').text("Commission must be greater than 0")
                 return false;
             } else {

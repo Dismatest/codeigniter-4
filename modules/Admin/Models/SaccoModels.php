@@ -67,7 +67,21 @@ class SaccoModels extends Model
         $builder->join('users', 'users.user_id = shares_on_sale.user_id');
         $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id');
         $builder->where('shares_on_sale.sacco_id', $sacco_id);
-        $builder->orderBy('shares_on_sale.created_at', 'ASC');
+        $builder->whereIn('shares_on_sale.is_verified', [0, 1, 2]);
+        $builder->orderBy('shares_on_sale.created_at', 'DSC');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
+    public function viewSoldShares(){
+        $sacco_id = session()->get('sacco_id');
+        $builder = $this->db->table('shares_on_sale');
+        $builder->select('users.uniid, users.fname,users.lname,users.email,users.phone, sacco.name, shares_on_sale.*');
+        $builder->join('users', 'users.user_id = shares_on_sale.user_id');
+        $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id');
+        $builder->where('shares_on_sale.sacco_id', $sacco_id);
+        $builder->where('shares_on_sale.is_verified', 3);
+        $builder->orderBy('shares_on_sale.created_at', 'DSC');
         $query = $builder->get();
         return $query->getResultArray();
     }
@@ -178,16 +192,21 @@ class SaccoModels extends Model
     }
 
     public function getTransactions($sacco_id){
-        $builder = $this->db->table('transactions');
-        $builder->select('u1.fname as buyer_fname, u1.lname as buyer_lname, u1.phone as buyer_phone, u2.fname as seller_fname, 
-        u2.lname as seller_lname, u2.phone as seller_phone, transactions.transaction_id, transactions.amount, transactions.mpesaReceiptNumber, transactions.transactionDate, 
-        transactions.phoneNumber, transactions.status, shares_on_sale.membership_number, shares_on_sale.shares_on_sale, 
-        shares_on_sale.total');
-        $builder->join('users as u1', 'u1.uniid = transactions.user_id');
-        $builder->join('shares_on_sale', 'shares_on_sale.uuid = transactions.share_id');
-        $builder->join('users as u2', 'u2.user_id = shares_on_sale.user_id');
-        $builder->where('shares_on_sale.sacco_id', $sacco_id);
-        $builder->where('transactions.amount !=', '0');
+        $builder = $this->db->table('callbacks');
+        $builder->select(
+            'callbacks.amount, callbacks.mpesaReceiptNumber, callbacks.transactionDate, callbacks.phoneNumber as seller_phone,
+                    transactions.bid_id, bid_share.bid_amount, bid_share.buyer_membership_number,
+                    u1.fname as buyer_fname, u1.lname as buyer_lname, u1.phone as buyer_phone, u2.fname as seller_fname, u2.lname as seller_lname, sacco.name,
+                    shares_on_sale.membership_number as seller_membership_number, shares_on_sale.shares_on_sale, shares_on_sale.total
+         ');
+        $builder->join('transactions', 'transactions.merchantRequestID = callbacks.merchantRequestID', 'left');
+        $builder->join('bid_share', 'bid_share.bid_id = transactions.bid_id', 'left');
+        $builder->join('users as u1', 'u1.uniid = bid_share.buyer_id', 'left');
+        $builder->join('users as u2', 'u2.user_id = bid_share.seller_id', 'left');
+        $builder->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'left');
+        $builder->where('bid_share.sacco_id', $sacco_id);
+        $builder->orderBy('callbacks.transactionDate', 'DESC');
         $query = $builder->get();
         return $query->getResultArray();
     }

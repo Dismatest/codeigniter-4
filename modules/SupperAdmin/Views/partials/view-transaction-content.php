@@ -9,13 +9,16 @@
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <span></span>SupperAdmin/Transaction Report <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                    <span></span>SupperAdmin/Transaction Report <i class="mdi mdi-table-large icon-sm text-primary align-middle"></i>
                 </li>
             </ul>
         </nav>
     </div>
     <div class="row">
         <div class="col-12 grid-margin">
+            <div class="set-buyer-commission-container">
+                <h5 class="buyer-commission-container"><span><i class="mdi mdi-table-large buyer-commission"></i></span> View Transactions</h5>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -23,30 +26,38 @@
                         <table id="example" class="table table-striped" style="width:100%">
                             <thead>
                             <tr>
-                                <th> Seller's Name </th>
-                                <th> Buyer's Name </th>
+                                <th> Seller's Membership </th>
+                                <th> Buyer's Membership </th>
+                                <th> Buyer's Phone </th>
+                                <th> Sellers's Phone </th>
                                 <th> Shares </th>
+                                <th> Sacco </th>
                                 <th> Value </th>
-                                <th> Amount </th>
+                                <th> Bid Amount </th>
                                 <th> Status </th>
+                                <th> Date </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php if  (isset($viewTransactions) && !empty($viewTransactions)): ?>
-                                <?php foreach ($viewTransactions as $transaction): ?>
-                                    <tr>
-                                        <td><?= $transaction['seller_fname'] .' '. $transaction['seller_lname']?></td>
-                                        <td><?= $transaction['buyer_fname'] .' '. $transaction['buyer_lname']?></td>
-                                        <td><?= $transaction['shares_on_sale'] ?></td>
-                                        <td><?= $transaction['total'] ?></td>
-                                        <td><?= $transaction['amount'] ?></td>
-                                        <td><label class="badge badge-gradient-success">complete</label></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else : ?>
+                            <?php if(!empty($viewTransactions)): ?>
+                            <?php foreach ($viewTransactions as $transaction): ?>
                                 <tr>
-                                    <td colspan="7" class="text-center">No transactions found</td>
+                                    <td><?= $transaction['seller_membership_number'] ?></td>
+                                    <td><?= $transaction['buyer_membership_number'] ?></td>
+                                    <td><?= $transaction['buyer_phone'] ?></td>
+                                    <td><?= $transaction['seller_phone'] ?></td>
+                                    <td><?= $transaction['shares_on_sale'] ?></td>
+                                    <td><?= $transaction['name'] ?></td>
+                                    <td><?= $transaction['shares_on_sale'] ?></td>
+                                    <td><?= $transaction['bid_amount'] ?></td>
+                                    <?php if($transaction['bid_amount'] == $transaction['amount']): ?>
+                                        <td><span class="badge badge-success" style="border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center"><i class="mdi mdi-checkbox-marked-circle-outline"></i></span></td>
+                                    <?php else: ?>
+                                        <td><span class="badge badge-danger" style="border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center"><i class="mdi mdi-close-circle-outline"></i></span></td>
+                                    <?php endif; ?>
+                                    <td><?= $transaction['transactionDate'] ?></td>
                                 </tr>
+                            <?php endforeach; ?>
                             <?php endif; ?>
                             </tbody>
                         </table>

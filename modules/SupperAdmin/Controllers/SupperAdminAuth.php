@@ -12,12 +12,14 @@ class SupperAdminAuth extends BaseController
 {
     protected $loginActivityModel;
     protected $email;
+
     public function __construct()
     {
         helper(['form', 'url', 'text', 'date']);
         $this->loginActivityModel = new LoginActivityModel();
         $this->email = \Config\Services::email();
     }
+
     public function login()
     {
         $data = [];
@@ -51,19 +53,20 @@ class SupperAdminAuth extends BaseController
                 $user = $supperAdminModel->where('email', $email)->first();
 
                 if (!$user) {
-                    session()->setFlashdata('error', 'Theirs no user with that email, please try again');
-                    return redirect()->to(base_url('supperAdmin/login'));
+                    session()->setFlashdata('error', 'Incorrect email or password, please try again');
+                    return redirect()->to(base_url('/supperAdmin/login'));
                 }
 
                 $passwordCheck = Hash::decrypt($password, $user['password']);
                 if (!$passwordCheck) {
-                    session()->setFlashdata('error', 'Password is not correct, please try again');
-                    return redirect()->to(base_url('supperAdmin/login'));
+                    session()->setFlashdata('error', 'Incorrect password or email, please try again');
+                    return redirect()->to(base_url('/supperAdmin/login'));
                 } else {
                     $userId = $user['admin_id'];
                     $sessionData = array(
                         'fname' => $user['fname'],
                         'lname' => $user['lname'],
+                        'email' => $user['email'],
                         'currentLoggedInUser' => $userId,
                     );
                     session()->set($sessionData);
@@ -81,7 +84,7 @@ class SupperAdminAuth extends BaseController
     {
         $data = [];
         $data['registerTitle'] = 'Register';
-        if($this->request->getMethod() == 'post'){
+        if ($this->request->getMethod() == 'post') {
 
             $rules = [
                 'fname' => [
@@ -122,9 +125,9 @@ class SupperAdminAuth extends BaseController
                     ]
                 ]
             ];
-            if(!$this->validate($rules)){
+            if (!$this->validate($rules)) {
                 $data['validation'] = $this->validator;
-            }else{
+            } else {
                 $fname = $this->request->getPost('fname');
                 $lname = $this->request->getPost('lname');
                 $email = $this->request->getPost('email');
@@ -140,9 +143,9 @@ class SupperAdminAuth extends BaseController
 
                 $supperAdminModel = new SupperAdmins();
                 $query = $supperAdminModel->insert($usersData);
-                if($query){
+                if ($query) {
                     return redirect()->to(base_url('supperAdmin/login'))->with('success', 'Registration Success');
-                }else{
+                } else {
                     return redirect()->back()->with('fail', 'Registration Failed');
                 }
 
@@ -151,9 +154,10 @@ class SupperAdminAuth extends BaseController
         return view('Modules\SupperAdmin\Views\register', $data);
     }
 
-    public function forgetPassword(){
+    public function forgetPassword()
+    {
         $data = [];
-        if($this->request->getMethod()  == 'post'){
+        if ($this->request->getMethod() == 'post') {
             $rules = [
                 'email' => [
                     'rules' => 'required|valid_email',
@@ -164,76 +168,98 @@ class SupperAdminAuth extends BaseController
                 ],
             ];
 
-            if(!$this->validate($rules)){
+            if (!$this->validate($rules)) {
                 $data['validation'] = $this->validator;
-            }else {
-               $email = $this->request->getPost('email');
-               $validateEmail = $this->loginActivityModel->checkAdminEmail($email);
-               if(!empty($validateEmail)){
-                   $updateResetTime = $this->loginActivityModel->updateResetTime($validateEmail['uuid']);
-                   if($updateResetTime){
-                       $message = "Your your password reset link has been sent successfully, click the link now to change your password, the link expires within 39min" . anchor(base_url('supperAdmin/password-reset-link/' . $validateEmail['uuid']), ' reset password link', '');
-                       if($this->sendEmail($validateEmail['fname'], $validateEmail['email'], $message)) {
-                           session()->setFlashdata('success', 'Password reset link has been sent to your email');
-                           return redirect()->to(base_url('supperAdmin/forget-password'));
-                       }else{
-                           session()->setFlashdata('error', 'Failed to send password reset link');
-                           return redirect()->to(base_url('supperAdmin/forget-password'));
-                       }
-                   }else{
-                          session()->setFlashdata('error', 'We could not update your reset time, please try again');
-                          return redirect()->to(base_url('supperAdmin/forget-password'));
-                   }
-               }else{
-                   session()->setFlashdata('error', 'Email does not exist');
-                   return redirect()->to(base_url('supperAdmin/forget-password'));
-               }
+            } else {
+                $email = $this->request->getPost('email');
+                $validateEmail = $this->loginActivityModel->checkAdminEmail($email);
+                if (!empty($validateEmail)) {
+                    $updateResetTime = $this->loginActivityModel->updateResetTime($validateEmail['uuid']);
+                    if ($updateResetTime) {
+                        $subject = 'Password Reset Link';
+                        $message = "<br/>This email contains your password reset link. click the link now to change your password, the link expires within 39min " . anchor(base_url('supperAdmin/password-reset-link/' . $validateEmail['uuid']), ' reset password link');
+                        if (service('sendEmail')->send_email($validateEmail['fname'], $validateEmail['email'], $subject, $message)) {
+                            $email_logs = [
+                                'uuid' => Uuid::uuid4()->toString(),
+                                'fname' => $validateEmail['fname'] . ' ' . $validateEmail['lname'],
+                                'email' => $validateEmail['email'],
+                                'message_title' => $subject,
+                                'role' => 'supperAdmin',
+                                'status' => '1',
+                            ];
+
+                            $this->loginActivityModel->insertEmailLogs($email_logs);
+                            session()->setFlashdata('success', 'Password reset link has been sent to your email');
+                            return redirect()->to(base_url('supperAdmin/forget-password'));
+                        } else {
+                            $email_logs = [
+                                'uuid' => Uuid::uuid4()->toString(),
+                                'fname' => $validateEmail['fname'] . ' ' . $validateEmail['lname'],
+                                'email' => $validateEmail['email'],
+                                'message_title' => $subject,
+                                'role' => 'supperAdmin',
+                                'status' => '0',
+                            ];
+
+                            $this->loginActivityModel->insertEmailLogs($email_logs);
+                            session()->setFlashdata('error', 'Failed to send password reset link');
+                            return redirect()->to(base_url('supperAdmin/forget-password'));
+                        }
+                    } else {
+                        session()->setFlashdata('error', 'We could not update your reset time, please try again');
+                        return redirect()->to(base_url('supperAdmin/forget-password'));
+                    }
+                } else {
+                    session()->setFlashdata('error', 'Email does not exist');
+                    return redirect()->to(base_url('supperAdmin/forget-password'));
+                }
             }
         }
         return view('Modules\SupperAdmin\Views\forget-password', $data);
     }
 
-    public function resetPassword($uuid = null){
+    public function resetPassword($uuid = null)
+    {
         $data = [];
-        if(!empty($uuid)){
+        if (!empty($uuid)) {
             $verifyUuid = $this->loginActivityModel->verifyUuid($uuid);
-            if($verifyUuid){
-               if($this->expiryTime($verifyUuid['updated_at'])){
-                   if($this->request->getMethod() == 'post'){
-                          $rules = [
+            if ($verifyUuid) {
+                if ($this->expiryTime($verifyUuid['updated_at'])) {
+                    if ($this->request->getMethod() == 'post') {
+                        $rules = [
                             'password' => [
-                                 'rules' => 'required|min_length[5]|max_length[20]',
-                                 'errors' => [
-                                      'required' => 'Your password is required',
-                                      'min_length' => 'The length of password must be more than five',
-                                      'max_length' => 'The maximum password length must be less than twenty',
-                                 ]
+                                'rules' => 'required|min_length[5]|max_length[20]',
+                                'errors' => [
+                                    'required' => 'Your password is required',
+                                    'min_length' => 'The length of password must be more than five',
+                                    'max_length' => 'The maximum password length must be less than twenty',
+                                ]
                             ],
                             'conf-password' => [
-                                 'rules' => 'required|min_length[5]|max_length[20]|matches[password]',
-                                 'errors' => [
-                                      'required' => 'Password is required',
-                                      'min_length' => 'The length of password must be more than five',
-                                      'max_length' => 'The maximum password length must be less than twenty',
-                                      'matches' => 'The two password must match',
-                                 ]
+                                'rules' => 'required|min_length[5]|max_length[20]|matches[password]',
+                                'errors' => [
+                                    'required' => 'Password is required',
+                                    'min_length' => 'The length of password must be more than five',
+                                    'max_length' => 'The maximum password length must be less than twenty',
+                                    'matches' => 'The two password must match',
+                                ]
                             ]
-                          ];
-                          if(!$this->validate($rules)){
+                        ];
+                        if (!$this->validate($rules)) {
                             $data['validation'] = $this->validator;
-                          }else{
+                        } else {
                             $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
                             $updatePassword = $this->loginActivityModel->updateAdminPassword($uuid, $password);
-                            if($updatePassword){
-                                 session()->setFlashdata('success', 'Password reset successfully');
-                                 return redirect()->to(base_url('supperAdmin/login'));
-                            }else{
-                                 session()->setFlashdata('error', 'Failed to reset password');
-                                 return redirect()->to(base_url('supperAdmin/reset-password/' . $uuid));
+                            if ($updatePassword) {
+                                session()->setFlashdata('success', 'Password reset successfully');
+                                return redirect()->to(base_url('supperAdmin/login'));
+                            } else {
+                                session()->setFlashdata('error', 'Failed to reset password');
+                                return redirect()->to(base_url('supperAdmin/reset-password/' . $uuid));
                             }
-                          }
-                   }
-               }
+                        }
+                    }
+                }
             }
         }
         return view('Modules\SupperAdmin\Views\reset-password', $data);
@@ -251,29 +277,9 @@ class SupperAdminAuth extends BaseController
         }
     }
 
-    public function sendEmail($name, $email, $message)
+    public function logout()
     {
-        $this->email->setFrom('billclintonogot88@gmail.com', 'Sacco Hisa Admin');
-        $this->email->setTo("$email");
-
-        $this->email->setSubject('Reset Password');
-
-        $email_template = view('Modules\SupperAdmin\Views\sacco\email-template', [
-            'name' => $name,
-            'message' => $message
-        ]);
-
-        // Set email message
-        $this->email->setMessage($email_template);
-        if ($this->email->send()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function logout(){
-        if(session()->has('currentLoggedInUser')){
+        if (session()->has('currentLoggedInUser')) {
             session()->remove('currentLoggedInUser');
             return redirect()->to('supperAdmin/login')->with('success', 'You have logged out');
         }

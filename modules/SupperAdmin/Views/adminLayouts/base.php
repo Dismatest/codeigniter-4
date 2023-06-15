@@ -29,7 +29,7 @@
         elseif(isset($editUserTitle)):
             echo $editUserTitle;
         else:
-            echo 'No title';
+            echo 'admin';
         endif;
         ?>
     </title>
@@ -65,6 +65,9 @@
 <script src="<?= base_url('assets/js/supperAdminStepper.js')?>"></script>
 <?php $this->renderSection("set-buyer-commission") ?>
 <?php $this->renderSection("set-sacco-commission") ?>
+<?php $this->renderSection('set-seller-commission') ?>
+<?php $this->renderSection('share-statistics') ?>
+<?php $this->renderSection('manage-transaction-script') ?>
 <script>
     <?php if(session()->getFlashdata('success')) : ?>
     $(document).ready(function () {

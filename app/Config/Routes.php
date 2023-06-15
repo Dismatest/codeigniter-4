@@ -31,11 +31,12 @@ $routes->group('', ['filter' => 'isLoggedInFilter'], function ($routes) {
 
     $routes->match(['get', 'post'], 'share/(:segment)', 'Home::share/$1');
     $routes->match(['get', 'post'], 'update-profile', 'Profile::updateProfile');
+    $routes->match(['get', 'post'], 'saved/settings', 'Home::settings');
     $routes->match(['get', 'post'], 'share/(:segment)/bid', 'Home::bid/$1/bid');
     $routes->get('has_bid/(:segment)/', 'Home::hasBid/$1');
     $routes->get('has_active_bid/(:segment)/', 'Home::hasActiveBid/$1');
-    $routes->match(['get', 'post'], 'my_bids/accept/(:num)', 'Home::acceptBid/$1');
-    $routes->match(['get', 'post'], 'my_bids/reject/(:num)', 'Home::rejectBid/$1');
+    $routes->match(['get', 'post'], 'my_bids/accept/(:segment)', 'Home::acceptBid/$1');
+    $routes->match(['get', 'post'], 'my_bids/reject/(:segment)', 'Home::rejectBid/$1');
     $routes->match(['get', 'post'], 'payment/initiate_payment', 'Home::payment');
     $routes->post('payment/confirm_payment', 'Home::confirmPayment');
     $routes->post('payment/get_bid', 'Home::getBid');
@@ -87,7 +88,13 @@ $routes->group('', function ($routes) {
     $routes->match(['post', 'get'], 'login', 'Auth::login');
     $routes->match(['get', 'post'], 'forgot-password', 'Home::forgotPassword');
     $routes->match(['get', 'post'], 'password-reset/(:segment)', 'Home::passwordReset/$1');
-    $routes->match(['get', 'post'], 'payment_callback', 'Home::paymentCallback');
+
+//    payment routes
+    $routes->match(['get', 'post'], 'payment/payment_callback', 'Home::paymentCallback');
+    $routes->post('payment/check_payment', 'Home::checkPayment');
+
+
+
     $routes->get('sacco-all-shares/(:segment)', 'Home::getSaccoAllShares/$1');
     $routes->get('all_sacco_shares/', 'Home::getSaccoShares');
     $routes->cli('server/index', 'Server::index');

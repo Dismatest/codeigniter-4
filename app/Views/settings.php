@@ -1,5 +1,5 @@
-<?= $this->extend("client_base/base.php");?>
-<?= $this->section('content');?>
+<?= $this->extend("client_base/base.php"); ?>
+<?= $this->section('content'); ?>
 
 <?= $this->include('includes/navbar.php'); ?>
 
@@ -7,77 +7,57 @@
 
     <div class="row settings-top">
 
-        <?= $this->include('includes/saved-sidebar.php'); ?>
-
         <div class="col-md-7 settings-top-social-media">
             <div class="main-saved-container">
-                <div class="connect-social-media">
-                    <h6 class="h5">Connect Social Media for a great experience</h6>
+                <div class="update-email-container">
+                    <h6 style="font-size: 15px; color: #1bcfb4; padding: 15px 0; font-weight: 600">Account Settings</h6>
                     <hr>
-                    <div class="social-media-icons">
-                        <a href=""><i class="fa-brands fa-facebook"> Facebook</i></a>
-                        <div class="switch">
-                            <input type="checkbox" id="toggle">
-                            <label for="toggle" class="slider">
-                                <span class="on">ON</span>
-                                <span class="off">OFF</span>
-                            </label>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="social-media-icons">
-                        <a href=""><i class="fa-brands fa-twitter"> Twitter</i></a>
-                        <div class="switch">
-                            <input type="checkbox" id="toggle1">
-                            <label for="toggle1" class="slider">
-                                <span class="on2">ON</span>
-                                <span class="off2">OFF</span>
-                            </label>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="main-saved-container mt-3">
-                <div class="connect-social-media">
-                    <h6 class="h5">Preferences</h6>
-                    <hr>
-                    <div class="social-media-icons">
-                        <div class="d-flex flex-column align-items-sm-start">
-                            <p class="h6">Display</p>
-                            <p>Switch between dark and light theme</p>
-                        </div>
-                        <div style="cursor: pointer;">
-                            <span><i class="far fa-sun fa-2x"></i></span>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="social-media-icons">
-                        <div class="d-flex flex-column align-items-sm-start">
-                            <p class="h6">Data Saver</p>
-                            <p>Turn on to save data bundles</p>
-                        </div>
-                        <div class="switch">
-                            <input type="checkbox" id="toggle1">
-                            <label for="toggle1" class="slider">
-                                <span class="on2">ON</span>
-                                <span class="off2">OFF</span>
-                            </label>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class=" social-media-icons">
-                        <a href="<?= base_url().'/logout'?>" id="logout"><i class="fas fa-arrow-right-from-bracket m-2"></i>Logout</a>
-
+                    <div class="update-email">
+                        <h5>Update Email</h5>
+                        <form>
+                            <div class="verify-input-1">
+                                <input type="text" name="update-email" id="update-email">
+                            </div>
+                            <button disabled type="submit" class="update-email-button">Update Email</button>
+                        </form>
                     </div>
                 </div>
             </div>
 
 
+            <div class="main-saved-container py-3 mt-3">
+                <div class="update-email-container">
+
+                    <div class="update-email">
+                        <h5>Change Password</h5>
+                        <form>
+                            <div class="verify-input-1">
+                                <input type="password" name="password" id="password" placeholder="New password">
+                            </div>
+                            <div class="verify-input-1">
+                                <input type="password" name="password1" id="password1"
+                                       placeholder="Confirm New Password">
+                            </div>
+                            <button disabled type="submit" class="update-email-button">Update Password</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="main-saved-container py-3 mt-3">
+                <div class="update-email-container">
+
+                    <div class="update-email">
+                        <h5 style="color: orangered">Delete Account</h5>
+                        <form>
+                            <button disabled type="submit" class="delete-account">Delete Account</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
 
 
         </div>
