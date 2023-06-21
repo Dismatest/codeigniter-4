@@ -14,7 +14,7 @@
             </ul>
         </nav>
     </div>
-    <h5 class="text-center p-2">Manage New Members</h5>
+    <h5 class="text-center p-2">Members Report</h5>
     <div class="row">
         <div class="col-12 grid-margin">
             <div class="card">
@@ -29,31 +29,21 @@
                                 <th> ID Number</th>
                                 <td> Date</td>
                                 <td> Status</td>
-                                <td> Action</td>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php if (!empty($users)): ?>
-                                <?php foreach ($users as $user): ?>
+                            <?php if (!empty($members)): ?>
+                                <?php foreach ($members as $member): ?>
                                     <tr>
-                                        <td><?= ucfirst($user['fname']) . ' ' . ucfirst($user['lname']) ?></td>
-                                        <td><?= $user['phone'] ?></td>
-                                        <td><?= $user['id_number'] ?></td>
-                                        <?php if (!empty($date_created)) : ?>
-                                            <td><?= $date_created ?></td>
-                                            <td> <button class="btn btn-warning btn-sm">Pending</button></td>
-                                        <?php endif; ?>
+                                        <td><?= ucfirst($member['fname']) . ' ' . ucfirst($member['lname']) ?></td>
+                                        <td><?= $member['phone'] ?></td>
+                                        <td><?= $member['id_number'] ?></td>
+                                        <td><?= date('d M Y', strtotime($member['updated_at'])) ?></td>
+
                                         <td>
-                                            <button class="btn btn-success btn-sm approve-btn" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop" data-id="<?= $user['membership_id'] ?>">
-                                                Approve
-                                            </button>
-                                            <a class="text-danger"
-                                               href="<?= 'delete-user-shares/' . $user['membership_id'] ?>"
-                                               style="font-size: 20px;">
-                                                <i class="mdi mdi-delete"></i>
-                                            </a>
+                                            <button class="btn btn-success btn-sm">Approved</button>
                                         </td>
+
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
@@ -77,27 +67,16 @@
                 <h5 class="modal-title" id="staticBackdropLabel">Approve New Member</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <span class="text-success" id="member-success" style="padding-left: 20px; display: none;"></span>
-            <span class="text-danger" id="member-error" style="padding-left: 20px; display: none;"></span>
             <div class="modal-body">
-                <table class="table table-striped" id="membership-data">
-                    <thead>
-                    <tr>
-                        <th> Name</th>
-                        <th> Phone Number</th>
-                        <th> ID Number</th>
-                    </thead>
-                    <tbody>
-                    <tr>
-                    </tr>
-                    </tbody>
-                </table>
+
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <?php if(!empty($user['membership_id'])): ?>
-                <button type="button" class="btn btn-primary approve-membership" data-id="<?= $user['membership_id'] ?>">Approve Member</button>
-                <?php endif; ?>
+                <button type="button" class="btn btn-primary approve-membership"
+                >Approve Member
+                </button>
+
             </div>
         </div>
     </div>

@@ -85,7 +85,8 @@ class LoginActivityModel extends Model
         return $query->getResultArray();
     }
 
-    public function viewSoldShares(){
+    public function viewSoldShares()
+    {
         $builder = $this->db->table('shares_on_sale');
         $builder->select('users.uniid, users.fname,users.lname,users.email,users.phone, sacco.name, shares_on_sale.*');
         $builder->join('users', 'users.user_id = shares_on_sale.user_id');
@@ -120,18 +121,19 @@ class LoginActivityModel extends Model
         return $query->getResultArray();
     }
 
-    public function findAllRejectedShares()
+    public function findAllBids()
     {
-        $builder = $this->db->table('shares_on_sale');
-        $builder->select('users.fname, users.lname, shares_on_sale.membership_number, shares_on_sale.shares_on_sale, shares_on_sale.total, shares_on_sale.created_at, sacco.name, share_messages.reason');
-        $builder->join('users', 'users.user_id = shares_on_sale.user_id', 'left');
+        $builder = $this->db->table('bid_share');
+        $builder->select('shares_on_sale.uuid, COUNT(bid_share.share_on_sale_id) as bidders_count, users.fname, users.lname, shares_on_sale.shares_on_sale, shares_on_sale.total, shares_on_sale.membership_number, shares_on_sale.created_at, sacco.name');
+        $builder->join('users', 'users.user_id = bid_share.seller_id', 'left');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'left');
         $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left');
-        $builder->join('share_messages', 'share_messages.share_id = shares_on_sale.uuid', 'left');
-        $builder->where('is_verified', '2');
-        $builder->orderBy('created_at', 'ASC');
+        $builder->groupBy('shares_on_sale.uuid, users.fname, users.lname, shares_on_sale.shares_on_sale, shares_on_sale.total, shares_on_sale.membership_number, shares_on_sale.created_at, sacco.name, bid_share.created_at');
+        $builder->orderBy('bid_share.created_at', 'DESC');
         $query = $builder->get();
         return $query->getResultArray();
     }
+
 
     public function approveShare($uuid)
     {
@@ -416,6 +418,29 @@ class LoginActivityModel extends Model
         return $query->getResultArray();
     }
 
+    public function getTransactionSummery(){
+        $builder = $this->db->table('callbacks');
+        $builder->select('SUM(callbacks.amount) as total_amount, sacco.sacco_id, sacco.name');
+        $builder->join('transactions', 'transactions.merchantRequestID = callbacks.merchantRequestID', 'left');
+        $builder->join('bid_share', 'bid_share.bid_id = transactions.bid_id', 'left');
+        $builder->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left');
+        $builder->groupBy('sacco.sacco_id, sacco.name');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
+    public function transactionHistoryView($sacco_id)
+    {
+        $builder = $this->db->table('callbacks');
+        $builder->select('callbacks.amount, callbacks.transactionDate, sacco.name');
+        $builder->join('transactions', 'transactions.merchantRequestID = callbacks.merchantRequestID', 'left');
+        $builder->join('bid_share', 'bid_share.bid_id = transactions.bid_id', 'left');
+        $builder->join('sacco', 'sacco.sacco_id = bid_share.sacco_id', 'left');
+        $builder->where('sacco.sacco_id', $sacco_id);
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
     public function pendingTransactions($user_id)
     {
 
@@ -604,6 +629,98 @@ class LoginActivityModel extends Model
         } else {
             return false;
         }
+    }
+
+    public function getBidsByShareUuid($uuid)
+    {
+        $builder = $this->db->table('bid_share');
+        $builder->select('shares_on_sale.uuid, users.fname, users.lname, shares_on_sale.shares_on_sale, shares_on_sale.total, sacco.name, bid_share.uuid as bid_uuid, bid_share.buyer_membership_number, bid_share.bid_amount, bid_share.action, bid_share.updated_at');
+        $builder->join('users', 'users.uniid = bid_share.buyer_id', 'left');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'left');
+        $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left');
+        $builder->where('bid_share.share_on_sale_id', $uuid);
+        $builder->orderBy('bid_share.updated_at', 'DESC');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
+    public function checkApprove($uuid)
+    {
+        $builder = $this->db->table('bid_share');
+        $builder->select('bid_share.action');
+        $builder->where('bid_share.share_on_sale_id', $uuid);
+        $builder->whereIn('bid_share.action', ['1', '2']);
+        $query = $builder->countAllResults();
+        if ($query > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function approveShareAdmin($shareUuid){
+        $builder = $this->db->table('bid_share');
+        $builder->where('uuid', $shareUuid);
+        $builder->update(['action' => '1']);
+        if ($this->db->affectedRows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function rejectShareAdmin($shareUuid){
+        $builder = $this->db->table('bid_share');
+        $builder->where('uuid', $shareUuid);
+        $builder->update(['action' => '2']);
+        if ($this->db->affectedRows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getSaccoMembers(){
+        $builder = $this->db->table('sacco_membership');
+        $builder->select('sacco_membership.membership_id, sacco_membership.id_number, sacco_membership.status, sacco_membership.created_at, users.fname, users.lname, users.email, users.phone, sacco.name');
+        $builder->join('users', 'users.user_id = sacco_membership.user_id', 'left');
+        $builder->join('sacco', 'sacco.sacco_id = sacco_membership.sacco_id', 'left');
+        $builder->orderBy('sacco_membership.created_at', 'DESC');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
+    public function getMemberData($membership_id){
+        $builder = $this->db->table('sacco_membership');
+        $builder->select('sacco_membership.id_number, sacco_membership.status, sacco_membership.created_at, users.fname, users.lname, users.email, users.phone, sacco.name');
+        $builder->join('users', 'users.user_id = sacco_membership.user_id', 'left');
+        $builder->join('sacco', 'sacco.sacco_id = sacco_membership.sacco_id', 'left');
+        $builder->where('sacco_membership.membership_id', $membership_id);
+        $query = $builder->get();
+        return $query->getRowArray();
+    }
+
+    public function approveNewMember($membership_id){
+        $builder = $this->db->table('sacco_membership');
+        $builder->where('membership_id', $membership_id);
+        $builder->update(['status' => '1', 'updated_at' => date('Y-m-d H:i:s')]);
+        if ($this->db->affectedRows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getMembersReport($saccoId){
+        $builder = $this->db->table('sacco_membership');
+        $builder->select('sacco_membership.membership_id, sacco_membership.id_number, sacco_membership.status, sacco_membership.updated_at, users.fname, users.lname, users.email, users.phone');
+        $builder->join('users', 'users.user_id = sacco_membership.user_id', 'left');
+        $builder->join('sacco', 'sacco.sacco_id = sacco_membership.sacco_id', 'left');
+        $builder->where('sacco_membership.sacco_id', $saccoId);
+        $builder->where('sacco_membership.status', '1');
+        $builder->orderBy('sacco_membership.created_at', 'DESC');
+        $query = $builder->get();
+        return $query->getResultArray();
     }
 
 }

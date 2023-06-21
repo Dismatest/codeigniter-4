@@ -441,10 +441,10 @@ class SupperAdmin extends BaseController
     }
 
     public function bidsReport(){
-        $rejectedShares = $this->loginActivityModel->findAllRejectedShares();
+        $bidsReport = $this->loginActivityModel->findAllBids();
         $data = [
             'rejectedSharesTitle' => 'bids reports',
-            'rejectedShares' => $rejectedShares,
+            'bidsReports' => $bidsReport,
         ];
         return view('Modules\SupperAdmin\Views\bids-report', $data);
     }
@@ -954,6 +954,47 @@ class SupperAdmin extends BaseController
             }
         }
         return view('Modules\SupperAdmin\Views\change-password', $data);
+    }
+
+    public function viewBidsReport($shareUuid){
+        $getBids = $this->loginActivityModel->getBidsByShareUuid($shareUuid);
+        $response = [
+            'status' => 200,
+            'bids' => $getBids,
+        ];
+        return $this->response->setJSON($response);
+    }
+
+    public function saccoMembershipReport(){
+        $data = [
+            'saccoMembershipReport' => 'Sacco Membership Report',
+            'saccoMembers' => $this->loginActivityModel->getSaccoMembers(),
+        ];
+        return view('Modules\SupperAdmin\Views\sacco-membership-report', $data);
+    }
+
+    public function viewTransactionsSummery(){
+        $data = [
+            'saccoMembershipReport' => 'Sacco Membership Report',
+            'transactionsSummery' => $this->loginActivityModel->getTransactionSummery(),
+        ];
+        return view('Modules\SupperAdmin\Views\view-transactions-summery', $data);
+    }
+
+    public function transactionHistoryView($sacco_id){
+        try{
+            $viewTransactionHistory = $this->loginActivityModel->transactionHistoryView($sacco_id);
+            $response = [
+                'status' => 200,
+                'transactionHistory' => $viewTransactionHistory,
+            ];
+            return $this->response->setJSON($response);
+        }catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => 500,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function generateRandomPassword($length = 8) {

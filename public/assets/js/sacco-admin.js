@@ -118,7 +118,8 @@ $(document).ready(function () {
             },
 
             error: function (error) {
-                console.log(error);
+                alertify.set('notifier', 'position', 'bottom-right');
+                alertify.error('there was an error, please try again');
             },
 
             complete: function () {
@@ -167,7 +168,8 @@ $(document).ready(function () {
                 alertify.success(response.message);
             },
             error: function (error) {
-                console.log(error);
+                alertify.set('notifier', 'position', 'bottom-right');
+                alertify.error('An error occured, please try again');
             }
 
         });

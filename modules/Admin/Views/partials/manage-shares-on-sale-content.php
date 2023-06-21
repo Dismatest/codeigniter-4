@@ -85,8 +85,6 @@
                                             <button type="submit" class="btn btn-warning">Delete</button>
                                         </form>
                                         <?php endif; ?>
-
-
                                     </div>
                                 </div>
                             </div>

@@ -7,7 +7,7 @@
     <div class="container-fluid page-body-wrapper">
         <?= $this->include('Modules\Admin\Views\includes\sidebar');?>
         <div class="main-panel">
-            <?= $this->include('Modules\Admin\Views\partials\manage-shears-on-sale-content');?>
+            <?= $this->include('Modules\Admin\Views\partials\manage-shares-on-sale-content');?>
         </div>
     </div>
 </div>

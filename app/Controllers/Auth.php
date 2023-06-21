@@ -273,18 +273,32 @@ class Auth extends BaseController
         return view('login');
     }
 
-    public function expiry_date($expiry_date)
-    {
+//    public function expiry_date($date_created)
+//    {
+//
+//        $updated_time = strtotime($date_created);
+//        $currentTime = time();
+//        $difference_time = ($currentTime - $updated_time) / 60;
+//        dd($difference_time);
+//        if ($difference_time < 3600) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
-        $updated_time = strtotime($expiry_date);
-        $currentTime = time();
-        $difference_time = ($currentTime - $updated_time) / 60;
+    public function expiry_date($date_created)
+    {
+        $updated_time = strtotime($date_created);
+        $current_time = time();
+        $difference_time = ($current_time - $updated_time) / 3600;
         if ($difference_time < 3600) {
             return true;
         } else {
             return false;
         }
     }
+
 
 //the second function for expiry date
 
@@ -382,4 +396,8 @@ class Auth extends BaseController
         }
     }
 }
+
+
+
+
 

@@ -14,7 +14,9 @@ class SaccoMembership extends Migration
             'user_id'                    => ['type' => 'int', 'constraint' => 11],
             'sacco_id'                 => ['type' => 'int', 'constraint' => 11],
             'id_number'                => ['type' => 'int', 'constraint' => 10],
+            'status'                   => ['type' => 'int', 'constraint' => 1, 'default' => 0],
             'created_at'              => ['type' => 'datetime', 'default' => date('Y-m-d H:i:s'), 'null' => true],
+            'updated_at'              => ['type' => 'datetime', 'null' => true],
         ]);
 
         $this->forge->addPrimaryKey('membership_id');

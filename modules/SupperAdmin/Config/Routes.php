@@ -24,12 +24,15 @@ $routes->group('supperAdmin', ['namespace' => 'Modules\SupperAdmin\Controllers',
     $routes->match(['post', 'get'], 'manage-users/edit/(:segment)', 'SupperAdmin::manageUsersEdit/$1');
     $routes->match(['post', 'get'], 'manage-users/delete/(:segment)', 'SupperAdmin::manageUsersDelete/$1');
 
+    //sacco membership reports
+    $routes->get('sacco-membership-report', 'SupperAdmin::saccoMembershipReport');
 
-    //shares routes
-
+    //bids routes
+    $routes->get('bids-report/view-report/(:segment)', 'SupperAdmin::viewBidsReport/$1');
     $routes->get('shares-report', 'SupperAdmin::sharesReport');
     $routes->get('view-sold-shares', 'SupperAdmin::soldShares');
 
+    //shares routes
     $routes->get('set_buyer_commission', 'SupperAdmin::setBuyerCommission');
     $routes->post('set_commission/buyer_commission', 'SupperAdmin::setCommissionAjax');
     $routes->get('set_commission/get_buyer_commission', 'SupperAdmin::getBuyerCommissionAjax');
@@ -53,8 +56,14 @@ $routes->group('supperAdmin', ['namespace' => 'Modules\SupperAdmin\Controllers',
     $routes->post('set_sacco_commission/update_sacco_commission_by_id', 'SupperAdmin::updateSaccoCommissionByIdAjax');
     $routes->post('set_sacco_commission/delete_sacco_commission_by_id', 'SupperAdmin::deleteSaccoCommissionByIdAjax');
 
-
+//transaction routes
     $routes->get('transactions-report', 'SupperAdmin::transactionsReport');
+    $routes->get('view-transactions', 'SupperAdmin::viewTransactions');
+    $routes->get('view-pending-transactions', 'SupperAdmin::pendingTransactions');
+    $routes->get('transaction-summery', 'SupperAdmin::viewTransactionsSummery');
+    $routes->get('transaction-history-view/(:num)', 'SupperAdmin::transactionHistoryView/$1');
+
+
     $routes->match(['post', 'get'], 'shares-report/mark-sold/(:segment)', 'SupperAdmin::markSold/$1');
     $routes->match(['post', 'get'], 'shares-history/statistics', 'SupperAdmin::sharesStatistics');
     $routes->get('bids-report', 'SupperAdmin::bidsReport');
@@ -69,8 +78,6 @@ $routes->group('supperAdmin', ['namespace' => 'Modules\SupperAdmin\Controllers',
     $routes->get('sms-audit', 'SupperAdmin::smsAuditTrail');
     $routes->get('delete-audit-trail/(:num)', 'SupperAdmin::auditTrailDelete/$1');
 
-    $routes->get('view-transactions', 'SupperAdmin::viewTransactions');
-    $routes->get('view-pending-transactions', 'SupperAdmin::pendingTransactions');
 
     $routes->match(['get', 'post'], 'register-new_admin', 'SupperAdmin::registerNewAdmin');
     $routes->match(['get', 'post'], 'change-password', 'SupperAdmin::changePassword');

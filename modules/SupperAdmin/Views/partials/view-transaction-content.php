@@ -55,7 +55,7 @@
                                     <?php else: ?>
                                         <td><span class="badge badge-danger" style="border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center"><i class="mdi mdi-close-circle-outline"></i></span></td>
                                     <?php endif; ?>
-                                    <td><?= $transaction['transactionDate'] ?></td>
+                                    <td><?= date('d M Y', strtotime($transaction['transactionDate'])) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                             <?php endif; ?>

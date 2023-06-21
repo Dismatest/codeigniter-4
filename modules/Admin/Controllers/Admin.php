@@ -64,7 +64,7 @@ class Admin extends BaseController
                 'shares' => $shares,
             ];
         }
-        return view('Modules\Admin\Views\manage-shears-on-sale', $data);
+        return view('Modules\Admin\Views\manage-shares-on-sale', $data);
     }
 
     public function verifyShares($id = null)
@@ -1089,6 +1089,99 @@ class Admin extends BaseController
             }
         }
         return view('Modules\Admin\Views\reset-password', $data);
+    }
+
+    public function viewBidsReport($shareUuid){
+        $getBids = $this->loginActivityModel->getBidsByShareUuid($shareUuid);
+        $response = [
+            'status' => 200,
+            'bids' => $getBids,
+        ];
+        return $this->response->setJSON($response);
+    }
+
+    public function checkApprove($shareUuid){
+        $checkApprove = $this->loginActivityModel->checkApprove($shareUuid);
+        $response = [
+            'status' => 200,
+            'checkApprove' => $checkApprove,
+        ];
+        return $this->response->setJSON($response);
+    }
+
+    public function approveShareAdmin(){
+        $shareUuid = $this->request->getPost('shareUuid');
+        $approveShare = $this->loginActivityModel->approveShareAdmin($shareUuid);
+        if($approveShare){
+            $response = [
+                'status' => 200,
+                'message' => 'Share approved successfully',
+            ];
+            return $this->response->setJSON($response);
+        }else{
+            $response = [
+                'status' => 500,
+                'message' => 'Failed to approve share',
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function rejectShareAdmin(){
+        $shareUuid = $this->request->getPost('shareUuid');
+        $approveShare = $this->loginActivityModel->rejectShareAdmin($shareUuid);
+        if($approveShare){
+            $response = [
+                'status' => 200,
+                'message' => 'Share approved successfully',
+            ];
+            return $this->response->setJSON($response);
+        }else{
+            $response = [
+                'status' => 500,
+                'message' => 'Failed to approve share',
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function getMemberData($id){
+        $approveMember = $this->loginActivityModel->getMemberData($id);
+        if($approveMember){
+            return $this->response->setJSON($approveMember);
+        }else{
+            $response = [
+                'status' => 500,
+                'message' => 'There was an error fetching member data',
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function approveNewMember(){
+        $memberId = $this->request->getPost('membershipID');
+        $approveMember = $this->loginActivityModel->approveNewMember($memberId);
+        if($approveMember){
+            $response = [
+                'status' => 200,
+                'message' => 'A new member approved successfully',
+            ];
+            return $this->response->setJSON($response);
+        }else{
+            $response = [
+                'status' => 500,
+                'message' => 'Failed to approve new member',
+            ];
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function membersReport(){
+        $data = [];
+        $data['title'] = 'Members Report';
+        $sacco_id = session()->get('sacco_id');
+        $data['members'] = $this->loginActivityModel->getMembersReport($sacco_id);
+        return view('Modules\Admin\Views\members-report', $data);
     }
 
     public function expiryTime($date)

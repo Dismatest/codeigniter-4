@@ -54,7 +54,7 @@
                                             <td><span class="badge badge-success">sold</span></td>
                                         <?php endif; ?>
 
-                                        <td> <?= date('dY-m-d', strtotime($share['created_at'])) ?> </td>
+                                        <td> <?= date('Y-m-d', strtotime($share['created_at'])) ?> </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>

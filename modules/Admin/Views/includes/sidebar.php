@@ -49,9 +49,8 @@
             <div class="collapse" id="ui-basics1">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/bids-report')?>"> Bids Report</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/bids-report')?>"> Transactions Report</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/bids-report')?>"> Members Report </a></li>
-                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/bids-report')?>"> Commission Report </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/members-report')?>"> Members Report </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="<?= base_url('admin/commission-report')?>"> Commission Report </a></li>
                 </ul>
             </div>
 

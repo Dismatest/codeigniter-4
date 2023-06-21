@@ -18,7 +18,12 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers', 'filter' =>
 
     //user management routes
     $routes->get('list_members', 'Admin::listMembers');
+    $routes->get('members-report', 'Admin::membersReport');
     $routes->get('manage-new-users', 'Admin::manageNewUsers');
+    $routes->get('manage-membership/get-member-data/(:num)', 'Admin::getMemberData/$1');
+    $routes->post('manage-membership/approve-share', 'Admin::approveNewMember');
+
+
     $routes->match(['post','get'],'add-user-shares', 'Admin::addUserShares');
     $routes->post('update-user-shares/(:num)', 'Admin::updateUserShares/$1');
     $routes->get('delete-user-shares/(:num)', 'Admin::deleteUserShares/$1');
@@ -43,6 +48,10 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers', 'filter' =>
 //    bids report
     $routes->get('bids-report', 'Admin::bidsReport');
     $routes->post('bids-report/view', 'Admin::viewBidsReport');
+    $routes->get('bids-report/view-report/(:segment)', 'Admin::viewBidsReport/$1');
+    $routes->get('bids-report/check-approve/(:segment)', 'Admin::checkApprove/$1');
+    $routes->post('bids-report/approve-share', 'Admin::approveShareAdmin');
+    $routes->post('bids-report/reject-share', 'Admin::rejectShareAdmin');
 
 //    creating member shares
     $routes->match(['get', 'post'],'price_per_share', 'Admin::pricePerShare');

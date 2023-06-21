@@ -68,6 +68,8 @@
 <?php $this->renderSection('set-seller-commission') ?>
 <?php $this->renderSection('share-statistics') ?>
 <?php $this->renderSection('manage-transaction-script') ?>
+<?php $this->renderSection('view-bids-modal') ?>
+<?php $this->renderSection('transaction-summery-script') ?>
 <script>
     <?php if(session()->getFlashdata('success')) : ?>
     $(document).ready(function () {

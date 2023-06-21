@@ -123,6 +123,7 @@ class SaccoModels extends Model
         $builder->join('users', 'users.user_id = sacco_membership.user_id');
         $builder->join('sacco', 'sacco.sacco_id = sacco_membership.sacco_id');
         $builder->where('sacco_membership.sacco_id', $id);
+        $builder->where('sacco_membership.status', 0);
         $builder->orderBy('sacco_membership.created_at', 'ASC');
         $query = $builder->get();
         return $query->getResultArray();
@@ -505,14 +506,15 @@ class SaccoModels extends Model
 
     public function getBidsReport($sacco_id){
         $builder = $this->db->table('bid_share');
-        $builder->select('bid_share.bid_id, bid_share.created_at, bid_share.bid_amount, sacco.name, users.fname as seller_fname, users.lname as seller_lname, shares_on_sale.shares_on_sale, shares_on_sale.total');
-        $builder->join('sacco', 'sacco.sacco_id = bid_share.sacco_id');
-        $builder->join('users', 'users.user_id = bid_share.seller_id');
-        $builder->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id');
+        $builder->select('shares_on_sale.uuid, COUNT(bid_share.share_on_sale_id) as bidders_count, users.fname, users.lname, shares_on_sale.shares_on_sale, shares_on_sale.total, shares_on_sale.membership_number, shares_on_sale.created_at, sacco.name');
+        $builder->join('users', 'users.user_id = bid_share.seller_id', 'left');
+        $builder->join('shares_on_sale', 'shares_on_sale.uuid = bid_share.share_on_sale_id', 'left');
+        $builder->join('sacco', 'sacco.sacco_id = shares_on_sale.sacco_id', 'left');
+        $builder->groupBy('shares_on_sale.uuid, users.fname, users.lname, shares_on_sale.shares_on_sale, shares_on_sale.total, shares_on_sale.membership_number, shares_on_sale.created_at, sacco.name, bid_share.created_at');
         $builder->where('bid_share.sacco_id', $sacco_id);
         $builder->orderBy('bid_share.created_at', 'DESC');
-        $result = $builder->get();
-        return $result->getResultArray();
+        $query = $builder->get();
+        return $query->getResultArray();
     }
 
     public function checkAdminEmail($email){

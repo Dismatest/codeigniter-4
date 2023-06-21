@@ -78,5 +78,7 @@
 <?= $this->renderSection('view-pending-transaction-script') ?>
 <?= $this->renderSection('bids-report-script') ?>
 <?= $this->renderSection('view-admin-shares-sold-statistics-script') ?>
+<?= $this->renderSection('sacco-membership-script') ?>
+<?= $this->renderSection('members-report-script') ?>
 </body>
 </html>
